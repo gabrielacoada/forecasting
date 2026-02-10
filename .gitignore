@@ -1,33 +1,121 @@
-# Virtual Environment
-.venv/
-venv/
-env/
-
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
 
 # Jupyter Notebook
-.ipynb_checkpoints/
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
 *.ipynb_checkpoints
 
-# IDE
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.DS_Store
 
-# OS
+# Data files (large or sensitive)
+*.csv.gz
+*.parquet
+*.feather
+*.h5
+*.hdf5
+
+# Exclude large raw datasets if needed
+# Uncomment if datasets become too large for git
+# problem-sets/*/data/raw/*.csv
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.cache
+
+# OS files
 .DS_Store
 Thumbs.db
+Desktop.ini
 
-# Claude
-.claude/
+# Large output files
+*.gif
+*.mp4
+*.avi
 
-# Data files (keep the CSV for reproducibility)
-# Uncomment if you don't want to track data
-# *.csv
+# API keys and credentials
+secrets.json
+credentials.json
+*.key
+*.pem
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Documentation builds
+docs/_build/
+site/
+
+# Model files (if you save trained models)
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.pb
+
+# Exclude personal notes
+NOTES.md
+TODO.md
+scratch/
+
+# Keep directory structure but ignore contents
+# (Useful for empty data/outputs folders)
+**/data/raw/.gitkeep
+**/outputs/figures/.gitkeep
+**/outputs/tables/.gitkeep
