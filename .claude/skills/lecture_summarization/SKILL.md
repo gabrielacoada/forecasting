@@ -198,6 +198,39 @@ style NODE fill:#e3f2fd   %% blue for informational
 style NODE fill:#fff3e0   %% orange for warnings/caution
 ```
 
+## Integration with Recording Alignment
+
+When a lecture recording is available, use the `recording_slide_alignment` skill to enrich summaries with timing and emphasis data.
+
+### After Alignment
+```bash
+# Enrich existing summary with recording insights
+claude "Using the slide-alignment.md and enriched-summary.md from week 5,
+update summary.md to highlight what the professor emphasized most
+(by time spent and verbal cues)"
+```
+
+### Emphasis-Weighted Summary
+The recording alignment produces an emphasis report showing which slides the professor spent the most time on and where they used verbal emphasis cues. Use this to:
+- **Bold** concepts the professor flagged as important
+- Add "Professor's note:" callouts for verbal explanations not on slides
+- Reorder the review checklist to prioritize high-emphasis topics
+- Note topics the professor said to skip or marked as optional
+
+### Workflow: Recording + Slides → Complete Study Guide
+```bash
+# Step 1: Align recording with slides
+/align_recording week-05
+
+# Step 2: Create enriched summary using alignment output
+claude "Combine the slide-alignment.md with the existing summary.md for
+week 5. Add professor emphasis analysis and verbal examples."
+
+# Step 3: Generate practice problems weighted by emphasis
+claude "Based on the emphasis report in week 5, generate practice problems
+focused on the topics the professor spent the most time on."
+```
+
 ## Quality Checks
 
 Good summaries should:
