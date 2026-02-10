@@ -86,6 +86,80 @@ def extract_slide_texts(slides_path):
     return slides
 
 
+def detect_annotated_slides(original_path, annotated_path):
+    """
+    Compare original slides to annotated slides to find which slides have
+    handwritten annotations. Annotated slides are ground truth — if you wrote
+    on a slide, the professor was actively discussing it.
+
+    Returns a dict mapping slide_number -> annotation_weight (0.0 to 1.0).
+    Higher weight = more annotation content = professor spent more time here.
+    """
+    import pdfplumber
+
+    if not annotated_path or not Path(annotated_path).exists():
+        return {}
+
+    print(f"Detecting annotations by comparing original vs annotated slides...")
+
+    annotation_weights = {}
+
+    try:
+        with pdfplumber.open(str(original_path)) as orig_pdf, \
+             pdfplumber.open(str(annotated_path)) as ann_pdf:
+
+            n_pages = min(len(orig_pdf.pages), len(ann_pdf.pages))
+
+            for i in range(n_pages):
+                orig_text = (orig_pdf.pages[i].extract_text() or "").strip()
+                ann_text = (ann_pdf.pages[i].extract_text() or "").strip()
+
+                # Text difference: extra text in annotated version = typed annotations
+                text_diff = len(ann_text) - len(orig_text)
+
+                # Compare drawing/line objects (ink strokes from handwriting)
+                orig_lines = len(orig_pdf.pages[i].lines or [])
+                ann_lines = len(ann_pdf.pages[i].lines or [])
+                line_diff = ann_lines - orig_lines
+
+                # Compare curve objects (pen strokes)
+                orig_curves = len(orig_pdf.pages[i].curves or [])
+                ann_curves = len(ann_pdf.pages[i].curves or [])
+                curve_diff = ann_curves - orig_curves
+
+                # Compare rectangles/shapes (highlights, boxes)
+                orig_rects = len(orig_pdf.pages[i].rects or [])
+                ann_rects = len(ann_pdf.pages[i].rects or [])
+                rect_diff = ann_rects - orig_rects
+
+                # Any positive difference means annotations were added
+                total_additions = max(0, text_diff) + max(0, line_diff) * 5 + \
+                                  max(0, curve_diff) * 3 + max(0, rect_diff) * 2
+
+                if total_additions > 0:
+                    annotation_weights[i + 1] = total_additions  # slide_number = i + 1
+
+            # Normalize weights to 0.0 - 1.0 range
+            if annotation_weights:
+                max_weight = max(annotation_weights.values())
+                if max_weight > 0:
+                    annotation_weights = {
+                        k: v / max_weight for k, v in annotation_weights.items()
+                    }
+
+        annotated_count = sum(1 for w in annotation_weights.values() if w > 0)
+        print(f"  Found annotations on {annotated_count}/{n_pages} slides")
+        if annotated_count > 0:
+            top_slides = sorted(annotation_weights.items(), key=lambda x: -x[1])[:5]
+            print(f"  Heaviest annotations: {', '.join(f'slide {s} ({w:.0%})' for s, w in top_slides)}")
+
+    except Exception as e:
+        print(f"  Warning: Could not compare PDFs for annotations: {e}")
+        print(f"  Proceeding without annotation data.")
+
+    return annotation_weights
+
+
 def compute_similarity_matrix(segments, slides):
     """Compute TF-IDF cosine similarity between transcript segments and slides."""
     from sklearn.feature_extraction.text import TfidfVectorizer
@@ -111,7 +185,7 @@ def compute_similarity_matrix(segments, slides):
     return similarity
 
 
-def detect_transition_cues(text):
+def detect_transition_cue(text):
     """Check if a transcript segment contains slide transition cues."""
     cues = [
         r"\bnext slide\b",
@@ -130,20 +204,26 @@ def detect_transition_cues(text):
 
 
 def align_segments_to_slides(segments, slides, similarity_matrix,
+                              annotation_weights=None,
                               similarity_threshold=0.15, max_backtrack=3):
     """
     Assign each transcript segment to a slide using content similarity
-    with a monotonic temporal constraint.
+    with a monotonic temporal constraint, boosted by annotation evidence.
 
     The algorithm:
     1. For each segment, find the best-matching slide by cosine similarity
-    2. Apply a monotonic constraint: the assigned slide can only move forward
+    2. Boost scores for annotated slides (annotations = ground truth that
+       the professor was actively on that slide)
+    3. Apply a monotonic constraint: the assigned slide can only move forward
        or backtrack by at most max_backtrack slides from the current position
-    3. Use temporal prior: weight similarity by proximity to expected position
+    4. Use temporal prior: weight similarity by proximity to expected position
        (early recording -> early slides)
-    4. Detect transition cues to trigger slide advancement
+    5. Detect transition cues to trigger slide advancement
     """
     import numpy as np
+
+    if annotation_weights is None:
+        annotation_weights = {}
 
     n_segments = len(segments)
     n_slides = len(slides)
@@ -151,6 +231,12 @@ def align_segments_to_slides(segments, slides, similarity_matrix,
     current_slide_idx = 0
 
     total_duration = segments[-1]["end"] if segments else 1.0
+
+    # Annotation boost: annotated slides get a significant similarity bonus.
+    # This is the strongest signal — if you wrote on a slide, the professor
+    # was definitely on it. We scale the boost by annotation density (heavier
+    # annotations = more time spent = stronger pull).
+    ANNOTATION_BOOST = 0.25  # strong bonus for annotated slides
 
     for i, seg in enumerate(segments):
         # Temporal prior: expected slide position based on time progress
@@ -174,15 +260,29 @@ def align_segments_to_slides(segments, slides, similarity_matrix,
             temporal_bonus = np.exp(-0.5 * ((j - expected_slide_idx) / max(n_slides * 0.15, 1)) ** 2)
             sims[j] += 0.05 * temporal_bonus
 
+        # Add annotation boost: annotated slides are confirmed active slides.
+        # The boost is proportional to annotation density — heavy annotations
+        # pull harder than light ones.
+        for j in range(n_slides):
+            slide_num = slides[j]["slide_number"]
+            if slide_num in annotation_weights:
+                weight = annotation_weights[slide_num]
+                sims[j] += ANNOTATION_BOOST * weight
+
         # Check for transition cues
-        has_transition = detect_transition_cues(seg["text"])
+        has_transition = detect_transition_cue(seg["text"])
 
         best_slide_idx = int(np.argmax(sims))
         best_sim = similarity_matrix[i][best_slide_idx]
 
-        # If similarity is too low, keep current slide (professor is elaborating)
+        # If similarity is too low BUT the current slide is annotated, stay on it
+        # (professor is elaborating verbally on content you're writing about)
+        current_is_annotated = slides[current_slide_idx]["slide_number"] in annotation_weights
         if best_sim < similarity_threshold and not has_transition:
-            best_slide_idx = current_slide_idx
+            if current_is_annotated:
+                best_slide_idx = current_slide_idx
+            else:
+                best_slide_idx = current_slide_idx
 
         # If transition cue detected and we haven't moved, nudge forward
         if has_transition and best_slide_idx <= current_slide_idx:
@@ -194,6 +294,7 @@ def align_segments_to_slides(segments, slides, similarity_matrix,
             "slide_index": best_slide_idx,
             "similarity": float(best_sim),
             "has_transition_cue": has_transition,
+            "annotation_boosted": slides[best_slide_idx]["slide_number"] in annotation_weights,
         })
 
         current_slide_idx = best_slide_idx
@@ -201,8 +302,11 @@ def align_segments_to_slides(segments, slides, similarity_matrix,
     return assignments
 
 
-def merge_into_slide_blocks(segments, slides, assignments):
+def merge_into_slide_blocks(segments, slides, assignments, annotation_weights=None):
     """Group consecutive segments assigned to the same slide into blocks."""
+    if annotation_weights is None:
+        annotation_weights = {}
+
     blocks = []
     current_block = None
 
@@ -220,6 +324,8 @@ def merge_into_slide_blocks(segments, slides, assignments):
                 "transcript_segments": [seg["text"]],
                 "avg_similarity": assign["similarity"],
                 "n_segments": 1,
+                "has_annotations": slide_num in annotation_weights,
+                "annotation_density": annotation_weights.get(slide_num, 0.0),
             }
         else:
             current_block["end_time"] = seg["end"]
@@ -238,7 +344,13 @@ def merge_into_slide_blocks(segments, slides, assignments):
 
 
 def detect_emphasis(blocks):
-    """Analyze blocks to detect professor emphasis signals."""
+    """Analyze blocks to detect professor emphasis signals.
+
+    Annotations are treated as the strongest emphasis indicator — if you
+    wrote on a slide, the professor was actively discussing it and you found
+    it important enough to annotate. Annotation density (how much you wrote)
+    further scales the emphasis score.
+    """
     emphasis_cues = [
         (r"\b(?:this is (?:really |very )?important)\b", "important"),
         (r"\b(?:you need to know|you should know)\b", "need to know"),
@@ -259,11 +371,23 @@ def detect_emphasis(blocks):
             if re.search(pattern, full_text):
                 cues_found.append(label)
 
+        # Annotation-based emphasis: you wrote on this slide = confirmed important
+        has_annotations = block.get("has_annotations", False)
+        annotation_density = block.get("annotation_density", 0.0)
+        if has_annotations:
+            cues_found.append("annotated")
+
+        # Emphasis score: annotation density is a strong signal, plus verbal cues + time
+        annotation_bonus = annotation_density * 2.0 if has_annotations else 0.0
+        emphasis_score = len(cues_found) + (duration / 120) + annotation_bonus
+
         emphasis_report.append({
             "slide_number": block["slide_number"],
             "duration_seconds": round(duration, 1),
             "emphasis_cues": cues_found,
-            "emphasis_score": len(cues_found) + (duration / 120),  # cues + time weight
+            "emphasis_score": emphasis_score,
+            "has_annotations": has_annotations,
+            "annotation_density": round(annotation_density, 2),
         })
 
     return emphasis_report
@@ -331,8 +455,17 @@ def generate_slide_alignment_md(blocks, emphasis, recording_name, slides_name,
         lines.append(f"> {transcript}")
         lines.append(f"")
 
+        # Annotation indicator
+        if block.get("has_annotations"):
+            density = block.get("annotation_density", 0)
+            density_label = "heavy" if density > 0.6 else "moderate" if density > 0.3 else "light"
+            lines.append(f"**Your annotations:** Yes ({density_label} annotations)")
+            lines.append(f"")
+
         # Similarity confidence
-        confidence = "high" if block["avg_similarity"] > 0.3 else \
+        has_ann = block.get("has_annotations", False)
+        confidence = "high (annotated)" if has_ann else \
+                     "high" if block["avg_similarity"] > 0.3 else \
                      "medium" if block["avg_similarity"] > 0.15 else "low"
         lines.append(f"*Alignment confidence: {confidence}*")
         lines.append(f"")
@@ -366,11 +499,12 @@ def generate_emphasis_report_md(emphasis, slides):
 
     lines.append("### All Slides by Time Spent")
     lines.append("")
-    lines.append("| Slide | Duration | Emphasis Cues |")
-    lines.append("|-------|----------|---------------|")
+    lines.append("| Slide | Duration | Annotated | Emphasis Cues |")
+    lines.append("|-------|----------|-----------|---------------|")
     for e in sorted(emphasis, key=lambda x: x["slide_number"]):
-        cues = ", ".join(e["emphasis_cues"]) if e["emphasis_cues"] else "-"
-        lines.append(f"| {e['slide_number']} | {format_duration(e['duration_seconds'])} | {cues} |")
+        cues = ", ".join(c for c in e["emphasis_cues"] if c != "annotated") if e["emphasis_cues"] else "-"
+        annotated = "Yes" if e.get("has_annotations") else "-"
+        lines.append(f"| {e['slide_number']} | {format_duration(e['duration_seconds'])} | {annotated} | {cues} |")
 
     return "\n".join(lines)
 
@@ -417,7 +551,8 @@ def generate_enriched_summary_md(blocks, emphasis, slides, notes_text=None):
         duration = block["end_time"] - block["start_time"]
         start = format_timestamp(block["start_time"])
 
-        lines.append(f"### Slide {slide_num} (at {start}, {format_duration(duration)})")
+        ann_tag = " (annotated)" if block.get("has_annotations") else ""
+        lines.append(f"### Slide {slide_num} (at {start}, {format_duration(duration)}){ann_tag}")
         lines.append("")
 
         if block["slide_text"]:
@@ -429,6 +564,10 @@ def generate_enriched_summary_md(blocks, emphasis, slides, notes_text=None):
         lines.append(f"**Professor explained:**")
         lines.append(f"{transcript}")
         lines.append("")
+
+        if block.get("has_annotations"):
+            lines.append(f"*You annotated this slide — professor was actively discussing it.*")
+            lines.append("")
 
     # Append user notes if provided
     if notes_text:
@@ -519,29 +658,38 @@ def main():
     check_dependencies()
 
     # Step 1: Transcribe
-    print("\n[1/5] Transcribing recording...")
+    print("\n[1/6] Transcribing recording...")
     segments = transcribe_recording(recording_path, args.whisper_model)
 
     # Step 2: Extract slide text
-    print("\n[2/5] Extracting slide text...")
+    print("\n[2/6] Extracting slide text...")
     slides = extract_slide_texts(slides_path)
 
-    # Step 3: Compute similarity and align
-    print("\n[3/5] Computing alignment...")
+    # Step 3: Detect annotations (compare original vs annotated slides)
+    print("\n[3/6] Detecting annotations...")
+    annotation_weights = detect_annotated_slides(slides_path, args.annotated_slides)
+    if annotation_weights:
+        print(f"  Annotation data will boost alignment for {len(annotation_weights)} slides")
+    else:
+        print("  No annotated slides provided or no annotations detected")
+
+    # Step 4: Compute similarity and align
+    print("\n[4/6] Computing alignment...")
     similarity_matrix = compute_similarity_matrix(segments, slides)
     assignments = align_segments_to_slides(
         segments, slides, similarity_matrix,
+        annotation_weights=annotation_weights,
         similarity_threshold=args.similarity_threshold,
         max_backtrack=args.max_backtrack,
     )
 
-    # Step 4: Merge into slide blocks and analyze emphasis
-    print("\n[4/5] Merging and analyzing emphasis...")
-    blocks = merge_into_slide_blocks(segments, slides, assignments)
+    # Step 5: Merge into slide blocks and analyze emphasis
+    print("\n[5/6] Merging and analyzing emphasis...")
+    blocks = merge_into_slide_blocks(segments, slides, assignments, annotation_weights)
     emphasis = detect_emphasis(blocks)
 
-    # Step 5: Generate outputs
-    print("\n[5/5] Generating output files...")
+    # Step 6: Generate outputs
+    print("\n[6/6] Generating output files...")
 
     notes_text = load_notes(args.notes)
     recording_name = recording_path.name
@@ -574,8 +722,10 @@ def main():
     print("\n" + "=" * 60)
     print("ALIGNMENT COMPLETE")
     print("=" * 60)
+    annotated_count = sum(1 for b in blocks if b.get("has_annotations"))
     print(f"  Recording:  {recording_name}")
     print(f"  Slides:     {slides_name} ({len(slides)} slides)")
+    print(f"  Annotated:  {annotated_count} slides have your annotations")
     print(f"  Segments:   {len(segments)} transcript segments")
     print(f"  Blocks:     {len(blocks)} slide blocks")
     print(f"  Duration:   {format_timestamp(segments[-1]['end'])}")

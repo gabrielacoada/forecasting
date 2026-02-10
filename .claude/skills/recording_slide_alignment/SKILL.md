@@ -67,6 +67,25 @@ The alignment uses a **content-matching + monotonic temporal constraint** approa
 - The recording starts roughly when the professor starts the slide deck
 - Content overlap between what's spoken and what's on the slide is the strongest signal
 - Keyword matching (technical terms, formula names, example names) is more reliable than generic words
+- **Annotations are ground truth**: If you wrote on or annotated a slide, the professor was actively on that slide at that time. Annotated slides are confirmed "active" slides and should be weighted heavily in alignment
+
+### Using Your Annotations as Alignment Anchors
+
+Your handwritten annotations on slides (from Notability) are the **strongest signal** for alignment — stronger than transcript-to-slide text matching. The reasoning is simple: you only write on a slide while the professor is talking about it.
+
+**How this works:**
+1. Compare the **original slides PDF** to the **annotated slides PDF** page by page
+2. Any slide where the annotated version differs from the original (i.e., you wrote something) is marked as a **confirmed active slide**
+3. Slides with **more annotation content** (heavier writing, more ink) likely had the professor on them for longer
+4. Slides with **no annotations** were either skipped, shown briefly, or the professor talked without you needing to write
+5. These annotation anchors constrain the alignment — transcript segments near an annotated slide are strongly pulled toward it
+
+**Annotation density as a time proxy:**
+- Heavy annotations (lots of writing, diagrams, underlines) → professor spent significant time here
+- Light annotations (a checkmark, one word) → briefly discussed or a quick note to yourself
+- No annotations → possibly skipped, or pure listening (Q&A, verbal-only explanation)
+
+**This means:** Even if the transcript text poorly matches a slide's content (e.g., the professor went on a verbal tangent while on slide 15), the annotation on slide 15 confirms the professor was there. The alignment should trust annotation evidence over text-matching scores when they conflict.
 
 ### Handling Edge Cases
 - **Professor skips slides**: Some slides get no transcript segments — that's fine, they're marked as "skipped or briefly shown"
@@ -192,6 +211,8 @@ Use the alignment to find where the professor discussed those concepts."
 The alignment skill also identifies **what the professor emphasized**, which is invaluable for exam prep:
 
 ### Emphasis Signals
+- **Your annotations**: If you wrote on a slide, the professor was actively discussing it — annotated slides are confirmed important
+- **Annotation density**: Slides with heavy annotations (lots of writing, diagrams, underlines) received the most professor attention
 - **Time spent**: If 3 slides take 20 minutes, that topic matters
 - **Verbal cues**: "This is important", "You need to know this", "This will come up again"
 - **Repetition**: Professor revisits a concept or re-explains it
