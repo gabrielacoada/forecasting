@@ -12,9 +12,14 @@ Weekly lecture materials organized by week number.
 week-XX-topic-name/
 ├── slides-original.pdf       # Prof's slides (as uploaded to Canvas/email)
 ├── slides-annotated.pdf      # Your Notability export with handwritten notes
+├── recording.m4a             # Lecture recording (audio or video)
 ├── summary.md                # AI-generated or manual summary
 ├── key-concepts.md           # Main takeaways
-└── code-examples.ipynb       # Any code from class
+├── code-examples.ipynb       # Any code from class
+├── slide-alignment.md        # (Generated) Timestamped recording-to-slide guide
+├── transcript.md             # (Generated) Full lecture transcript
+├── enriched-summary.md       # (Generated) Slides + transcript + your notes
+└── alignment-data.json       # (Generated) Machine-readable alignment data
 ```
 
 **Naming convention:**
@@ -26,8 +31,10 @@ week-XX-topic-name/
 **Workflow:**
 1. After each lecture, export annotated slides from Notability to PDF
 2. Save to `week-XX/slides-annotated.pdf`
-3. Optionally: Ask Claude to summarize key points
-4. Optionally: Type up important concepts in `key-concepts.md`
+3. Save your lecture recording to `week-XX/recording.m4a` (or .mp3/.mp4)
+4. Run `/align_recording week-XX` to generate timestamped slide alignment
+5. Optionally: Ask Claude to summarize key points
+6. Optionally: Type up important concepts in `key-concepts.md`
 
 ### resources/
 External materials referenced in class.
@@ -41,6 +48,17 @@ resources/
 ```
 
 ## Using AI for Study
+
+### Align Recording with Slides
+```bash
+# After uploading recording + slides to the week folder:
+/align_recording week-05
+
+# This generates:
+#   slide-alignment.md   — timestamped guide (which slide at which time)
+#   transcript.md        — full lecture transcript
+#   enriched-summary.md  — combined slides + transcript + your notes
+```
 
 ### Summarize Lecture
 ```bash

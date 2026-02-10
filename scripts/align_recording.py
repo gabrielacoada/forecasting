@@ -1,0 +1,910 @@
+#!/usr/bin/env python3
+"""
+Recording-to-Slide Alignment Script
+
+Aligns lecture recordings with PDF slides to produce a timestamped study guide.
+Uses whisper for transcription, pdfplumber for slide text extraction, and
+TF-IDF cosine similarity for content matching with a monotonic temporal constraint.
+
+Usage:
+    python scripts/align_recording.py \
+        --recording course-materials/lectures/week-05/recording.m4a \
+        --slides course-materials/lectures/week-05/Dynamics+Causal+Effects.pdf \
+        --output-dir course-materials/lectures/week-05/ \
+        --whisper-model base
+"""
+
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+
+
+def check_dependencies():
+    """Check and report missing dependencies."""
+    missing = []
+    for pkg, import_name in [
+        ("openai-whisper", "whisper"),
+        ("pdfplumber", "pdfplumber"),
+        ("scikit-learn", "sklearn"),
+    ]:
+        try:
+            __import__(import_name)
+        except ImportError:
+            missing.append(pkg)
+    if missing:
+        print("Missing dependencies. Install with:")
+        print(f"  pip install {' '.join(missing)}")
+        sys.exit(1)
+
+
+def transcribe_recording(recording_path, model_name="base"):
+    """Transcribe audio/video using whisper, returning timestamped segments."""
+    import whisper
+
+    print(f"Loading whisper model '{model_name}'...")
+    model = whisper.load_model(model_name)
+
+    print(f"Transcribing {recording_path}...")
+    result = model.transcribe(
+        str(recording_path),
+        verbose=False,
+        word_timestamps=True,
+    )
+
+    segments = []
+    for seg in result["segments"]:
+        segments.append({
+            "id": seg["id"],
+            "start": seg["start"],
+            "end": seg["end"],
+            "text": seg["text"].strip(),
+        })
+
+    print(f"  Transcribed {len(segments)} segments, "
+          f"total duration: {format_timestamp(segments[-1]['end'])}")
+    return segments
+
+
+def extract_slide_texts(slides_path):
+    """Extract text content from each page/slide of a PDF."""
+    import pdfplumber
+
+    print(f"Extracting text from {slides_path}...")
+    slides = []
+    with pdfplumber.open(str(slides_path)) as pdf:
+        for i, page in enumerate(pdf.pages):
+            text = page.extract_text() or ""
+            slides.append({
+                "slide_number": i + 1,
+                "text": text.strip(),
+                "word_count": len(text.split()),
+            })
+
+    print(f"  Extracted text from {len(slides)} slides")
+    return slides
+
+
+def detect_annotated_slides(original_path, annotated_path):
+    """
+    Compare original slides to annotated slides to find which slides have
+    handwritten annotations. Annotated slides are ground truth — if you wrote
+    on a slide, the professor was actively discussing it.
+
+    Handles inserted pages: the annotated PDF may have MORE pages than the
+    original because the user sometimes adds blank pages to write down what
+    the professor puts on the board. These inserted "board note" pages don't
+    match any original slide and get associated with the nearest preceding slide.
+
+    Returns a tuple:
+      - annotation_weights: dict mapping slide_number -> weight (0.0 to 1.0)
+      - board_notes: list of dicts with inserted page info (page index, text,
+        associated slide number)
+    """
+    import pdfplumber
+    from difflib import SequenceMatcher
+
+    if not annotated_path or not Path(annotated_path).exists():
+        return {}, []
+
+    print(f"Detecting annotations by comparing original vs annotated slides...")
+
+    annotation_weights = {}
+    board_notes = []
+
+    try:
+        with pdfplumber.open(str(original_path)) as orig_pdf, \
+             pdfplumber.open(str(annotated_path)) as ann_pdf:
+
+            n_orig = len(orig_pdf.pages)
+            n_ann = len(ann_pdf.pages)
+
+            # Extract text from all original slides
+            orig_texts = []
+            for page in orig_pdf.pages:
+                orig_texts.append((page.extract_text() or "").strip())
+
+            # Extract text + object counts from all annotated pages
+            ann_pages = []
+            for page in ann_pdf.pages:
+                ann_pages.append({
+                    "text": (page.extract_text() or "").strip(),
+                    "n_lines": len(page.lines or []),
+                    "n_curves": len(page.curves or []),
+                    "n_rects": len(page.rects or []),
+                })
+
+            if n_ann == n_orig:
+                # Same page count: simple 1-to-1 comparison
+                print(f"  Page counts match ({n_orig}), using direct comparison")
+                page_mapping = list(range(n_orig))
+            else:
+                # Different page count: user inserted extra pages.
+                # Match each annotated page to its best original slide by text.
+                # Pages that don't match any original slide are "board notes."
+                print(f"  Page count differs (original: {n_orig}, annotated: {n_ann})")
+                print(f"  Matching pages by content to detect inserted board-note pages...")
+                page_mapping = _match_annotated_to_original(orig_texts, ann_pages)
+
+            # Now compare matched pages and detect board notes
+            last_matched_slide = 0
+            for ann_idx, orig_idx in enumerate(page_mapping):
+                ann_page = ann_pages[ann_idx]
+
+                if orig_idx is None:
+                    # This annotated page doesn't match any original slide.
+                    # It's an inserted "board note" page — associate it with
+                    # the most recent matched slide (professor was on that slide
+                    # when they started writing on the board).
+                    board_notes.append({
+                        "annotated_page": ann_idx + 1,
+                        "associated_slide": last_matched_slide,
+                        "text": ann_page["text"],
+                        "has_content": bool(ann_page["text"] or
+                                            ann_page["n_lines"] or
+                                            ann_page["n_curves"]),
+                    })
+                    # Board notes also boost the associated slide's weight
+                    if last_matched_slide > 0:
+                        ink = ann_page["n_lines"] * 5 + ann_page["n_curves"] * 3
+                        text_len = len(ann_page["text"])
+                        board_weight = max(ink, text_len, 10)  # always significant
+                        annotation_weights[last_matched_slide] = \
+                            annotation_weights.get(last_matched_slide, 0) + board_weight
+                    continue
+
+                # Matched page: compare to detect annotations added on top
+                slide_num = orig_idx + 1
+                last_matched_slide = slide_num
+                orig_text = orig_texts[orig_idx]
+
+                text_diff = len(ann_page["text"]) - len(orig_text)
+
+                # We don't have original object counts readily here, so estimate
+                # by checking if annotated page has drawing objects at all
+                ink_objects = ann_page["n_lines"] + ann_page["n_curves"] + ann_page["n_rects"]
+
+                # Heuristic: original slides typically have few lines/curves
+                # (mostly text). Any significant ink objects likely = annotations.
+                # A more precise approach would cache orig object counts, but
+                # this works well enough since Notability adds many curve objects.
+                total_additions = max(0, text_diff) + ink_objects * 2
+
+                if total_additions > 0:
+                    annotation_weights[slide_num] = \
+                        annotation_weights.get(slide_num, 0) + total_additions
+
+            # Normalize weights to 0.0 - 1.0 range
+            if annotation_weights:
+                max_weight = max(annotation_weights.values())
+                if max_weight > 0:
+                    annotation_weights = {
+                        k: v / max_weight for k, v in annotation_weights.items()
+                    }
+
+        annotated_count = sum(1 for w in annotation_weights.values() if w > 0)
+        print(f"  Found annotations on {annotated_count}/{n_orig} slides")
+        if board_notes:
+            print(f"  Found {len(board_notes)} inserted board-note pages")
+            for bn in board_notes:
+                preview = (bn["text"][:60] + "...") if bn["text"] else "(ink only)"
+                print(f"    - Page {bn['annotated_page']} -> "
+                      f"associated with slide {bn['associated_slide']}: {preview}")
+        if annotated_count > 0:
+            top_slides = sorted(annotation_weights.items(), key=lambda x: -x[1])[:5]
+            print(f"  Heaviest annotations: "
+                  f"{', '.join(f'slide {s} ({w:.0%})' for s, w in top_slides)}")
+
+    except Exception as e:
+        print(f"  Warning: Could not compare PDFs for annotations: {e}")
+        print(f"  Proceeding without annotation data.")
+
+    return annotation_weights, board_notes
+
+
+def _match_annotated_to_original(orig_texts, ann_pages):
+    """
+    Match annotated PDF pages to original slides by text similarity.
+    Returns a list where index = annotated page index, value = original slide
+    index (0-based) or None if the page is an inserted board-note page.
+
+    Uses greedy forward matching: walks through annotated pages and tries to
+    match each to the next expected original slide. If the text similarity is
+    too low, the page is marked as inserted (board note).
+    """
+    from difflib import SequenceMatcher
+
+    MATCH_THRESHOLD = 0.4  # min similarity to consider a match
+
+    mapping = []
+    orig_idx = 0
+    n_orig = len(orig_texts)
+
+    for ann_idx, ann_page in enumerate(ann_pages):
+        if orig_idx >= n_orig:
+            # All original slides matched; remaining annotated pages are board notes
+            mapping.append(None)
+            continue
+
+        ann_text = ann_page["text"]
+
+        # Compare to current expected original slide
+        sim = SequenceMatcher(None, orig_texts[orig_idx], ann_text).ratio()
+
+        # Also check next original slide (in case a board note was inserted)
+        next_sim = 0.0
+        if orig_idx + 1 < n_orig:
+            next_sim = SequenceMatcher(None, orig_texts[orig_idx + 1], ann_text).ratio()
+
+        if sim >= MATCH_THRESHOLD:
+            # Good match to current original slide
+            mapping.append(orig_idx)
+            orig_idx += 1
+        elif next_sim >= MATCH_THRESHOLD and next_sim > sim:
+            # Better match to NEXT original slide — current annotated page might
+            # be a board note, or the professor skipped a slide. Check if the
+            # page has very little original-slide text (= board note).
+            # Skip the unmatched original slide and match to next.
+            mapping.append(None)  # this page is a board note
+            # Don't advance orig_idx yet — we'll match it next iteration
+        else:
+            # Low similarity: this is an inserted board-note page
+            mapping.append(None)
+
+    return mapping
+
+
+def compute_similarity_matrix(segments, slides):
+    """Compute TF-IDF cosine similarity between transcript segments and slides."""
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+
+    segment_texts = [s["text"] for s in segments]
+    slide_texts = [s["text"] for s in slides]
+
+    # Build TF-IDF on combined corpus (slides first, then segments)
+    all_texts = slide_texts + segment_texts
+    vectorizer = TfidfVectorizer(
+        stop_words="english",
+        min_df=1,
+        max_df=0.95,
+        ngram_range=(1, 2),
+    )
+    tfidf_matrix = vectorizer.fit_transform(all_texts)
+
+    slide_vectors = tfidf_matrix[: len(slides)]
+    segment_vectors = tfidf_matrix[len(slides):]
+
+    similarity = cosine_similarity(segment_vectors, slide_vectors)
+    return similarity
+
+
+def detect_transition_cue(text):
+    """Check if a transcript segment contains slide transition cues."""
+    cues = [
+        r"\bnext slide\b",
+        r"\bmoving on\b",
+        r"\blet'?s look at\b",
+        r"\blet'?s move\b",
+        r"\bnow let'?s\b",
+        r"\bturning to\b",
+        r"\bon this slide\b",
+        r"\bas you can see\b",
+        r"\blooking at this\b",
+        r"\bso now\b",
+    ]
+    lower = text.lower()
+    return any(re.search(cue, lower) for cue in cues)
+
+
+def align_segments_to_slides(segments, slides, similarity_matrix,
+                              annotation_weights=None,
+                              similarity_threshold=0.15, max_backtrack=3):
+    """
+    Assign each transcript segment to a slide using content similarity
+    with a monotonic temporal constraint, boosted by annotation evidence.
+
+    The algorithm:
+    1. For each segment, find the best-matching slide by cosine similarity
+    2. Boost scores for annotated slides (annotations = ground truth that
+       the professor was actively on that slide)
+    3. Apply a monotonic constraint: the assigned slide can only move forward
+       or backtrack by at most max_backtrack slides from the current position
+    4. Use temporal prior: weight similarity by proximity to expected position
+       (early recording -> early slides)
+    5. Detect transition cues to trigger slide advancement
+    """
+    import numpy as np
+
+    if annotation_weights is None:
+        annotation_weights = {}
+
+    n_segments = len(segments)
+    n_slides = len(slides)
+    assignments = []
+    current_slide_idx = 0
+
+    total_duration = segments[-1]["end"] if segments else 1.0
+
+    # Annotation boost: annotated slides get a significant similarity bonus.
+    # This is the strongest signal — if you wrote on a slide, the professor
+    # was definitely on it. We scale the boost by annotation density (heavier
+    # annotations = more time spent = stronger pull).
+    ANNOTATION_BOOST = 0.25  # strong bonus for annotated slides
+
+    for i, seg in enumerate(segments):
+        # Temporal prior: expected slide position based on time progress
+        time_progress = seg["start"] / total_duration
+        expected_slide_idx = int(time_progress * n_slides)
+
+        # Allowed slide range: current position to a bit ahead, with small backtrack
+        min_slide = max(0, current_slide_idx - max_backtrack)
+        max_slide = min(n_slides - 1, current_slide_idx + max(5, n_slides // 4))
+
+        # Get similarities for allowed range
+        sims = similarity_matrix[i].copy()
+
+        # Zero out slides outside allowed range
+        mask = np.zeros(n_slides)
+        mask[min_slide: max_slide + 1] = 1.0
+        sims = sims * mask
+
+        # Add temporal prior bonus (small gaussian centered on expected position)
+        for j in range(n_slides):
+            temporal_bonus = np.exp(-0.5 * ((j - expected_slide_idx) / max(n_slides * 0.15, 1)) ** 2)
+            sims[j] += 0.05 * temporal_bonus
+
+        # Add annotation boost: annotated slides are confirmed active slides.
+        # The boost is proportional to annotation density — heavy annotations
+        # pull harder than light ones.
+        for j in range(n_slides):
+            slide_num = slides[j]["slide_number"]
+            if slide_num in annotation_weights:
+                weight = annotation_weights[slide_num]
+                sims[j] += ANNOTATION_BOOST * weight
+
+        # Check for transition cues
+        has_transition = detect_transition_cue(seg["text"])
+
+        best_slide_idx = int(np.argmax(sims))
+        best_sim = similarity_matrix[i][best_slide_idx]
+
+        # If similarity is too low BUT the current slide is annotated, stay on it
+        # (professor is elaborating verbally on content you're writing about)
+        current_is_annotated = slides[current_slide_idx]["slide_number"] in annotation_weights
+        if best_sim < similarity_threshold and not has_transition:
+            if current_is_annotated:
+                best_slide_idx = current_slide_idx
+            else:
+                best_slide_idx = current_slide_idx
+
+        # If transition cue detected and we haven't moved, nudge forward
+        if has_transition and best_slide_idx <= current_slide_idx:
+            best_slide_idx = min(current_slide_idx + 1, n_slides - 1)
+
+        assignments.append({
+            "segment_id": seg["id"],
+            "slide_number": slides[best_slide_idx]["slide_number"],
+            "slide_index": best_slide_idx,
+            "similarity": float(best_sim),
+            "has_transition_cue": has_transition,
+            "annotation_boosted": slides[best_slide_idx]["slide_number"] in annotation_weights,
+        })
+
+        current_slide_idx = best_slide_idx
+
+    return assignments
+
+
+def merge_into_slide_blocks(segments, slides, assignments, annotation_weights=None):
+    """Group consecutive segments assigned to the same slide into blocks."""
+    if annotation_weights is None:
+        annotation_weights = {}
+
+    blocks = []
+    current_block = None
+
+    for seg, assign in zip(segments, assignments):
+        slide_num = assign["slide_number"]
+
+        if current_block is None or current_block["slide_number"] != slide_num:
+            if current_block is not None:
+                blocks.append(current_block)
+            current_block = {
+                "slide_number": slide_num,
+                "slide_text": slides[assign["slide_index"]]["text"],
+                "start_time": seg["start"],
+                "end_time": seg["end"],
+                "transcript_segments": [seg["text"]],
+                "avg_similarity": assign["similarity"],
+                "n_segments": 1,
+                "has_annotations": slide_num in annotation_weights,
+                "annotation_density": annotation_weights.get(slide_num, 0.0),
+            }
+        else:
+            current_block["end_time"] = seg["end"]
+            current_block["transcript_segments"].append(seg["text"])
+            current_block["avg_similarity"] = (
+                (current_block["avg_similarity"] * current_block["n_segments"]
+                 + assign["similarity"])
+                / (current_block["n_segments"] + 1)
+            )
+            current_block["n_segments"] += 1
+
+    if current_block is not None:
+        blocks.append(current_block)
+
+    return blocks
+
+
+def detect_emphasis(blocks):
+    """Analyze blocks to detect professor emphasis signals.
+
+    Annotations are treated as the strongest emphasis indicator — if you
+    wrote on a slide, the professor was actively discussing it and you found
+    it important enough to annotate. Annotation density (how much you wrote)
+    further scales the emphasis score.
+    """
+    emphasis_cues = [
+        (r"\b(?:this is (?:really |very )?important)\b", "important"),
+        (r"\b(?:you need to know|you should know)\b", "need to know"),
+        (r"\b(?:this will (?:come up|be on))\b", "exam hint"),
+        (r"\b(?:key (?:point|idea|concept|takeaway))\b", "key point"),
+        (r"\b(?:common mistake|students often)\b", "common mistake"),
+        (r"\b(?:remember this|don'?t forget)\b", "remember"),
+        (r"\b(?:pay attention|note that)\b", "attention"),
+    ]
+
+    emphasis_report = []
+    for block in blocks:
+        full_text = " ".join(block["transcript_segments"]).lower()
+        duration = block["end_time"] - block["start_time"]
+        cues_found = []
+
+        for pattern, label in emphasis_cues:
+            if re.search(pattern, full_text):
+                cues_found.append(label)
+
+        # Annotation-based emphasis: you wrote on this slide = confirmed important
+        has_annotations = block.get("has_annotations", False)
+        annotation_density = block.get("annotation_density", 0.0)
+        if has_annotations:
+            cues_found.append("annotated")
+
+        # Emphasis score: annotation density is a strong signal, plus verbal cues + time
+        annotation_bonus = annotation_density * 2.0 if has_annotations else 0.0
+        emphasis_score = len(cues_found) + (duration / 120) + annotation_bonus
+
+        emphasis_report.append({
+            "slide_number": block["slide_number"],
+            "duration_seconds": round(duration, 1),
+            "emphasis_cues": cues_found,
+            "emphasis_score": emphasis_score,
+            "has_annotations": has_annotations,
+            "annotation_density": round(annotation_density, 2),
+        })
+
+    return emphasis_report
+
+
+def load_notes(notes_path):
+    """Load optional typed notes file."""
+    if notes_path and Path(notes_path).exists():
+        return Path(notes_path).read_text(encoding="utf-8")
+    return None
+
+
+def format_timestamp(seconds):
+    """Format seconds as HH:MM:SS or MM:SS."""
+    h = int(seconds // 3600)
+    m = int((seconds % 3600) // 60)
+    s = int(seconds % 60)
+    if h > 0:
+        return f"{h}:{m:02d}:{s:02d}"
+    return f"{m:02d}:{s:02d}"
+
+
+def generate_slide_alignment_md(blocks, emphasis, recording_name, slides_name,
+                                 total_slides, notes_text=None, board_notes=None):
+    """Generate the main slide-alignment.md output."""
+    if board_notes is None:
+        board_notes = []
+
+    total_duration = blocks[-1]["end_time"] if blocks else 0
+
+    # Index board notes by associated slide for easy lookup
+    board_notes_by_slide = {}
+    for bn in board_notes:
+        slide = bn["associated_slide"]
+        board_notes_by_slide.setdefault(slide, []).append(bn)
+
+    lines = [
+        f"# Lecture Recording Alignment",
+        f"**Recording:** {recording_name} ({format_timestamp(total_duration)})",
+        f"**Slides:** {slides_name} ({total_slides} slides)",
+    ]
+    if board_notes:
+        lines.append(f"**Board notes:** {len(board_notes)} inserted pages detected")
+    lines.extend([
+        f"",
+        f"---",
+        f"",
+    ])
+
+    for block in blocks:
+        start = format_timestamp(block["start_time"])
+        end = format_timestamp(block["end_time"])
+        slide_num = block["slide_number"]
+        duration = block["end_time"] - block["start_time"]
+
+        # Find emphasis info for this block
+        emph = next((e for e in emphasis if e["slide_number"] == slide_num), None)
+        emphasis_markers = ""
+        if emph and emph["emphasis_cues"]:
+            markers = ", ".join(emph["emphasis_cues"])
+            emphasis_markers = f" **[{markers}]**"
+
+        lines.append(f"## Slide {slide_num} ({start} - {end}) [{format_duration(duration)}]{emphasis_markers}")
+        lines.append(f"")
+
+        # Slide text (truncated if very long)
+        slide_text = block["slide_text"]
+        if len(slide_text) > 500:
+            slide_text = slide_text[:500] + "..."
+        if slide_text:
+            lines.append(f"**Slide content:**")
+            lines.append(f"> {slide_text[:200]}")
+            lines.append(f"")
+
+        # Transcript
+        transcript = " ".join(block["transcript_segments"])
+        lines.append(f"**Professor said:**")
+        lines.append(f"> {transcript}")
+        lines.append(f"")
+
+        # Annotation indicator
+        if block.get("has_annotations"):
+            density = block.get("annotation_density", 0)
+            density_label = "heavy" if density > 0.6 else "moderate" if density > 0.3 else "light"
+            lines.append(f"**Your annotations:** Yes ({density_label} annotations)")
+            lines.append(f"")
+
+        # Board notes: extra pages you inserted for what the professor wrote on the board
+        slide_board_notes = board_notes_by_slide.get(slide_num, [])
+        if slide_board_notes:
+            lines.append(f"**Board notes** ({len(slide_board_notes)} page(s) "
+                         f"you added for board content):")
+            for bn in slide_board_notes:
+                if bn["text"]:
+                    lines.append(f"> {bn['text'][:300]}")
+                else:
+                    lines.append(f"> *(handwritten/diagram — no extractable text)*")
+            lines.append(f"")
+
+        # Similarity confidence
+        has_ann = block.get("has_annotations", False)
+        confidence = "high (annotated)" if has_ann else \
+                     "high" if block["avg_similarity"] > 0.3 else \
+                     "medium" if block["avg_similarity"] > 0.15 else "low"
+        lines.append(f"*Alignment confidence: {confidence}*")
+        lines.append(f"")
+        lines.append(f"---")
+        lines.append(f"")
+
+    return "\n".join(lines)
+
+
+def generate_emphasis_report_md(emphasis, slides):
+    """Generate the emphasis analysis section."""
+    sorted_emph = sorted(emphasis, key=lambda x: x["emphasis_score"], reverse=True)
+
+    lines = [
+        "## Professor Emphasis Analysis",
+        "",
+        "### High Emphasis Topics (most time + verbal cues)",
+        "",
+    ]
+
+    rank = 1
+    for e in sorted_emph[:5]:
+        slide = next((s for s in slides if s["slide_number"] == e["slide_number"]), None)
+        slide_preview = (slide["text"][:80] + "...") if slide and slide["text"] else "No text"
+        cues = ", ".join(e["emphasis_cues"]) if e["emphasis_cues"] else "time-based"
+        duration = format_duration(e["duration_seconds"])
+        lines.append(f"{rank}. **Slide {e['slide_number']}** - {duration}, cues: {cues}")
+        lines.append(f"   - Preview: {slide_preview}")
+        lines.append(f"")
+        rank += 1
+
+    lines.append("### All Slides by Time Spent")
+    lines.append("")
+    lines.append("| Slide | Duration | Annotated | Emphasis Cues |")
+    lines.append("|-------|----------|-----------|---------------|")
+    for e in sorted(emphasis, key=lambda x: x["slide_number"]):
+        cues = ", ".join(c for c in e["emphasis_cues"] if c != "annotated") if e["emphasis_cues"] else "-"
+        annotated = "Yes" if e.get("has_annotations") else "-"
+        lines.append(f"| {e['slide_number']} | {format_duration(e['duration_seconds'])} | {annotated} | {cues} |")
+
+    return "\n".join(lines)
+
+
+def generate_transcript_md(segments, recording_name):
+    """Generate the full transcript with timestamps."""
+    lines = [
+        f"# Full Transcript: {recording_name}",
+        f"",
+    ]
+
+    for seg in segments:
+        ts = format_timestamp(seg["start"])
+        lines.append(f"**[{ts}]** {seg['text']}")
+        lines.append(f"")
+
+    return "\n".join(lines)
+
+
+def generate_enriched_summary_md(blocks, emphasis, slides, notes_text=None,
+                                  board_notes=None):
+    """Generate an enriched summary combining slides, transcript, and notes."""
+    if board_notes is None:
+        board_notes = []
+
+    board_notes_by_slide = {}
+    for bn in board_notes:
+        slide = bn["associated_slide"]
+        board_notes_by_slide.setdefault(slide, []).append(bn)
+
+    lines = [
+        "# Enriched Lecture Summary",
+        "",
+        "This summary combines slide content, what the professor said, "
+        "and your annotations into a single study document.",
+        "",
+        "---",
+        "",
+    ]
+
+    # Add emphasis report
+    lines.append(generate_emphasis_report_md(emphasis, slides))
+    lines.append("")
+    lines.append("---")
+    lines.append("")
+
+    # Main content by slide
+    lines.append("## Slide-by-Slide Breakdown")
+    lines.append("")
+
+    for block in blocks:
+        slide_num = block["slide_number"]
+        duration = block["end_time"] - block["start_time"]
+        start = format_timestamp(block["start_time"])
+
+        ann_tag = " (annotated)" if block.get("has_annotations") else ""
+        lines.append(f"### Slide {slide_num} (at {start}, {format_duration(duration)}){ann_tag}")
+        lines.append("")
+
+        if block["slide_text"]:
+            lines.append(f"**On the slide:**")
+            lines.append(f"{block['slide_text'][:300]}")
+            lines.append("")
+
+        transcript = " ".join(block["transcript_segments"])
+        lines.append(f"**Professor explained:**")
+        lines.append(f"{transcript}")
+        lines.append("")
+
+        if block.get("has_annotations"):
+            lines.append(f"*You annotated this slide — professor was actively discussing it.*")
+            lines.append("")
+
+        # Board notes for this slide
+        slide_bns = board_notes_by_slide.get(block["slide_number"], [])
+        if slide_bns:
+            lines.append(f"**Board notes** (you added {len(slide_bns)} page(s) "
+                         f"for what the professor wrote on the board):")
+            for bn in slide_bns:
+                if bn["text"]:
+                    lines.append(f"> {bn['text'][:300]}")
+                else:
+                    lines.append(f"> *(handwritten/diagram)*")
+            lines.append("")
+
+    # Append user notes if provided
+    if notes_text:
+        lines.append("---")
+        lines.append("")
+        lines.append("## Your Typed Notes")
+        lines.append("")
+        lines.append(notes_text)
+
+    return "\n".join(lines)
+
+
+def format_duration(seconds):
+    """Format duration nicely."""
+    if seconds < 60:
+        return f"{int(seconds)}s"
+    m = int(seconds // 60)
+    s = int(seconds % 60)
+    return f"{m}m {s}s"
+
+
+def save_alignment_data(output_dir, blocks, assignments, emphasis, board_notes=None):
+    """Save machine-readable alignment data as JSON."""
+    data = {
+        "blocks": blocks,
+        "segment_assignments": assignments,
+        "emphasis": emphasis,
+        "board_notes": board_notes or [],
+    }
+    output_path = Path(output_dir) / "alignment-data.json"
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, default=str)
+    print(f"  Saved: {output_path}")
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Align lecture recording with PDF slides"
+    )
+    parser.add_argument(
+        "--recording", required=True,
+        help="Path to recording file (m4a, mp3, wav, mp4)"
+    )
+    parser.add_argument(
+        "--slides", required=True,
+        help="Path to slides PDF"
+    )
+    parser.add_argument(
+        "--output-dir", required=True,
+        help="Directory to write output files"
+    )
+    parser.add_argument(
+        "--whisper-model", default="base",
+        choices=["tiny", "base", "small", "medium", "large"],
+        help="Whisper model size (default: base)"
+    )
+    parser.add_argument(
+        "--annotated-slides", default=None,
+        help="Path to annotated slides PDF (optional)"
+    )
+    parser.add_argument(
+        "--notes", default=None,
+        help="Path to typed notes file (optional)"
+    )
+    parser.add_argument(
+        "--similarity-threshold", type=float, default=0.15,
+        help="Minimum cosine similarity for slide assignment (default: 0.15)"
+    )
+    parser.add_argument(
+        "--max-backtrack", type=int, default=3,
+        help="Max slides to backtrack in alignment (default: 3)"
+    )
+    args = parser.parse_args()
+
+    # Validate inputs
+    recording_path = Path(args.recording)
+    slides_path = Path(args.slides)
+    output_dir = Path(args.output_dir)
+
+    if not recording_path.exists():
+        print(f"Error: Recording not found: {recording_path}")
+        sys.exit(1)
+    if not slides_path.exists():
+        print(f"Error: Slides not found: {slides_path}")
+        sys.exit(1)
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    check_dependencies()
+
+    # Step 1: Transcribe
+    print("\n[1/6] Transcribing recording...")
+    segments = transcribe_recording(recording_path, args.whisper_model)
+
+    # Step 2: Extract slide text
+    print("\n[2/6] Extracting slide text...")
+    slides = extract_slide_texts(slides_path)
+
+    # Step 3: Detect annotations (compare original vs annotated slides)
+    print("\n[3/6] Detecting annotations...")
+    annotation_weights, board_notes = detect_annotated_slides(
+        slides_path, args.annotated_slides
+    )
+    if annotation_weights:
+        print(f"  Annotation data will boost alignment for {len(annotation_weights)} slides")
+    else:
+        print("  No annotated slides provided or no annotations detected")
+
+    # Step 4: Compute similarity and align
+    print("\n[4/6] Computing alignment...")
+    similarity_matrix = compute_similarity_matrix(segments, slides)
+    assignments = align_segments_to_slides(
+        segments, slides, similarity_matrix,
+        annotation_weights=annotation_weights,
+        similarity_threshold=args.similarity_threshold,
+        max_backtrack=args.max_backtrack,
+    )
+
+    # Step 5: Merge into slide blocks and analyze emphasis
+    print("\n[5/6] Merging and analyzing emphasis...")
+    blocks = merge_into_slide_blocks(segments, slides, assignments, annotation_weights)
+    emphasis = detect_emphasis(blocks)
+
+    # Step 6: Generate outputs
+    print("\n[6/6] Generating output files...")
+
+    notes_text = load_notes(args.notes)
+    recording_name = recording_path.name
+    slides_name = slides_path.name
+
+    # Main alignment file
+    alignment_md = generate_slide_alignment_md(
+        blocks, emphasis, recording_name, slides_name, len(slides),
+        notes_text, board_notes
+    )
+    alignment_path = output_dir / "slide-alignment.md"
+    alignment_path.write_text(alignment_md, encoding="utf-8")
+    print(f"  Saved: {alignment_path}")
+
+    # Full transcript
+    transcript_md = generate_transcript_md(segments, recording_name)
+    transcript_path = output_dir / "transcript.md"
+    transcript_path.write_text(transcript_md, encoding="utf-8")
+    print(f"  Saved: {transcript_path}")
+
+    # Enriched summary
+    enriched_md = generate_enriched_summary_md(
+        blocks, emphasis, slides, notes_text, board_notes
+    )
+    enriched_path = output_dir / "enriched-summary.md"
+    enriched_path.write_text(enriched_md, encoding="utf-8")
+    print(f"  Saved: {enriched_path}")
+
+    # Machine-readable JSON
+    save_alignment_data(output_dir, blocks, assignments, emphasis, board_notes)
+
+    # Summary
+    print("\n" + "=" * 60)
+    print("ALIGNMENT COMPLETE")
+    print("=" * 60)
+    annotated_count = sum(1 for b in blocks if b.get("has_annotations"))
+    print(f"  Recording:  {recording_name}")
+    print(f"  Slides:     {slides_name} ({len(slides)} slides)")
+    print(f"  Annotated:  {annotated_count} slides have your annotations")
+    if board_notes:
+        print(f"  Board notes: {len(board_notes)} inserted pages detected")
+    print(f"  Segments:   {len(segments)} transcript segments")
+    print(f"  Blocks:     {len(blocks)} slide blocks")
+    print(f"  Duration:   {format_timestamp(segments[-1]['end'])}")
+    print(f"\nOutputs:")
+    print(f"  {alignment_path}     <- Main timestamped guide")
+    print(f"  {transcript_path}        <- Full transcript")
+    print(f"  {enriched_path}   <- Combined study document")
+    print(f"  {output_dir / 'alignment-data.json'}  <- Machine-readable data")
+    print("=" * 60)
+
+
+if __name__ == "__main__":
+    main()
