@@ -67,6 +67,130 @@ def transcribe_recording(recording_path, model_name="base"):
     return segments
 
 
+def parse_transcript_file(transcript_path, target_duration=30):
+    """Parse an Otter.ai-style transcript file into timestamped segments.
+
+    Expected format:
+        Speaker N  M:SS
+        Text content of what was said...
+
+        Speaker N  M:SS
+        More text...
+
+    Otter.ai segments are often very long (full speaker turns spanning multiple
+    slides). This parser splits them into ~target_duration second chunks by
+    sentence to match the granularity that the alignment algorithm expects
+    (similar to Whisper's ~10-30s segments).
+
+    Returns segments in the same format as transcribe_recording().
+    """
+    text = Path(transcript_path).read_text(encoding="utf-8")
+
+    # Match speaker headers with timestamps like "Speaker 1  0:00" or "Unknown Speaker  1:37"
+    header_pattern = re.compile(
+        r'^(?:Speaker \d+|Unknown Speaker)\s+(\d+):(\d{2})\s*$', re.MULTILINE
+    )
+
+    headers = list(header_pattern.finditer(text))
+    if not headers:
+        print(f"Error: Could not find any speaker timestamps in {transcript_path}")
+        sys.exit(1)
+
+    # First pass: parse raw speaker turns
+    raw_turns = []
+    for i, match in enumerate(headers):
+        minutes = int(match.group(1))
+        seconds = int(match.group(2))
+        start_time = minutes * 60 + seconds
+
+        text_start = match.end()
+        text_end = headers[i + 1].start() if i + 1 < len(headers) else len(text)
+        segment_text = text[text_start:text_end].strip()
+
+        if not segment_text:
+            continue
+
+        if i + 1 < len(headers):
+            next_match = headers[i + 1]
+            end_time = int(next_match.group(1)) * 60 + int(next_match.group(2))
+        else:
+            end_time = start_time + max(10, len(segment_text) // 15)
+
+        raw_turns.append({
+            "start": float(start_time),
+            "end": float(end_time),
+            "text": segment_text,
+        })
+
+    # Second pass: split long turns into ~target_duration chunks by sentence
+    segments = []
+    sentence_split = re.compile(r'(?<=[.!?])\s+')
+
+    for turn in raw_turns:
+        duration = turn["end"] - turn["start"]
+
+        if duration <= target_duration * 1.5:
+            # Short enough — keep as-is
+            segments.append({
+                "id": len(segments),
+                "start": turn["start"],
+                "end": turn["end"],
+                "text": turn["text"],
+            })
+            continue
+
+        # Split into sentences and group into chunks
+        sentences = sentence_split.split(turn["text"])
+        if not sentences:
+            continue
+
+        total_chars = sum(len(s) for s in sentences)
+        if total_chars == 0:
+            continue
+
+        # Distribute time proportionally across sentences
+        chunk_text = []
+        chunk_chars = 0
+        chunk_start = turn["start"]
+        chars_so_far = 0
+
+        for sent in sentences:
+            chunk_text.append(sent)
+            chunk_chars += len(sent)
+            chars_so_far += len(sent)
+
+            # Estimate current time position
+            progress = chars_so_far / total_chars
+            current_time = turn["start"] + progress * duration
+
+            # Emit chunk if we've accumulated enough duration
+            estimated_chunk_duration = current_time - chunk_start
+            if estimated_chunk_duration >= target_duration and chunk_text:
+                segments.append({
+                    "id": len(segments),
+                    "start": chunk_start,
+                    "end": current_time,
+                    "text": " ".join(chunk_text),
+                })
+                chunk_text = []
+                chunk_chars = 0
+                chunk_start = current_time
+
+        # Emit remaining text
+        if chunk_text:
+            segments.append({
+                "id": len(segments),
+                "start": chunk_start,
+                "end": turn["end"],
+                "text": " ".join(chunk_text),
+            })
+
+    print(f"  Parsed {len(segments)} segments from transcript "
+          f"(split from {len(raw_turns)} speaker turns), "
+          f"total duration: {format_timestamp(segments[-1]['end'])}")
+    return segments
+
+
 def extract_slide_texts(slides_path):
     """Extract text content from each page/slide of a PDF."""
     import pdfplumber
@@ -769,8 +893,13 @@ def main():
         description="Align lecture recording with PDF slides"
     )
     parser.add_argument(
-        "--recording", required=True,
+        "--recording", default=None,
         help="Path to recording file (m4a, mp3, wav, mp4)"
+    )
+    parser.add_argument(
+        "--transcript", default=None,
+        help="Path to pre-transcribed text file (Otter.ai format). "
+             "Use instead of --recording to skip Whisper transcription."
     )
     parser.add_argument(
         "--slides", required=True,
@@ -804,12 +933,20 @@ def main():
     args = parser.parse_args()
 
     # Validate inputs
-    recording_path = Path(args.recording)
+    if not args.recording and not args.transcript:
+        print("Error: Provide either --recording (audio) or --transcript (text file)")
+        sys.exit(1)
+
+    transcript_path = Path(args.transcript) if args.transcript else None
+    recording_path = Path(args.recording) if args.recording else transcript_path
     slides_path = Path(args.slides)
     output_dir = Path(args.output_dir)
 
-    if not recording_path.exists():
-        print(f"Error: Recording not found: {recording_path}")
+    if transcript_path and not transcript_path.exists():
+        print(f"Error: Transcript not found: {transcript_path}")
+        sys.exit(1)
+    if args.recording and not Path(args.recording).exists():
+        print(f"Error: Recording not found: {args.recording}")
         sys.exit(1)
     if not slides_path.exists():
         print(f"Error: Slides not found: {slides_path}")
@@ -817,11 +954,14 @@ def main():
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    check_dependencies()
-
-    # Step 1: Transcribe
-    print("\n[1/6] Transcribing recording...")
-    segments = transcribe_recording(recording_path, args.whisper_model)
+    # Step 1: Transcribe or parse existing transcript
+    if transcript_path:
+        print("\n[1/6] Parsing pre-transcribed text...")
+        segments = parse_transcript_file(transcript_path)
+    else:
+        check_dependencies()
+        print("\n[1/6] Transcribing recording...")
+        segments = transcribe_recording(recording_path, args.whisper_model)
 
     # Step 2: Extract slide text
     print("\n[2/6] Extracting slide text...")

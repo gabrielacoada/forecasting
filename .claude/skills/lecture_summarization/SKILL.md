@@ -200,31 +200,36 @@ style NODE fill:#fff3e0   %% orange for warnings/caution
 
 ## Integration with Recording Alignment
 
-When a lecture recording is available, use the `recording_slide_alignment` skill to enrich summaries with timing and emphasis data.
+When an Otter.ai transcript of the lecture recording is available, use the `recording_slide_alignment` skill to enrich summaries with timing, emphasis, and annotation data.
 
 ### After Alignment
 ```bash
-# Enrich existing summary with recording insights
-claude "Using the slide-alignment.md and enriched-summary.md from week 5,
-update summary.md to highlight what the professor emphasized most
-(by time spent and verbal cues)"
+# Enrich existing summary with recording + annotation insights
+claude "Using the slide-alignment.md, enriched-summary.md, and annotation
+density data from week 5, enrich summary.md with:
+- Time allocation table (how long on each topic)
+- Heaviest annotations (which slides you wrote on most)
+- Key things the professor said that aren't on slides
+- Midterm hints from Q&A"
 ```
 
 ### Emphasis-Weighted Summary
-The recording alignment produces an emphasis report showing which slides the professor spent the most time on and where they used verbal emphasis cues. Use this to:
+The recording alignment produces an emphasis report showing which slides the professor spent the most time on, where they used verbal emphasis cues, and which slides you annotated most heavily. Use this to:
 - **Bold** concepts the professor flagged as important
-- Add "Professor's note:" callouts for verbal explanations not on slides
+- Add "From the recording:" callouts with direct quotes for verbal explanations not on slides
+- List heaviest annotations (board-note pages, ink density) showing where you were writing most
 - Reorder the review checklist to prioritize high-emphasis topics
 - Note topics the professor said to skip or marked as optional
+- Include midterm/exam hints from Q&A sections at the end of the recording
 
-### Workflow: Recording + Slides → Complete Study Guide
+### Workflow: Transcript + Annotated Slides → Complete Study Guide
 ```bash
-# Step 1: Align recording with slides
+# Step 1: Align transcript with annotated slides
 /align_recording week-05
 
-# Step 2: Create enriched summary using alignment output
+# Step 2: Enrich summary with alignment output + annotation data
 claude "Combine the slide-alignment.md with the existing summary.md for
-week 5. Add professor emphasis analysis and verbal examples."
+week 5. Add professor emphasis, annotation density, and verbal examples."
 
 # Step 3: Generate practice problems weighted by emphasis
 claude "Based on the emphasis report in week 5, generate practice problems

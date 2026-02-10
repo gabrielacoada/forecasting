@@ -3,6 +3,61 @@
 ## Main Topic
 Estimating how the effect of a change in X on Y unfolds over time using distributed lag regressions, the assumptions required for causal interpretation (exogeneity), and why standard OLS standard errors are invalid with serially correlated errors — motivating Heteroskedasticity and Autocorrelation-Consistent (HAC) standard errors.
 
+## Recording & Annotation Insights
+
+### Time Allocation (from Feb 10 recording, 58:54 total)
+| Topic | Approx. Time | Professor Emphasis |
+|-------|-------------|-------------------|
+| OJ data + initial regression (slides 3–8) | ~6 min | Set up the running example quickly |
+| Dynamic causal effects: ideal vs feasible (slides 9–12) | ~5 min | Key conceptual shift: same subject over time as different "subjects" |
+| Exogeneity + distributed lag assumptions (slides 13–15) | ~5 min | "This is extremely important" — stressed stationarity and weak dependence |
+| HAC standard errors: intuition + math (slides 17–23) | ~12 min | Longest single topic — board derivation of variance with serial correlation |
+| OJ estimation results + multiplier graphics (slides 24–33) | ~12 min | How to read confidence intervals on impulse response functions |
+| Exogeneity examples + practice (slides 34–38) | ~13 min | "Super important" — creating exogenous measures, midterm preview |
+| Q&A, midterm logistics | ~6 min | Midterm format hints |
+
+### Heaviest Annotations (your annotated PDF)
+The following slides had the most handwritten ink, indicating where you were most actively writing during class:
+1. **Page 19** (board note) — Variance derivation with serial correlation; inserted blank page where you wrote down the professor's board work on $\text{var}(\frac{1}{T}\sum v_t)$ with the covariance terms
+2. **Page 8** (distributed lag regression) — Heavy markup on the OJ regression with 6 lags and coefficient interpretation
+3. **Page 31** (board note) — Inserted page for the multiplier graphic discussion; likely notes on reading confidence intervals
+4. **Page 20** (Variance for Time Series, $T=2$) — The $f_2 = 1 + \rho_1$ derivation showing why IID formula breaks
+5. **Page 18** (HAC the math) — The OLS estimator formula and variance decomposition
+6. **Page 14** (Estimation of DCEs) — Annotations on the four distributed lag model assumptions
+7. **Page 30** (Multiplier Graphic) — Annotations on the dynamic multiplier plot
+8. **Page 7** (Initial Regression) — Notes around the 0.47 coefficient and standard errors
+9. **Page 39** (board note) — End-of-lecture board notes
+
+Pages with **no annotations**: 1–3 (title/intro), 9–11 (ideal experiment concepts), 16–17 (OLS consistency statement, HAC intro), 22 (HAC SEs text), 25–27, 29, 33–37 — these were mostly theoretical summary slides the professor talked through verbally.
+
+### Key Things the Professor Said (not on slides)
+
+**On HAC standard errors:**
+> "I'm not gonna ask you to know this, but I think it's important that you know a little bit of it, have an intuition."
+
+> "The cost of using HAC is very little, and it protects you against the possibility of serial correlation and also heteroskedasticity. It's a good habit, in my opinion, to always use HAC regardless."
+
+> "If you're absolutely sure your errors are not heteroskedastic and not serially correlated, just go ahead and use normal standard errors. But you have to be pretty damn sure. If there's any doubt, use HAC."
+
+**On reading multiplier graphics (impulse response functions):**
+> "If the confidence interval contains zero, that effect is not statistically different than zero. From about two months on, the effect on price changes is not statistically significant — but the effect on price *levels* persists for about a year."
+
+The professor spent ~3 minutes explaining that the dynamic multiplier shows the effect on $\Delta Y_t$ (price *changes*), while the cumulative multiplier shows the effect on $Y_t$ (price *levels*). This distinction is critical for interpretation.
+
+**On creating exogenous measures (beyond slides):**
+- For monetary policy: Use high-frequency market data around Fed announcements to isolate the "surprise" component — the part markets didn't expect
+- For oil prices: Isolate price changes caused by Middle East wars (truly exogenous geopolitical events)
+- For government spending: Look at spending changes around wars in the past
+- General principle: "You can apply some of the things you learn in micro — propensity score, conditioning on covariates"
+
+**Midterm hints (from Q&A at ~52:00–58:00):**
+- No coding on the midterm — "I don't care that you find yourself here with 30 minutes pulling up AI asking them to code for you"
+- Format: professor will give you output/graphs and ask for interpretation
+- One theory question, plus interpret-output problems
+- "Take the practice problems at heart" — they're from an older senior-level class so format may differ slightly, but content is the same
+- Coding is graded separately in the lab component
+- Three problem sets before the midterm
+
 ## Key Concepts
 
 ### 1. Dynamic Causal Effects
@@ -67,6 +122,8 @@ $$\widehat{\%ChgP}_t = -0.65 + 0.47 FDD_t + 0.14 FDD_{t-1} + 0.06 FDD_{t-2} + 0.
 5. $Y$ = GDP growth, $X$ = Federal Funds rate — NOT exogenous (the Fed reacts to GDP)
 6. $Y$ = change in inflation, $X$ = unemployment rate — NOT exogenous (Phillips curve: simultaneous causality)
 
+> **From the recording — creating exogenous measures:** The professor went beyond the slides to discuss how researchers construct exogenous variation when raw $X$ is endogenous. For oil prices: isolate changes due to wars in the Middle East. For monetary policy: use high-frequency market movements around Fed announcements to capture the "surprise" component (what markets didn't expect). For government spending: exploit spending changes around wars. He noted "you can think of applying some of the things you learn in micro — propensity score, conditioning on covariates." This is how the field of macro identification works in practice, and it's directly relevant to the VAR identification we'll study later.
+
 ### 7. Distributed Lag Model Assumptions
 1. $E(u_t | X_t, X_{t-1}, X_{t-2}, \ldots) = 0$ — $X$ is exogenous
 2. (a) $Y$ and $X$ have **stationary distributions** (time series counterpart of "identically distributed")
@@ -80,6 +137,8 @@ $$\widehat{\%ChgP}_t = -0.65 + 0.47 FDD_t + 0.14 FDD_{t-1} + 0.06 FDD_{t-2} + 0.
 
 ### 8. Why Conventional OLS Standard Errors Fail
 In time series, $u_t$ is typically **serially correlated**. This changes the variance formula for the OLS estimator.
+
+> **From the recording:** The professor derived this on the board (your board-note page 19 has the full derivation). The key insight: $\text{var}(v_1 + v_2) = \text{var}(v_1) + \text{var}(v_2) + 2\text{cov}(v_1, v_2)$. In cross-section, the covariance term is zero (independence). In time series, it's not — and ignoring it gives the wrong standard errors.
 
 **Simple case ($T = 2$, no lags):**
 $$\text{var}\left(\frac{1}{2}\sum_{t=1}^{2} v_t\right) = \frac{1}{2}\sigma_v^2 \times f_2, \quad \text{where } f_2 = (1 + \rho_1)$$
@@ -105,6 +164,8 @@ $$\hat{f}_T = 1 + 2\sum_{j=1}^{m-1}\left(\frac{m-j}{m}\right)\tilde{\rho}_j$$
 
 **Key practical point:** HAC SEs are needed for distributed lag regressions. For AR and ADL models, HAC SEs are usually unnecessary if enough lags of $Y$ are included (because the errors become serially uncorrelated).
 
+> **Professor's rule of thumb:** "If you're sure the errors are not serially correlated, use normal standard errors. If there's any doubt, use HAC. The consensus is most people should just use HAC." The downside is small-sample imprecision in the Newey-West estimator (the truncation parameter $m$ is chosen automatically but affects results), but this is usually a smaller risk than using the wrong SEs.
+
 ### 10. Estimation with Strictly Exogenous Regressors
 If $X$ is **strictly** exogenous, more efficient estimators exist:
 - Generalized Least Squares (GLS)
@@ -114,6 +175,8 @@ If $X$ is **strictly** exogenous, more efficient estimators exist:
 
 ### 11. OJ Price Data Analysis Results
 **Specification:** Distributed lag with $r = 18$ lags (Goldilocks method), Newey-West truncation $m = 7$.
+
+> **From the recording — choosing the number of lags:** When asked "how many lags do you include?", the professor said "8, 18, 16 — that's a specification choice." He suggested: include lags and stop when they're no longer significant. "Those are important questions that you have to ask every time you do modeling." The textbook uses $r = 18$ for this example.
 
 **Key findings (from Table 13.1):**
 | Lag | Dynamic Multiplier | Cumulative Multiplier |
@@ -130,6 +193,8 @@ If $X$ is **strictly** exogenous, more efficient estimators exist:
 - Future price rises are much smaller than the initial impact
 - Cumulative multiplier peaks around 7 months after the freeze
 - Adding monthly indicators does not significantly change results ($F = 1.01$, $p = 0.43$)
+
+> **From the recording — interpreting the graphics:** The professor emphasized that the dynamic multiplier shows the effect on $\%ChgP_t$ (price *changes*), which fades to statistically insignificant by ~2 months. But the cumulative multiplier shows the effect on price *levels*, which persists for about a year. "If your left-hand variable is the first difference, the coefficients give you the dynamic multiplier on the first difference. If you want the effect on the level, you need the cumulative multiplier." He also noted that at 95% confidence, even the 1-month lag may not be statistically significant, and that in multivariate analysis, 68% confidence intervals are common because "there's so much uncertainty."
 
 **Subsample instability:** The dynamic effect of freezes changed significantly over time. Freezes had a larger impact on prices during 1950–1966 than later periods, and the effect was less persistent during 1984–2000.
 
@@ -179,6 +244,7 @@ If $X$ is **strictly** exogenous, more efficient estimators exist:
 - **Builds on:** Week 4 distinction between structural and time series models, exogeneity concepts, AR/ADL models
 - **Related to:** SW Chapter 13 (Stock & Watson textbook, Appendix 13.1 for OJ data)
 - **Prerequisite for:** VAR models (identification in VAR is about ensuring the shock of interest is exogenous)
+- **Professor's preview:** "We will pick this up again when we think about VARs — the same autoregressive model but in vector form, multivariate at the same time. And the exogeneity questions are going to become even more important."
 
 ## Questions to Consider
 1. Why can't we use a standard differences estimator to measure dynamic causal effects in time series?
