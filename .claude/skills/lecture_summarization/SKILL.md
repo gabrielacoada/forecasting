@@ -180,6 +180,24 @@ claude "Ensure formulas in week-3 summary match reference/formulas/arma-processe
 claude "Based on week-3 summary, generate 5 potential exam questions and add to exam/practice-problems/"
 ```
 
+## Diagram Style
+
+**Always use Mermaid diagrams** instead of ASCII art for concept maps, flowcharts, hierarchies, and decision trees in `key-concepts.md` and `summary.md`. Mermaid renders natively in GitHub and most markdown viewers.
+
+Common diagram types to use:
+- `graph TD` for concept maps and topic hierarchies
+- `graph LR` for linear progressions and hierarchies (e.g. WN → MDS → Independent)
+- `flowchart TD` for decision flows (e.g. stationarity checks)
+- `flowchart LR` for process pipelines (e.g. theory → practice workflow)
+
+Use color styling to highlight important nodes:
+```mermaid
+style NODE fill:#c8e6c9   %% green for positive/correct
+style NODE fill:#ffcdd2   %% red for negative/incorrect
+style NODE fill:#e3f2fd   %% blue for informational
+style NODE fill:#fff3e0   %% orange for warnings/caution
+```
+
 ## Quality Checks
 
 Good summaries should:
@@ -189,6 +207,7 @@ Good summaries should:
 - ✅ Show examples or applications
 - ✅ Connect to broader course narrative
 - ✅ Be understandable 2 weeks later
+- ✅ Use Mermaid diagrams for all visual concept maps (never ASCII)
 
 Ask Claude to verify:
 ```bash

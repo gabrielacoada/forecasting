@@ -109,6 +109,9 @@ site/
 *.h5
 *.pb
 
+# Generated PDFs from lecture notes export
+**/lectures/*/pdf/
+
 # Exclude personal notes
 NOTES.md
 TODO.md
