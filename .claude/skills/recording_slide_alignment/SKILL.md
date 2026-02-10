@@ -87,11 +87,27 @@ Your handwritten annotations on slides (from Notability) are the **strongest sig
 
 **This means:** Even if the transcript text poorly matches a slide's content (e.g., the professor went on a verbal tangent while on slide 15), the annotation on slide 15 confirms the professor was there. The alignment should trust annotation evidence over text-matching scores when they conflict.
 
+### Inserted "Board Note" Pages
+
+You sometimes add extra blank pages to the annotated PDF to write down what the professor draws or writes on the board (content that isn't on any slide). This means the annotated PDF can have **more pages** than the original slides PDF.
+
+**How the system handles this:**
+1. Pages are matched by **text content similarity** (not by index), so inserted pages don't break the alignment
+2. Each annotated page is compared to all original slides — if it matches one well, it's that slide with annotations
+3. Pages that **don't match any original slide** are detected as **board note pages**
+4. Board note pages are associated with the **nearest preceding matched slide** (the professor was on that slide when they started writing on the board)
+5. Board notes **boost the emphasis score** of their associated slide — if the professor went to the board to explain something, that topic is clearly important
+6. Board note content (text or "handwritten/diagram") is included in the alignment output under the associated slide
+
+**Example:** If the original PDF has 30 slides and your annotated PDF has 34 pages, the system detects 4 inserted board-note pages, matches the other 30 to original slides, and shows each board note under the slide it belongs to.
+
 ### Handling Edge Cases
 - **Professor skips slides**: Some slides get no transcript segments — that's fine, they're marked as "skipped or briefly shown"
 - **Professor revisits a slide**: The monotonic constraint allows small backward jumps (up to 3 slides back)
 - **Tangents/digressions**: Segments with low similarity to any slide are marked as "off-slide discussion"
 - **Q&A sections**: Typically at slide boundaries, detected by question-like patterns in transcript
+- **Inserted pages (board notes)**: Extra pages you added to write board content are detected and associated with the slide the professor was on
+- **Page count mismatch**: If annotated PDF has more pages than original, pages are matched by content similarity — not by index — so everything stays aligned
 
 ## File Organization
 

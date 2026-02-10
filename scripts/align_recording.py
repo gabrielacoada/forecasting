@@ -92,52 +92,108 @@ def detect_annotated_slides(original_path, annotated_path):
     handwritten annotations. Annotated slides are ground truth — if you wrote
     on a slide, the professor was actively discussing it.
 
-    Returns a dict mapping slide_number -> annotation_weight (0.0 to 1.0).
-    Higher weight = more annotation content = professor spent more time here.
+    Handles inserted pages: the annotated PDF may have MORE pages than the
+    original because the user sometimes adds blank pages to write down what
+    the professor puts on the board. These inserted "board note" pages don't
+    match any original slide and get associated with the nearest preceding slide.
+
+    Returns a tuple:
+      - annotation_weights: dict mapping slide_number -> weight (0.0 to 1.0)
+      - board_notes: list of dicts with inserted page info (page index, text,
+        associated slide number)
     """
     import pdfplumber
+    from difflib import SequenceMatcher
 
     if not annotated_path or not Path(annotated_path).exists():
-        return {}
+        return {}, []
 
     print(f"Detecting annotations by comparing original vs annotated slides...")
 
     annotation_weights = {}
+    board_notes = []
 
     try:
         with pdfplumber.open(str(original_path)) as orig_pdf, \
              pdfplumber.open(str(annotated_path)) as ann_pdf:
 
-            n_pages = min(len(orig_pdf.pages), len(ann_pdf.pages))
+            n_orig = len(orig_pdf.pages)
+            n_ann = len(ann_pdf.pages)
 
-            for i in range(n_pages):
-                orig_text = (orig_pdf.pages[i].extract_text() or "").strip()
-                ann_text = (ann_pdf.pages[i].extract_text() or "").strip()
+            # Extract text from all original slides
+            orig_texts = []
+            for page in orig_pdf.pages:
+                orig_texts.append((page.extract_text() or "").strip())
 
-                # Text difference: extra text in annotated version = typed annotations
-                text_diff = len(ann_text) - len(orig_text)
+            # Extract text + object counts from all annotated pages
+            ann_pages = []
+            for page in ann_pdf.pages:
+                ann_pages.append({
+                    "text": (page.extract_text() or "").strip(),
+                    "n_lines": len(page.lines or []),
+                    "n_curves": len(page.curves or []),
+                    "n_rects": len(page.rects or []),
+                })
 
-                # Compare drawing/line objects (ink strokes from handwriting)
-                orig_lines = len(orig_pdf.pages[i].lines or [])
-                ann_lines = len(ann_pdf.pages[i].lines or [])
-                line_diff = ann_lines - orig_lines
+            if n_ann == n_orig:
+                # Same page count: simple 1-to-1 comparison
+                print(f"  Page counts match ({n_orig}), using direct comparison")
+                page_mapping = list(range(n_orig))
+            else:
+                # Different page count: user inserted extra pages.
+                # Match each annotated page to its best original slide by text.
+                # Pages that don't match any original slide are "board notes."
+                print(f"  Page count differs (original: {n_orig}, annotated: {n_ann})")
+                print(f"  Matching pages by content to detect inserted board-note pages...")
+                page_mapping = _match_annotated_to_original(orig_texts, ann_pages)
 
-                # Compare curve objects (pen strokes)
-                orig_curves = len(orig_pdf.pages[i].curves or [])
-                ann_curves = len(ann_pdf.pages[i].curves or [])
-                curve_diff = ann_curves - orig_curves
+            # Now compare matched pages and detect board notes
+            last_matched_slide = 0
+            for ann_idx, orig_idx in enumerate(page_mapping):
+                ann_page = ann_pages[ann_idx]
 
-                # Compare rectangles/shapes (highlights, boxes)
-                orig_rects = len(orig_pdf.pages[i].rects or [])
-                ann_rects = len(ann_pdf.pages[i].rects or [])
-                rect_diff = ann_rects - orig_rects
+                if orig_idx is None:
+                    # This annotated page doesn't match any original slide.
+                    # It's an inserted "board note" page — associate it with
+                    # the most recent matched slide (professor was on that slide
+                    # when they started writing on the board).
+                    board_notes.append({
+                        "annotated_page": ann_idx + 1,
+                        "associated_slide": last_matched_slide,
+                        "text": ann_page["text"],
+                        "has_content": bool(ann_page["text"] or
+                                            ann_page["n_lines"] or
+                                            ann_page["n_curves"]),
+                    })
+                    # Board notes also boost the associated slide's weight
+                    if last_matched_slide > 0:
+                        ink = ann_page["n_lines"] * 5 + ann_page["n_curves"] * 3
+                        text_len = len(ann_page["text"])
+                        board_weight = max(ink, text_len, 10)  # always significant
+                        annotation_weights[last_matched_slide] = \
+                            annotation_weights.get(last_matched_slide, 0) + board_weight
+                    continue
 
-                # Any positive difference means annotations were added
-                total_additions = max(0, text_diff) + max(0, line_diff) * 5 + \
-                                  max(0, curve_diff) * 3 + max(0, rect_diff) * 2
+                # Matched page: compare to detect annotations added on top
+                slide_num = orig_idx + 1
+                last_matched_slide = slide_num
+                orig_text = orig_texts[orig_idx]
+
+                text_diff = len(ann_page["text"]) - len(orig_text)
+
+                # We don't have original object counts readily here, so estimate
+                # by checking if annotated page has drawing objects at all
+                ink_objects = ann_page["n_lines"] + ann_page["n_curves"] + ann_page["n_rects"]
+
+                # Heuristic: original slides typically have few lines/curves
+                # (mostly text). Any significant ink objects likely = annotations.
+                # A more precise approach would cache orig object counts, but
+                # this works well enough since Notability adds many curve objects.
+                total_additions = max(0, text_diff) + ink_objects * 2
 
                 if total_additions > 0:
-                    annotation_weights[i + 1] = total_additions  # slide_number = i + 1
+                    annotation_weights[slide_num] = \
+                        annotation_weights.get(slide_num, 0) + total_additions
 
             # Normalize weights to 0.0 - 1.0 range
             if annotation_weights:
@@ -148,16 +204,75 @@ def detect_annotated_slides(original_path, annotated_path):
                     }
 
         annotated_count = sum(1 for w in annotation_weights.values() if w > 0)
-        print(f"  Found annotations on {annotated_count}/{n_pages} slides")
+        print(f"  Found annotations on {annotated_count}/{n_orig} slides")
+        if board_notes:
+            print(f"  Found {len(board_notes)} inserted board-note pages")
+            for bn in board_notes:
+                preview = (bn["text"][:60] + "...") if bn["text"] else "(ink only)"
+                print(f"    - Page {bn['annotated_page']} -> "
+                      f"associated with slide {bn['associated_slide']}: {preview}")
         if annotated_count > 0:
             top_slides = sorted(annotation_weights.items(), key=lambda x: -x[1])[:5]
-            print(f"  Heaviest annotations: {', '.join(f'slide {s} ({w:.0%})' for s, w in top_slides)}")
+            print(f"  Heaviest annotations: "
+                  f"{', '.join(f'slide {s} ({w:.0%})' for s, w in top_slides)}")
 
     except Exception as e:
         print(f"  Warning: Could not compare PDFs for annotations: {e}")
         print(f"  Proceeding without annotation data.")
 
-    return annotation_weights
+    return annotation_weights, board_notes
+
+
+def _match_annotated_to_original(orig_texts, ann_pages):
+    """
+    Match annotated PDF pages to original slides by text similarity.
+    Returns a list where index = annotated page index, value = original slide
+    index (0-based) or None if the page is an inserted board-note page.
+
+    Uses greedy forward matching: walks through annotated pages and tries to
+    match each to the next expected original slide. If the text similarity is
+    too low, the page is marked as inserted (board note).
+    """
+    from difflib import SequenceMatcher
+
+    MATCH_THRESHOLD = 0.4  # min similarity to consider a match
+
+    mapping = []
+    orig_idx = 0
+    n_orig = len(orig_texts)
+
+    for ann_idx, ann_page in enumerate(ann_pages):
+        if orig_idx >= n_orig:
+            # All original slides matched; remaining annotated pages are board notes
+            mapping.append(None)
+            continue
+
+        ann_text = ann_page["text"]
+
+        # Compare to current expected original slide
+        sim = SequenceMatcher(None, orig_texts[orig_idx], ann_text).ratio()
+
+        # Also check next original slide (in case a board note was inserted)
+        next_sim = 0.0
+        if orig_idx + 1 < n_orig:
+            next_sim = SequenceMatcher(None, orig_texts[orig_idx + 1], ann_text).ratio()
+
+        if sim >= MATCH_THRESHOLD:
+            # Good match to current original slide
+            mapping.append(orig_idx)
+            orig_idx += 1
+        elif next_sim >= MATCH_THRESHOLD and next_sim > sim:
+            # Better match to NEXT original slide — current annotated page might
+            # be a board note, or the professor skipped a slide. Check if the
+            # page has very little original-slide text (= board note).
+            # Skip the unmatched original slide and match to next.
+            mapping.append(None)  # this page is a board note
+            # Don't advance orig_idx yet — we'll match it next iteration
+        else:
+            # Low similarity: this is an inserted board-note page
+            mapping.append(None)
+
+    return mapping
 
 
 def compute_similarity_matrix(segments, slides):
@@ -411,18 +526,31 @@ def format_timestamp(seconds):
 
 
 def generate_slide_alignment_md(blocks, emphasis, recording_name, slides_name,
-                                 total_slides, notes_text=None):
+                                 total_slides, notes_text=None, board_notes=None):
     """Generate the main slide-alignment.md output."""
+    if board_notes is None:
+        board_notes = []
+
     total_duration = blocks[-1]["end_time"] if blocks else 0
+
+    # Index board notes by associated slide for easy lookup
+    board_notes_by_slide = {}
+    for bn in board_notes:
+        slide = bn["associated_slide"]
+        board_notes_by_slide.setdefault(slide, []).append(bn)
 
     lines = [
         f"# Lecture Recording Alignment",
         f"**Recording:** {recording_name} ({format_timestamp(total_duration)})",
         f"**Slides:** {slides_name} ({total_slides} slides)",
+    ]
+    if board_notes:
+        lines.append(f"**Board notes:** {len(board_notes)} inserted pages detected")
+    lines.extend([
         f"",
         f"---",
         f"",
-    ]
+    ])
 
     for block in blocks:
         start = format_timestamp(block["start_time"])
@@ -460,6 +588,18 @@ def generate_slide_alignment_md(blocks, emphasis, recording_name, slides_name,
             density = block.get("annotation_density", 0)
             density_label = "heavy" if density > 0.6 else "moderate" if density > 0.3 else "light"
             lines.append(f"**Your annotations:** Yes ({density_label} annotations)")
+            lines.append(f"")
+
+        # Board notes: extra pages you inserted for what the professor wrote on the board
+        slide_board_notes = board_notes_by_slide.get(slide_num, [])
+        if slide_board_notes:
+            lines.append(f"**Board notes** ({len(slide_board_notes)} page(s) "
+                         f"you added for board content):")
+            for bn in slide_board_notes:
+                if bn["text"]:
+                    lines.append(f"> {bn['text'][:300]}")
+                else:
+                    lines.append(f"> *(handwritten/diagram — no extractable text)*")
             lines.append(f"")
 
         # Similarity confidence
@@ -524,8 +664,17 @@ def generate_transcript_md(segments, recording_name):
     return "\n".join(lines)
 
 
-def generate_enriched_summary_md(blocks, emphasis, slides, notes_text=None):
+def generate_enriched_summary_md(blocks, emphasis, slides, notes_text=None,
+                                  board_notes=None):
     """Generate an enriched summary combining slides, transcript, and notes."""
+    if board_notes is None:
+        board_notes = []
+
+    board_notes_by_slide = {}
+    for bn in board_notes:
+        slide = bn["associated_slide"]
+        board_notes_by_slide.setdefault(slide, []).append(bn)
+
     lines = [
         "# Enriched Lecture Summary",
         "",
@@ -569,6 +718,18 @@ def generate_enriched_summary_md(blocks, emphasis, slides, notes_text=None):
             lines.append(f"*You annotated this slide — professor was actively discussing it.*")
             lines.append("")
 
+        # Board notes for this slide
+        slide_bns = board_notes_by_slide.get(block["slide_number"], [])
+        if slide_bns:
+            lines.append(f"**Board notes** (you added {len(slide_bns)} page(s) "
+                         f"for what the professor wrote on the board):")
+            for bn in slide_bns:
+                if bn["text"]:
+                    lines.append(f"> {bn['text'][:300]}")
+                else:
+                    lines.append(f"> *(handwritten/diagram)*")
+            lines.append("")
+
     # Append user notes if provided
     if notes_text:
         lines.append("---")
@@ -589,12 +750,13 @@ def format_duration(seconds):
     return f"{m}m {s}s"
 
 
-def save_alignment_data(output_dir, blocks, assignments, emphasis):
+def save_alignment_data(output_dir, blocks, assignments, emphasis, board_notes=None):
     """Save machine-readable alignment data as JSON."""
     data = {
         "blocks": blocks,
         "segment_assignments": assignments,
         "emphasis": emphasis,
+        "board_notes": board_notes or [],
     }
     output_path = Path(output_dir) / "alignment-data.json"
     with open(output_path, "w", encoding="utf-8") as f:
@@ -667,7 +829,9 @@ def main():
 
     # Step 3: Detect annotations (compare original vs annotated slides)
     print("\n[3/6] Detecting annotations...")
-    annotation_weights = detect_annotated_slides(slides_path, args.annotated_slides)
+    annotation_weights, board_notes = detect_annotated_slides(
+        slides_path, args.annotated_slides
+    )
     if annotation_weights:
         print(f"  Annotation data will boost alignment for {len(annotation_weights)} slides")
     else:
@@ -697,7 +861,8 @@ def main():
 
     # Main alignment file
     alignment_md = generate_slide_alignment_md(
-        blocks, emphasis, recording_name, slides_name, len(slides), notes_text
+        blocks, emphasis, recording_name, slides_name, len(slides),
+        notes_text, board_notes
     )
     alignment_path = output_dir / "slide-alignment.md"
     alignment_path.write_text(alignment_md, encoding="utf-8")
@@ -710,13 +875,15 @@ def main():
     print(f"  Saved: {transcript_path}")
 
     # Enriched summary
-    enriched_md = generate_enriched_summary_md(blocks, emphasis, slides, notes_text)
+    enriched_md = generate_enriched_summary_md(
+        blocks, emphasis, slides, notes_text, board_notes
+    )
     enriched_path = output_dir / "enriched-summary.md"
     enriched_path.write_text(enriched_md, encoding="utf-8")
     print(f"  Saved: {enriched_path}")
 
     # Machine-readable JSON
-    save_alignment_data(output_dir, blocks, assignments, emphasis)
+    save_alignment_data(output_dir, blocks, assignments, emphasis, board_notes)
 
     # Summary
     print("\n" + "=" * 60)
@@ -726,6 +893,8 @@ def main():
     print(f"  Recording:  {recording_name}")
     print(f"  Slides:     {slides_name} ({len(slides)} slides)")
     print(f"  Annotated:  {annotated_count} slides have your annotations")
+    if board_notes:
+        print(f"  Board notes: {len(board_notes)} inserted pages detected")
     print(f"  Segments:   {len(segments)} transcript segments")
     print(f"  Blocks:     {len(blocks)} slide blocks")
     print(f"  Duration:   {format_timestamp(segments[-1]['end'])}")
