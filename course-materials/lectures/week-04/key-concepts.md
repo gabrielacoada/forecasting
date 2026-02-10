@@ -160,20 +160,49 @@ flowchart TD
     style ARMA_BAD fill:#ffcdd2
 ```
 
-## Box-Jenkins Estimation Procedure
+## Pesavento's Practical Recipe (from lecture)
 
 ```mermaid
-flowchart LR
-    ID["1. Identify<br/>ACF/PACF patterns<br/>→ candidate (p,q)"] --> EST["2. Estimate<br/>MLE or conditional<br/>least squares"]
-    EST --> DIAG["3. Diagnose<br/>Are residuals<br/>white noise?"]
-    DIAG -->|"Yes"| FC["4. Forecast"]
-    DIAG -->|"No"| ID
+flowchart TD
+    S1["1. Remove trend<br/>& seasonality"] --> S2["2. Plot correlogram<br/>of residuals"]
+    S2 --> S3{"Flat?"}
+    S3 -->|"Yes"| DONE["Done!<br/>(rare for macro)"]
+    S3 -->|"No"| S4["3. Start LARGE<br/>(a few extra lags)"]
+    S4 --> S5["4. Estimate &<br/>drop insignificant"]
+    S5 --> S6["5. Compare AIC/BIC<br/>across candidates"]
+    S6 --> S7["6. Plot correlogram<br/>of RESIDUALS"]
+    S7 --> S8{"Still serial<br/>correlation?"}
+    S8 -->|"Yes"| S4
+    S8 -->|"No"| FC["7. Forecast!"]
 
-    style ID fill:#e3f2fd
-    style EST fill:#fff3e0
-    style DIAG fill:#fff3e0
+    style S4 fill:#ffcdd2
+    style S7 fill:#ffcdd2
     style FC fill:#c8e6c9
+    style DONE fill:#c8e6c9
 ```
+
+**Key emphasis:** "Start large, eliminate small" and "always plot residual correlogram" (red = what she repeats most)
+
+## Unit Root: The Critical Boundary
+
+```mermaid
+graph TD
+    RHO{"Value of ρ?"} -->|"ρ < 1"| STAT["Stationary ✓<br/>Shocks die out<br/>Theory works"]
+    RHO -->|"ρ = 1"| UNIT["Unit Root ✗<br/>Shock permanent<br/>Var → ∞<br/>Normal dist fails"]
+    RHO -->|"ρ > 1"| EXPL["Explosive ✗<br/>Rare in macro<br/>(bubbles only)"]
+
+    UNIT --> MODULE["Full module<br/>coming later!"]
+    STAT --> GOOD["Can estimate,<br/>forecast, test"]
+    EXPL --> RARE["Housing/financial<br/>bubbles"]
+
+    style STAT fill:#c8e6c9
+    style GOOD fill:#c8e6c9
+    style UNIT fill:#ffcdd2
+    style MODULE fill:#ffcdd2
+    style EXPL fill:#fff3e0
+```
+
+**Pesavento:** "We're going to spend a whole module just on this. What happens when ρ = 1? The variance explodes. I cannot construct sensible forecasts. The usual distributions don't apply."
 
 ## The Big Ideas
 
@@ -183,26 +212,31 @@ Economic shocks don't just hit and disappear — they propagate. This creates au
 ### 2. Differencing removes trend persistence, not cycle persistence
 Log GDP is 99% autocorrelated because of its trend. GDP growth (first difference) drops to 26% — but that remaining 26% is the cyclical component we want to model.
 
-### 3. AR terms are the workhorse of forecasting
-Most series need at least AR(1). AR terms capture the "memory" of the series. They dramatically increase $R^2$.
+### 3. AR terms are the workhorse of forecasting (confirmed by all 3 real data examples)
+From lecture: "Most things, almost everything, needs at least one lag. So at least AR(1), maybe sometimes more than one. Occasionally you will need a moving average in there, one, maybe." Unemployment → AR(3). GDP growth → AR(1). Inflation → AR(3-4).
 
 ### 4. Forecasting ≠ Causal inference
 This is the philosophical foundation of the course:
 - **Structural econometrics:** "What is the effect of X on Y?" → Needs exogeneity
 - **Time series forecasting:** "What will Y be tomorrow?" → Needs correlation, not causation
-- From annotation: "Think about what question you're asking"
 
-### 5. Stationarity is non-negotiable for cycle modeling
-If the DGP keeps changing, the past tells us nothing about the future. We must work with stationary data (or make it stationary via differencing/detrending).
+### 5. $\rho$ is the dynamic multiplier / impulse response
+From lecture: "If I have a shock today, how much of that shock will still be there tomorrow? $\rho$. Day after? $\rho^2$." This connects the math directly to economic meaning.
 
-### 6. MA = finite memory, AR = infinite memory
-MA(q) has exactly q periods of "memory" — the ACF is zero after lag q. AR(p) has infinite memory that decays geometrically. This fundamental difference drives the ACF/PACF identification patterns.
+### 6. $\rho = 1$ is the most important boundary in time series
+Pesavento: "We're going to spend a whole module just on this." When $\rho = 1$: variance → ∞, shock is permanent, normal distributions fail, forecasts break. Unit root testing is "very traditional — one of the first things you do."
 
-### 7. Stationarity and invertibility are mirror conditions
-AR stationarity requires roots outside the unit circle (for the AR polynomial). MA invertibility requires roots outside the unit circle (for the MA polynomial). Same math, different polynomials.
+### 7. AR and MA are mathematically interchangeable
+From lecture: "Whether you go autoregressive or moving average, you and I may end up with something mathematically identical." AR(1) = MA(∞). MA(q) can be approximated by a finite AR. Don't agonize over which — use information criteria.
 
-### 8. The Box-Jenkins approach is iterative
-Identify → Estimate → Diagnose → Revise. Don't just fit a model and stop. Check residuals for remaining structure. If residuals aren't white noise, the model is missing something.
+### 8. Watch for near-cancellation in ARMA
+From GDP growth example: ARMA(1,1) with $\rho \approx 0.3$, $\theta \approx -0.3$ — both look insignificant together because they cancel! "It's almost like close multicollinearity." Always test each component individually.
+
+### 9. Start large, go small (Pesavento's model selection philosophy)
+"The ideal way to go is from large to small, rather than small to large." Start with more lags than you think you need, then eliminate. The residual correlogram is the ultimate diagnostic.
+
+### 10. The residual correlogram is your best friend
+From lecture: "The most important thing is: if you compute the autocorrelation function of the residuals, you should quickly be able to see whether you still have serial correlation." She checks this in every single real data example.
 
 ## Formulas to Know
 
@@ -220,6 +254,16 @@ Identify → Estimate → Diagnose → Revise. Don't just fit a model and stop. 
 12. **Invertibility:** $(1+\theta L)^{-1}$ exists when $|\theta| < 1$
 13. **Exogeneity condition:** $E[p|\varepsilon] = 0$ (required for causal interpretation only)
 
+## Real Data Results Summary (from Feb 5 lecture)
+
+| Series | Best Model | Key Coefficient | Notes |
+|--------|-----------|-----------------|-------|
+| Unemployment | AR(3) | $\hat{\rho}_1 = 0.95$ | Very persistent. AR(4) not significant. |
+| GDP Growth | AR(1) | $\hat{\rho} \approx 0.3$ | ARMA(1,1) failed (near-cancellation). |
+| Inflation | AR(3-4) | Persistent | Adding MA destabilized other coefficients. |
+
+**Pesavento's lesson:** "The three real variables I had — they were basically all AR. That's probably reality."
+
 ## Common Exam Traps
 
 - **Trap:** Thinking endogeneity ruins forecasts. It doesn't — it only ruins causal interpretation.
@@ -231,3 +275,7 @@ Identify → Estimate → Diagnose → Revise. Don't just fit a model and stop. 
 - **Trap:** Thinking ACF = 0 after lag q means AR(q). No — ACF cutoff at lag q indicates MA(q). PACF cutoff at lag p indicates AR(p).
 - **Trap:** Forgetting the unit root case. When $\phi = 1$ in AR(1), variance formula $\sigma^2/(1-\phi^2)$ explodes to infinity. The process is a random walk.
 - **Trap:** Not checking invertibility for MA models. Two different $\theta$ values can produce the same ACF — always pick the invertible ($|\theta| < 1$) representation.
+- **Trap (from lecture):** Eliminating both AR and MA terms simultaneously when they're individually significant. Near-cancellation makes both look insignificant together (GDP growth example). Always test each singularly.
+- **Trap (from lecture):** Starting model selection from small to large. Pesavento explicitly says start large, go small — you might miss important lags if you start too small.
+- **Trap (from lecture):** Not plotting the residual correlogram after estimation. "This is the most important thing" — if residuals still show serial correlation, you're not done.
+- **Trap:** Thinking negative $\rho$ means ACF doesn't decay. It does — it just alternates sign: $\rho$, $\rho^2$ (positive), $\rho^3$ (negative), etc. "It's still going down, just flipping between positive and negative."
