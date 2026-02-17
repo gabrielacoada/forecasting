@@ -1,0 +1,22 @@
+name: climate-risk-loans
+title: "Climate Risk Impact on Banking Loan Portfolios"
+status: active
+created: 2026-02-12
+updated: 2026-02-12
+description: >
+  Research project exploring how NGFS climate scenarios affect commercial 
+  and consumer loan portfolios. Case study for Emory Forecasting course,
+  sponsored by Bank of America Treasury team.
+tags:
+  - climate-risk
+  - banking
+  - NGFS
+  - loan-portfolios
+  - forecasting
+  - stress-testing
+stats:
+  questions: 8
+  sources: 14
+  facts: 401
+  analysis_runs: 2
+  reports: 1

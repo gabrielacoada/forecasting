@@ -1,0 +1,126 @@
+Speaker 1  
+And this is used sometimes for stress testing, risk hedging, other things. And what we use these scenarios for is we build models from the ground up to do securities pricing. That's sort of what Wayne was mentioning. We cover a lot of different securities. We work within the bank's treasury, which is kind of like banks, Bank. And we take these hypothetical scenarios and these models, combine them and come up with, for example, a price with a price you can do different things, like hedging, risk management, etc. And we take these insights which are quantitative, and we deliver them to executives or people who need to derive strategy and make decisions based on that data. So, you know, very quantitative oriented. And the other kind of big bucket that we have things that we do here is, since we work in the treasury, we have access to a lot of the bank's financials, you know, the bank's balance sheets or financial statements. So we ingest a lot of these financial results from our partners here in the treasury, sometimes we use models or just aggregation techniques, different, you know, frameworks. We leverage these models, and then we deliver sort of tailored interfaces for our partners to use, and they can conduct these analyzes or look at these results in near real time, or sometimes real time. So we're kind of a quantitative, you know, team of people that can deliver solutions to the rest, rest of the Treasury. So hopefully that gives you a little bit of flavor. On top of that, we also have our own compute platform where we run all these models and processes. So we have infrastructure, people, systems, people that are extremely talented, and they help us run all our processes and maintain our code. Okay, so let's, let's move on to climate risk. Hopefully you've heard of climate risk before. You know it's on the news all the time, but so you probably know that it affects, you know, every facet of life for the entire world, and that's both economically, socially, politically, etc, but we really like to think about climate risk in two different buckets. There's physical risks, which are kind of the immediate effects of climate riskless, for example, if there's more powerful storms that create storm surges and impact real estate property. You know, that's a physical risk. But then the second bucket is transition risk, which is, how does humanity react to these changes in climate? So do we want to reduce our carbon emissions? How much is it? Does that cost? Does that add an additional cost to our regular life? Does it create an additional burden on our financial system because people need to borrow more money, or they take on more risk due to this emerging climate risk? So you can see that for banks, it's really a financial risk. It has a direct impact on our balance sheet, on our counterparties. It's very tangible, but the way that we model it may not necessarily be so straightforward. So here we say, regulators increasingly view it as a core financial stability concern. If climate risk keeps becoming worse and worse, obviously these financial institutions will see more and more stress from our counterparties and our credit exposures. So how are regulators looking at this? Here's a little bit of a history. First in Europe, the regulating agencies started signaling in the early 2020s that they were interested in incorporating climate risk into stress testing and examining financial institutions, and then that evolved into this organization called the NGFS. They started developing long term and short term scenarios. So it's kind of like hypothetical outcomes of of the climate and also the macro economy that these regulators can could start using or requiring financial institutions to incorporate them into their stress testing processes. So if the European banking agency is increasingly interested in embedding them, embedding these climate related risk scenarios and into into their supervisory expectations, which means there's stress testing. So they're actually asking banks, for example, to come up with models or frameworks in which they take in these climate scenarios look at their balance sheet and see how much of that balance sheet is at potential risk to these climate scenarios. In the US, the Federal Reserve was a little behind the curve. They started signaling around 2022 that they wanted to incorporate these climate risk scenarios into their stress testing protocols, and in 2023 they published exactly how they wanted banks to incorporate it into their processes. And even though in 2025 it was rescinded, it's still kind of a big signal to the industry that this emerging topic is going to become more and more ubiquitous, and it's going to be a requirement for the future. So we have a big incentive as a financial institution to incorporate these climate scenarios and climate stress testing into our day to day operations. Okay, I mentioned that there's multiple types of climate risk. If you think about a bank, for example, Bank of America, or any other bank, they may have, for example, exposure to commercial real estate. So we lend money to a commercial business who has a brick and mortar store, they may be exposed to climate risk if there's, for example, a hurricane or more frequent hurricanes, that's an example of physical risk and transition. Risk can be different. It can be policy changes. It can be changes in GDP, raising interest rates, that sort of thing. So it's very easy to see how these climate risks affect our loan portfolios and financial stability in general. In this project, we're going to focus on both commercial and consumer loans. We think these are good aggregate measures that we can look at to see how, how they're sensitive to economic shocks driven by climate change, something that's really important. With climate stress testing is or climate modeling is for models to be transparent. So who is evaluating these processes or frameworks? It's regulators or executives who need to make strategic decisions. So having a model that's transparent and explainable is extremely important. You can't have the most complex machine learning model that does you know who knows what and is giving you one answer, but you can't justify why it's telling you to sell your loans in a particular exposure. So having a model that's transparent and explainable is really important, and we'll see that kind of reflected in in this project's scope. It's an open ended question. You saw that? You know, it's really recent years that have seen the financial industry start to require these climate risk processes. So there's no established method to forecast climate risk or see the impact on a financial institution's balance sheet or projected income or just risk management? Even though there's no exact answer to this question, there are a lot of different frameworks and approaches that we can explore, and hopefully you guys come up with something interesting that maybe we haven't seen before.
+
+Unknown Speaker  
+So what's this project really about
+
+Speaker 1  
+this is kind of taken straight out of the project document that I think you guys may have seen already. But what we're trying to the question we're trying to answer is, how do, how does climate change or climate risk impact loan portfolios? So banks have commercial loans and they have consumer loans, consumer loans like, you know, auto personal loans, student loans and commercial loans that we lend money to businesses for their operations or capital investments. How are these portfolios impacted by climate risk? Thankfully, the NGFS climate scenarios contain macroeconomic variables. They also contain climate variables, like CO two emissions or carbon fuel costs, you know, a plethora of variables that you can explore. And the question is, how can we leverage these climate scenarios, or climate forecasts to create to figure out a relationship between the scenarios and the loan portfolios. Hopefully this makes sense, but the document has more detail as well, and we'll talk a little bit more about this. And what the project is really about is more critical thinking and clear communication over perfect models. So this is an open ended question, and, you know, banks do these things different ways, and also the data is not perfect, as you'll probably find out. So what we want to evaluate is more whether you can look at this data set or these multiple data sets. You know, think about how you want to approach the problem and how you can communicate your decisions and your frameworks in a very convincing and robust way. Not so much so the raw accuracy of a forecasting model. And nowadays, you know, there's copilot anyway, which can give you a pretty good starting point, but we want to really see you guys use critical thinking and justify your decisions. We also really care about model transparency and justification, so building defensible, transparent models with logical structure and thoughtful feature selection. Feature selection is basically variable selection, or you can do feature engineering, which you can take proxies. But what we really care about is that you think about why you're selecting each input to your model, and how that ties into your model framework handling uncertainty and ambiguity, you'll see that the data is not perfect. It has different granularity, frequencies, there's questions about the different regions or the models that the NGFS outputs. So we want you guys to be adaptable and versatile and think about how you're going to solve problems that don't have a specific solution. And that kind of ties in with the last point, which is these are real world analytical skills. We often face these kind of open ended questions in our job where there's a question that we need to answer and present valuable database insights into to our executives or to our leaders. How can we evaluate framework trade offs, or how can we solve problems creatively and be able to defend the decisions that we took. These are some more details about the project structure. We're thinking that we'll have you guys split off into two groups. You guys have to pick a team name, pick something creative, bonus points, and each of each of the two teams will do a 30 minute presentation at the end of the course. We'll talk more about the timeline for that. And yeah, we want to see we want to see you guys be creative and build something that you're proud of and you can defend. So we'll pick a winner based on specified parameters. We'll come up with a rubric to evaluate the two teams, and we'll pick a winner. The prize is still to be determined. We'll see what we can come up with, but I think it'll be fun. So, yeah, we'll evaluate the methodology and the modeling decisions more so than the raw performance of your model the accuracy. We want to see you guys be thoughtful and also think about how you want to present the information. We don't want this to be a deep dive into the specific coding syntax that you guys use. We want to see this as a presentation where you guys are trying to explain high level insights and strategic decisions that you can take or you can make based off of your model frameworks or your modeling decisions, and that means you guys get to be creative with visualizations. Depending on which forecasting framework you use, maybe you can come up with something creative and and impress us that way. And I think having good visualizations always makes a presentation more engaging and and compelling. So what is the the timeline specifically look like today we're doing the kickoff. So checkmark. We'll have a Q and A session that's 30 minutes next Thursday. So we'll do this probably in the same format, and you guys will get to ask us questions about the project, document, questions about the scope of the project, the data available. We tried to be specific with what we gave you guys in the project document for what data you guys should use, but like I said, it's an open ended question, and this is the opportunity to ask about the direction that you're thinking of taking as a team. And we can course correct or we can ask inquisitive questions to see if you're thinking about thinking about things the right way, or if you're making decisions, we can steer you in the right direction. After that, we can do optional Q and A's, so we'll do up to two per team, you know, regular business hours, and we want this to be on demand, so they're not required. If you guys have additional questions about your approach, or you you don't understand a particular data set, we can, we can meet a subset of us. Can can pull together and meet with you guys, so let us know. I'll give you guys the email for that, but we can do these throughout the semester, and the final presentations are on April 9. So here's what that actually looks like. Today. We're doing the kickoff February 12, and you guys have a bit of time to get familiar with the scope of the project, the data sets available in the NGFS portal, and also the training data that you can use historically from Fred, try to come up with some frameworks early prototypes. That way you have strong questions or useful questions that you guys can ask in the first Q and A really try to take advantage of this first Q and A session, and then you guys can start developing your models. If you run into any issues or have questions about direction, we can schedule these additional Q and A sessions, and that leads to the final presentation, so you have a pretty good amount of time to work on these. And we're really looking forward to what you guys can come up with. Here's the mailing list that you guys can can email. All four of us are recipients, and this is how you can request a Q A session after the first one. And I think that's everything. Do you guys have any questions?
+
+Speaker 1  
+The Okay, so let me. So let me between those words, or there's like, yes, they're underscores, yeah. And we can share it with Professor PESA Vento, and she can distribute it. Yeah.
+
+Speaker 2  
+You can send me an email with the email and make sure that is okay.
+
+Speaker 3  
+I do want to make one disclaimer, and so this is not like as a team. We don't currently work on climate change stuff for the bank, so a lot of the stuff that we're going to be discussing and how we're going to be having these conversations, it's us generally wanting to learn more about this space. It isn't that we're commenting on the way that Bank of America does this. And then the second thing is, for the analysis and the work that you guys are doing, we need to keep that industry specific. It shouldn't be targeted to Bank of America or a particular bank. I think part of the engagement is that in the variables that we've given you are industry specific for a reason, so we're going to keep the commentary and keep the discussion at an industry level and not get
+
+Unknown Speaker  
+into the details of particular institutions. Perfect.
+
+Unknown Speaker  
+I'm not sure if I'm sharing my screen anymore.
+
+Unknown Speaker  
+No, you're not.
+
+Unknown Speaker  
+While we're doing that, I also want to level set and be very
+
+Speaker 3  
+we don't know the answer to this problem like I as I was, I said, no one really has a specific answer to this problem. Everyone treats it differently. Everyone's thinking about it and how to execute. So this isn't the kind of thing that you'll come to the Q amp, a sessions and be looking for the specific answer. We're going to be trying to work a problem with you. And so that's what's great about this, is that, because there isn't an actual answer to this, anything you can provide is actually really useful and valuable, because it's part of the discussion to get into the right direction. We this is the kind of situation you face at work, and we face at work a lot of times. The projects that come down the pipeline are big, ambiguous questions, and then it's up to us to take the question translated to a technical specification and then work from that. So part of the experience of going through this is we're giving you a problem statement that doesn't have an actual answer, so that you can figure out how to frame it and how to drive some insights within that space.
+
+Speaker 2  
+I think that's actually even more exciting, right, the fact that you don't know the answer to me is even more exciting.
+
+Speaker 3  
+We're gonna learn. And that's we're easily impressed.
+
+Speaker 1  
+Yeah, this is the project document that I think you guys have seen already. This is the first time you're seeing it. Well, welcome. The first part is just an introduction, again, to what we want the scope of the project to be, forecasting these aggregated loan portfolio balances using macroeconomic and climate scenario data. And these are the four objectives that we want you guys to from the project. The proposed milestones are pretty broad, and they're not meant to be specific, but it's kind of a guideline for you guys to take and the steps as you approach this project. So obviously, understanding the scenarios here, I put a link to the NGFS portal. That specific link has a few resources available that you guys can check out to understand the data and can ask us, you know, questions, if you if you have concerns understanding the the macroeconomic variables, start thinking about how you're going to select your variables for your modeling. Then you can actually go ahead and collect the data from these NGFS scenarios. And also in Fred, which maybe you guys are familiar with fair already. You'll you'll find the aggregated loan portfolios here. We're going to focus first on commercial and industrial loans, which is that bus loans time series. And this is what we really want you guys to focus on forecasting. We're creating a model to predict for that specific link takes you to the NGFS data. You'll see that it's probably a zip file with a few of the different models. So try to see if you can figure out what everything means. And of course, on Fred, you'll also find historical data, macroeconomic or otherwise, for your for training your models, then you can decide on a forecasting framework. This is the part that we're super excited to talk to you guys about during the Q amp a or any, any of the additional Q amp a sessions. So really try to think about the data that you have available, which model framework is appropriate and what will give you the best results? Build a prototype. You can do scenario comparisons or come up with visualizations. There's multiple ways that you can segment the problem or try to do comparisons. And the last part is really important, which is, what are the implications of the results from your model. What does it mean for financial stability? What are some of the limitations in your frameworks that you select? What are the data that you had available? What were you still uncertain of conceptually, and what are some areas for refinement in the approach and the deliverables are here. The main one is really the presentation that we want to kind of evaluate your approach and your results. But of course, there's a technical report that we also want to see where you explain your methodology, your variable selection, and as much detail as you can. And you know, really try to be robust with your reasoning and a maximum of five pages, please. And here's some useful resources that we found that you guys might find interesting. So with that, yeah, any last questions, and if not, we also will have the Q and A in a week.
+
+Speaker 4  
+Yeah, and as far as
+
+Speaker 2  
+me, as far as far as the class, you're going to upload the technical report onto canvas, and then the whole grade is going to be based on both the report and the presentation
+
+Speaker 1  
+professor. Are you expecting them to submit the code as well?
+
+Speaker 2  
+No, I don't think so. Okay, I will. They have a lab that does the code. I'll ask that the TA if he wants to see something, but I'm sure they'll work with him as well a little bit. So No, as long as I see a, you know, some proof that this was done by them. Somehow, I think I'll trust them that that's what it is. I care more that they understand the funding, the recommendations and the presentation, how they explain what they have done. So that shows me that they have understood what they did.
+
+Unknown Speaker  
+You were gonna say,
+
+Unknown Speaker  
+I was gonna say the report. We're saying a
+
+Speaker 3  
+maximum of five pages, but don't feel like you have to go all the way to five pages. It's really like, again, that communication aspect of how can you take something very technical and translate it to something that is easy to understand for an audience that wasn't with you in the weeds? So there's that component as well.
+
+Unknown Speaker  
+See your hand raised,
+
+Speaker 5  
+Hi, yes, I have a question. So for the consumer, for the consumer loan component, was there a specific Fred series that you'd like us to use, similar to how business loans was specified for CNI, or is it just choosing and justifying the right series as that part of the exercise?
+
+Speaker 3  
+I think it's up to you guys. We if you want to do consumer instead of commercial, you're welcome to. If you want to tackle both consumer and commercial, that's an even more interesting challenge that's up to you as well, but we can share the ticker per consumer. We kind of limited it here because we figured maybe doing one would be enough, but we can send you the consumer one, and then in that case, of course, the macro variables and all that is going to be a little bit different. But we do have a ticker for consumer. I think it's actually consumer, yeah, uppercase consumer. Okay, that's the ticker, I think. And do you know how far back historically the training data should go?
+
+Unknown Speaker  
+Or is that also for you guys?
+
+Speaker 3  
+Got it? That's a question for you guys. So that's one of the parts of the modeling process, is making sure that the variables that you're selecting have the right tail, and that you are preparing enough periods for training or quarantine for testing, and how you're going to do your training split, that is definitely part of the design that you guys choose. As far as spread. I mean, you can go to stuff back to the 1940s but then you have stuff that only goes back to the 1990s and you guys are econ majors. So I would think that some of the discussion on variable selection and the time frames that you're talking about include business cycles. So make sure that you cover enough business cycles to be able to get good results. The other freely I'll give you is we just went through a structural change as part of the covid shock. So as you're looking at some of these data sets, you will see the period of the covid shock in the financial markets. And then there's a question of, how do you treat that? How different is that from the history? How? How do you want to treat that? It's a very interesting question for economists as well. I regularly ask people doing models, how do you treat the covid period? So it's one
+
+Speaker 2  
+interesting we have, we have talked a lot about it. Every time we look at a data, we says, how do we how can we model that? How should we treat the covid period?
+
+Unknown Speaker  
+Question, more questions.
+
+Speaker 2  
+They form the two groups. Already I have the two groups. I'm still missing the team name that counts for bonus point creativity for the team names count.
+
+Speaker 1  
+Okay, well, we're looking forward to questions you guys have at the Q, a, and we're
+
+Unknown Speaker  
+looking forward to
+
+Speaker 2  
+it next week, at the same time, 232, three. That works for you guys?
+
+Unknown Speaker  
+Okay, yeah, I'll share a teams link again, if that works
+
+Speaker 2  
+for you, perfect. And then we'll decide if we're going to be online like today, or maybe all in the class, depending on what we're doing. Then the rest of the time, we'll discuss on Tuesday in class what we're going to do, so that you guys can decide.
+
+Speaker 3  
+And then for the presentations, I think there's a very good chance that at least some of us are going to go see you guys in person. So we're trying to figure out what is the right way for the presentations. Definitely they expect at least some of us to be present in person for the final I hope so.
+
+Speaker 2  
+I think it's going to be more fun if we were all in a happy to go to rich? Yeah, right. We're actually in a different building, so you can even have explore a different area on campus. So, okay,
+
+Unknown Speaker  
+everybody, okay, here.
+
+Speaker 2  
+Okay, that's an interesting question. It's not an easy one, so you better start thinking.
+
+Unknown Speaker  
+Guys, all right, thank you guys,
+
+Speaker 2  
+okay, thank you so much. We'll see you next in a Week. Thank you.
+
+Unknown Speaker  
+Okay, bye. You. You
+
+Unknown Speaker  
+There we go. You.
+

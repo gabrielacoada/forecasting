@@ -1,0 +1,100 @@
+# Sources Manifest
+# Tracks all sources configured for this research project
+
+sources:
+  # === LOCAL DOCUMENTS ===
+  - name: case-study-pdf
+    type: local
+    path: sources/local/Emory_Time_Series_Climate_Case_Study.pdf
+    relevant_to: [Q1, Q2, Q3, Q4, Q5, Q7, Q8]
+    status: pending
+
+  - name: kickoff-transcript
+    type: local
+    path: sources/local/kickoff-transcript.txt
+    relevant_to: [Q1, Q2, Q4, Q5, Q8]
+    status: pending
+
+  # === COURSE MATERIALS ===
+  - name: week-03-univariate-ts
+    type: course-material
+    path: course-materials/lectures/week-03/summary.md
+    relevant_to: [Q4, Q5]
+    notes: "Stationarity, transformations, lag operator — foundational for modeling loan series"
+    status: pending
+
+  - name: week-04-arma-models
+    type: course-material
+    path: course-materials/lectures/week-04/summary.md
+    relevant_to: [Q4, Q5]
+    notes: "AR/ARMA identification, model selection, cycles — core forecasting framework candidates"
+    status: pending
+
+  - name: week-05-dynamic-causal-effects
+    type: course-material
+    path: course-materials/lectures/week-05/summary.md
+    relevant_to: [Q2, Q3, Q5]
+    notes: "Distributed lag regressions, HAC errors — directly applicable to modeling climate→loans transmission"
+    status: pending
+
+  # === ACADEMIC PAPERS (local PDF — directly extracted) ===
+  - name: sr1059-acharya-climate-stress-testing
+    type: local
+    path: sources/local/climate-stress-testing.pdf
+    relevant_to: [Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8]
+    notes: "Acharya et al. (2023) Climate Stress Testing — NY Fed Staff Report 1059. 85 facts extracted with page-level attribution."
+    status: complete
+    facts_file: facts/by-source/sr1059-acharya-climate-stress-testing.md
+
+  - name: sr1058-jung-bank-climate-exposure
+    type: local
+    path: sources/local/us-banks-exposure-to-climate-transition-risks.pdf
+    relevant_to: [Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8]
+    notes: "Jung et al. (2024) U.S. Banks' Exposures to Climate Transition Risks — NY Fed Staff Report 1058. 77 facts extracted with page-level attribution."
+    status: complete
+    facts_file: facts/by-source/sr1058-jung-bank-climate-exposure.md
+
+  # === WEB SEARCHES ===
+  - name: web-ngfs-scenarios-overview
+    type: web
+    queries:
+      - "NGFS climate scenarios overview variables GDP carbon price temperature"
+      - "NGFS scenario framework 2023 2024 model families GCAM REMIND MESSAGEix"
+      - "NGFS data portal documentation macro variables"
+    relevant_to: [Q1]
+    status: pending
+
+  - name: web-climate-risk-transmission
+    type: web
+    queries:
+      - "climate risk transmission mechanism bank loan portfolios"
+      - "physical transition climate risk impact commercial consumer credit"
+      - "climate change effect on bank lending credit risk"
+    relevant_to: [Q2, Q3]
+    status: pending
+
+  - name: web-climate-stress-testing-methods
+    type: web
+    queries:
+      - "climate stress testing methodology forecasting framework banks"
+      - "VAR model climate scenario loan portfolio forecasting"
+      - "time series forecasting climate risk banking transparent explainable"
+    relevant_to: [Q5, Q6]
+    status: pending
+
+  - name: web-regulatory-climate-frameworks
+    type: web
+    queries:
+      - "Federal Reserve climate stress test 2023 pilot exercise methodology"
+      - "ECB climate stress test banking supervision results"
+      - "NGFS climate scenarios regulatory stress testing banking"
+    relevant_to: [Q6, Q7]
+    status: pending
+
+  - name: web-fred-loan-data
+    type: web
+    queries:
+      - "FRED BUSLOANS commercial industrial loans time series characteristics"
+      - "FRED CONSUMER consumer loans aggregate banking data"
+    relevant_to: [Q3, Q4]
+    status: pending
