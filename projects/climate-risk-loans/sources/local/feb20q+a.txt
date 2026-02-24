@@ -1,0 +1,352 @@
+Unknown Speaker  
+Hello,
+
+Unknown Speaker  
+yeah, so I'll probably stay behind so I can control and then they give them the floor.
+
+Unknown Speaker  
+But you try, you guys, you try say something. I want to make sure you can hear them, because I don't want the microphones.
+
+Unknown Speaker  
+Can you hearing me?
+
+Unknown Speaker  
+Yes.
+
+Unknown Speaker  
+Okay, welcome. Welcome everyone. We're back here. I hope you guys have opportunity to think about it and have a lot of questions. You have anything to say, Veronica, or you just want to go with questions,
+
+Unknown Speaker  
+oh yeah, oh yeah, oh
+
+Unknown Speaker  
+yeah. Our team name is too big to melt our team name
+
+Unknown Speaker  
+is
+
+Unknown Speaker  
+green
+
+Unknown Speaker  
+horizon. Your name is green horizon. I
+
+Unknown Speaker  
+love them.
+
+Unknown Speaker  
+Thank
+
+Unknown Speaker  
+you guys. So we have one team with four and one team with
+
+Unknown Speaker  
+three. Yeah, yes. I
+
+Unknown Speaker  
+Okay,
+
+Unknown Speaker  
+but yeah, we could just jump in to the questions. We were thinking, you guys can drive the conversation as much as you want.
+
+Unknown Speaker  
+So whoever wants to go first?
+
+Unknown Speaker  
+Yeah. So we had, um, I know at the beginning we were talking about a little more about covid and how you kind of wanted us to go with however we thought would be the best way to approach it. So I think in class, when we talk about covid with a couple of homework assignments we've done, we treat covid as a structural break and we make it into a dummy variable of sorts. But do you guys have like, a standard way you've been treating covid, or is there a way that you want us to kind of think about it, or, yeah, like, is there just, like, a standard way you guys have been going about it and treating covid With all of the forecasting you guys have done?
+
+Unknown Speaker  
+Did they hear me? You had a really good answer,
+
+Unknown Speaker  
+yeah. I think that sounds right, right. Dummy variable sounds like the right thing to do now that we're further removed from the event. So one thing was FYI, when the event actually happened, and we're going through it, say, like back in 2021 2022 the issue that we were having was also that 2020, was part of our back test effectively.
+
+Unknown Speaker  
+So that kind of muddled the amount of back test data points we had, because we couldn't really use those, and it was very clear gap. So I think treating it with dummy variables makes sense. That's the way that a lot of people have been doing it. I would just question it when you're doing any kind of access thing, or if you're giving us your out of gamble period, make sure you have it out. Okay, sounds good. Thank you.
+
+Unknown Speaker  
+We were also wondering we had an idea of how we wanted to model the loans, but is there a specific outcome metric that's most meaningful to you guys, like using just growth in number of loans or credit loss or anything
+
+Unknown Speaker  
+like that? Excuse
+
+Unknown Speaker  
+me, George. Go ahead and ahead,
+
+Unknown Speaker  
+I think it's open ended.
+
+Unknown Speaker  
+The original variable that we gave you guys, the time series, I think, is just the cumulative amount of cumulative balance of loans in the US. If you want to look at that, that's fine. You can also do whatever variable conversion. If you want to look at percentage change over time steps,
+
+Unknown Speaker  
+that's also valid. It really depends on what you think your model will be able to predict best, and you know, be able to justify why you did that variable transformation or took a proxy.
+
+Unknown Speaker  
+Does that makes sense.
+
+Unknown Speaker  
+I would only add to that, that at the end of the day, when you're producing results and showing insights,
+
+Unknown Speaker  
+whether you model it as a growth or model it as a level, or however you want to model it, just make sure that those you're able to draw the right insights. So for example, if your final conclusion is, we see the industry dropping Ager, or the growth rate is Minnesota. Like, how are you going to explain your final conclusion? Make sure that you're able to derive it.
+
+Unknown Speaker  
+I was going to ask, how far in the past would you think it'd be necessary or applicable to look to understand the relationship between the CNI loans and like in the macroeconomic variables like GDP and such? Do
+
+Unknown Speaker  
+you think it would be necessary to go as far back as data gives us, or a certain time area? I was just wondering about that
+
+Unknown Speaker  
+modeling call.
+
+Unknown Speaker  
+I would say you want to make sure you include enough business cycles, so maybe take a look at what's happening like for sure, you want to take a look at the great financial crisis of 2008 you also want to take a look at what happened in 2001 I don't know that was an impactful to the loans, but you know you had the technology bubble in like the 2000 you also had some interesting effects in The 90s. So I would say you want to keep those at least the last three decades.
+
+Unknown Speaker  
+It also depends on what you're planning to feed into your model. So as all you guys have seen, you're trying to predict CNI loans. So you're looking for factors that would capture portions of the economy to explain that some of those factors may not go as far. So GDP, yes, it will go back to 1940s SMB, 500 even for some of the equity indices may actually go back. Well, maybe. But if you're looking at some other metrics to capture corporate activity like yields and things like that. So those time series may not be available as far as before the 90s. So it becomes a little bit of a modeling question. It's a trade off. Just because you have more historical data business doesn't necessarily mean that your models perform better. What matters more is that your historical data captures relevant business cycles, okay,
+
+Unknown Speaker  
+yeah, I agree with Ronnie. I asked me to try to know, to see you know different data sources, so you know the real data also you know, some, some, some metrics, you know, or variables, they are only come with the annual test, monthly, so you have to, you know, adjust the frequency. You know, think about, you know, how long you integrate data, and also about, you know, yes, have different, you know, start date use on adjustment for the data analysis.
+
+Unknown Speaker  
+I mean, kind of going off of that when we did look at the data, like you were saying, you know, we have the NGFS scenario data that was like annual. We have GDP that was quarterly, and then also the business consumer loans that were monthly. So kind of as you were saying, how do we? How would like? What would you say is like? The best way to model that frequency should be aggregated to like a yearly thing, or interpolate to monthly or
+
+Unknown Speaker  
+courtesy. Another great modeling question.
+
+Unknown Speaker  
+You know, I think you want to make a decision that's well founded, and if you're not sure what the best approach is, you could just give it a try with different frequencies and see what makes your model perform the best. I do agree that it's an open ended question, even from what we were talking a moment ago about some variables not being available historically. Do you want to create proxies, or, you know, be creative with your approach to solving these kind of data questions, data problems?
+
+Unknown Speaker  
+Yeah, and if you're, if you're comparing, say, as part of the project document, I think there's a statement there that says that you could compare different NGFS models.
+
+Unknown Speaker  
+You know, some models, I think, have different frequencies from others. So you know, also fit your your data structure, depending on how you want to compare your model performance. Do you want to pick the most granular, the least granular? What's going to lead to most or these errors? If you can do a variable analysis, that would be great, but not required.
+
+Unknown Speaker  
+What I can do also, guys, now that you pointed this out, is I had a class prepared for Midas, which is how to do analysis with mixed frequency data, so I will do it earlier rather than later.
+
+Unknown Speaker  
+I had a question that's kind of based off of the two articles that you guys provided us with for some background information. So the first paper, the US banks exposure to climate transition risk, offers kind of a general conclusion. If I recall correctly, it says something about the fact that even in like the worst case scenario, the largest exposure was less than 14% and I know that obviously we're tasked with, I guess, like developing our own model and finding our own conclusions. But how, I guess, strictly, should we use the findings of that paper as either like a guideline or some kind of an accuracy check, or is that just something that we shouldn't be concerned about at all, if our model ends up producing results that are entirely different.
+
+Unknown Speaker  
+Yeah, I think it's context. It'd be interesting to know how they came up with that framework to get to that 40% I think that that paper is also maybe a couple years old. I don't know how it aligns with these scenarios, or it could use these scenarios, but it's an interesting guidelines, right? I don't know if they were talking about CNI specifically for exposure, but it's an interesting guideline in context. I think that one or both of the papers that we referenced had maybe more complex modeling frameworks that included a wider variety of data sources, including bank specific balance sheet information, regional segmentation, all these things you know, are open questions.
+
+Unknown Speaker  
+We're not giving you guys that specific direction of trying to do this type of segmentation or granular analysis, but I think that's where they come up with those exposure numbers.
+
+Unknown Speaker  
+Like Veronica said, it's just useful context. These
+
+Unknown Speaker  
+are great questions.
+
+Unknown Speaker  
+I had a question about how you wanted us, or if you had any thought process on how we should approach consumer loans. When we were looking at the Fed papers, we saw that their models said that they can't estimate consumer loan exposure because the models track industries and not households. And our approach, the way that we were thinking about going about this, was using an indirect approach. We know that climate scenarios affect unemployment and interest rates, which affect how consumers can repay, and so we were just wondering whether or not you had any thoughts on that process, or if you had a different approach that you preferred.
+
+Unknown Speaker  
+Now I think that makes sense. You're kind of going a different angle looking at the drivers. So is that effectively, you're saying, what are the consequences of climate change to consumers, and then modeling from that angle, I don't think I have a concern with that approach.
+
+Unknown Speaker  
+Just make sure that you're very thorough about consumer drivers. So raise is important. Unemployment is obviously very important, but are there other aspects of it that
+
+Unknown Speaker  
+that matter to consumers? Okay, thank you.
+
+Unknown Speaker  
+I do want to make a point, just making a point about the data granularity and data transformations. And this is something that sometimes you don't realize until you're actually modeling. So I give you the Cliff's Notes for this.
+
+Unknown Speaker  
+When you're modeling your time series,
+
+Unknown Speaker  
+make sure you understand which ones are leading and which ones are lagging. So for example, a GDP print that was published with whatever tag date it is in your time series, think about whether that GDP realized in the last three months even about to realize like how, because the one thing you don't want to do when you're building a forecast is accidentally include a future point in your time series. So sometimes the operations are lagging understanding the context of what these measures are taking or taken and how the data provider tags it. So if it's a GDP in this area, obviously, for the last three quarters GDP average,
+
+Unknown Speaker  
+so being very mindful about the drivers you're thinking and when the driver was printed, or one time period it captures because it could actually, I've seen it in practice. Your model ends up being so good, and you just don't realize that you ended up using the close of day value in the morning. So you're technically using the future to predict your path, which is not correct, so to be mindful of time stamps.
+
+Unknown Speaker  
+And then we were wondering whether we should aggregate all CNI exposure into one bucket, or if there's like specific industries that are more climate sensitive, like agriculture, real estate, that you want us to look into, how they're affected specifically, or would you just be
+
+Unknown Speaker  
+aggregated? I mean, that's a good in theory. Yes, you should have very different ones. I don't know how you would pull out the industry, from the sector, from the industry number on. I don't know if price gives you the idea that the one thing that you
+
+Unknown Speaker  
+encourage you guys to do is to go to the firm level that you're going to go, like, do you want to make America city? Like? That's not something that we want you guys doing. We want you to make statements about industry.
+
+Unknown Speaker  
+I'm sure we don't really thought about Wait, you
+
+Unknown Speaker  
+find the data you want to use it to understand the different sectors. That's fine. But our view was kind of looking at the aggregate, which also covers region, for instance, language, sector, but also regions aggregated. So you have these things
+
+Unknown Speaker  
+happening, yeah, the time series that we gave you guys is just the US, right? Yeah,
+
+Unknown Speaker  
+this term is aggregate level. So if you edit these grammar levels, you have four times. So you can do more study, more can
+
+Unknown Speaker  
+document these findings in the report. It could be more interesting,
+
+Unknown Speaker  
+like more challenging to find drivers at the granite level too. Like, if you're doing an industry wide total loans, it may be a little bit more aligned to the macro variables are using. So you're using like an unemployment, like US unemployment, or you're using unfolds rate, but if you start to break out the sectors or the regions, then do you need region specific unemployment? And then are those overall relationships going to start to kind of break down?
+
+Unknown Speaker  
+The more I mean, by the way, these are great questions. I think these are the things like this is like taking the technical into the domain. So whenever we're building models and having data analysis exercises, these are the kinds of discussions we have on the data and the Connect, the connection of the points to the real world and what we're trying to capture. So this is great.
+
+Unknown Speaker  
+Are there any scenarios that you guys care more about, like climate scenarios,
+
+Unknown Speaker  
+any or all?
+
+Unknown Speaker  
+Okay, I had a similar question. I was wondering if there's a specific time horizon you would want us to look at, or it would be even encouraged for us to look at multiple time horizons. I
+
+Unknown Speaker  
+believe the climate data forecast that you have for the scenarios goes back to 2050, I forget what the Paris Climate Agreement was for. Was it for like the 30s that they were doing the estimates, or like so anywhere between? Maybe.
+
+Unknown Speaker  
+I think as long as I have so model and map is you can just plug in The Stars numbers. I guess it can
+
+Unknown Speaker  
+result by matters.
+
+Unknown Speaker  
+The more questions.
+
+Unknown Speaker  
+Last question, is there a specific threshold or something specific that you're looking for at which point you would take action, like, for example, if we see there's going to be a 2% decrease in CNI loans or something of that sort, or like, a number that you guys are looking for at all.
+
+Unknown Speaker  
+Well, I think the objective is to, like you said, create actionable derive actionable insights, like, if you think that they're going to decrease by 2%
+
+Unknown Speaker  
+can you dig into that number? Answer some important policy questions or systemic risk questions?
+
+Unknown Speaker  
+Can you explore maybe? I don't know.
+
+Unknown Speaker  
+I don't want to give you any other any hypothetical questions, but, yeah, think about it. Your model is going to give you some outputs, but if you're going to present this to say, an executive or someone who's making strategic decisions about increasing load exposures or whatnot, you want to be able to derive these or granular suggestions. So try to be creative. Yeah, yeah.
+
+Unknown Speaker  
+If you, if you start exploring, you know multiple approaches, like what we're talking about, where you have different types of data interpolation, or you try different macro variables or segmentation, these are all really important and interesting questions that will give you different insights. Even though these models may all give you a sort of similar type of output, they'll tell you very different stories. So try to use that. I
+
+Unknown Speaker  
+would also make a general comment.
+
+Unknown Speaker  
+We estimate. Estimates are fun, and they're nice because you get a point estimate, but a lot of times there's a lot of value from the confidence bands around the estimate. So a lot of times, when we operate in, you know, industry environments and we want to do take actions, is not just about awareness, and it is about how comfortable we are with the number eight within certain documents.
+
+Unknown Speaker  
+Also, sorry, a little bit unrelated to that previous question, but we have multiple NGFS models or scenarios. It would be great if you guys, you know, if you're presenting this model, and the insights that you derive from this model, showing a robust understanding of what different data sets are telling you, like if you want to visualize the what each climate scenario, so we go to Hot House, or, you
+
+Unknown Speaker  
+know, the current policies. How do they differ? How are they different, both in terms of climate variables or economic variables. Really try to show that you thought about what these variables mean, the story they're telling you, and how they're applicable to your forecasting model. I
+
+Unknown Speaker  
+was just gonna say that I'm glad you brought a company intervals and forecasting.
+
+Unknown Speaker  
+That's what we spent the last class.
+
+Unknown Speaker  
+If you can't forecast.
+
+Unknown Speaker  
+So far, have you finish your we're about to have one,
+
+Unknown Speaker  
+something
+
+Unknown Speaker  
+that I really didn't do last time, but it would be great to do is we introduced ourselves to cells. Maybe you want to go around the room, say your names and a little bit about your background not gonna make you say a fun fact.
+
+Unknown Speaker  
+Hi, I'm Halia, and I Bachelor's of Arts in econ with a minor in English.
+
+Unknown Speaker  
+Apart from doing getting my master's in economics, I am currently working full time at General parts company, and I'm doing category management. So that's been super cool, just coming up with strategy, working cross functionally, marketing, pricing, everything. So, yeah, been pretty cool
+
+Unknown Speaker  
+so far. Hi, I'm Jiwon. My bachelor's degree. I have an economics and I had a double major in History. Previously, I've worked with EY and their transfer pricing consulting department.
+
+Unknown Speaker  
+I'm planning on going back at the middle of this year, so I'm really excited. It's a lot of fun for me. It's just kind of like one big riddle, and I get to figure out different ways to solve the riddle. So that's a lot of fun. But yeah, I have outside of econ, I have a lot of interest in, like, history, reading, writing, a lot of, like the humanities aspects, which is part of the reason why I'm also interested in econ, because it's kind of an application of all of that so nice.
+
+Unknown Speaker  
+My name is Gabby, and I studied Computer Science and Economics undergrad. I worked at Francisco partners for the last summer, and I'm still working there, where I worked on the deals and operations team as their intern for the summer, and probably continue working for them as a consultant after we graduate. And I'm really interested in AI, honestly, I think that that's the recent changes, and it has been really interesting to me in the last couple of months.
+
+Unknown Speaker  
+Hi, I'm Brianna. It's nice to meet you guys. In undergrad, I studied math and economics. I minored in linguistics, and I think a lot of the work I've done so far has been very academically focused, a lot of research, and that kind of crosses with either something very mathy or something very languagey. So I was in Brazil last summer doing research, and yeah, I'll be joining PwC later this year, doing transfer pricing as well. There's a lot of transfer pricing love in the four plus one economic group.
+
+Unknown Speaker  
+So yeah, very excited for that, and it's really nice to meet you guys over zoom and hopefully in person soon.
+
+Unknown Speaker  
+Yeah, hi everyone. I'm Jeff. I graduated with Masters. No,
+
+Unknown Speaker  
+I graduated with a bachelor's in economics with a minor in anthropology.
+
+Unknown Speaker  
+My main interest in economics is behavioral economics and black micro. This past summer, I was actually at Bank of America in the Atlanta office doing global payment solutions, and I'll be returning this summer as a GPS analyst.
+
+Unknown Speaker  
+That's great.
+
+Unknown Speaker  
+Um, I'm Aiden.
+
+Unknown Speaker  
+My undergrad was in economics and linguistics.
+
+Unknown Speaker  
+Really excited to work with on this project. I have sort of a legal background. My previous internships have been in law and so I'm pretty interested in intersections between law and economics.
+
+Unknown Speaker  
+I'm really excited to work on this project, and it's nice to meet you guys.
+
+Unknown Speaker  
+Hi, likewise.
+
+Unknown Speaker  
+My name is really I have undergrad degree in economics and chemistry. My previous background last summer, I worked at a retail AI company just creating machine learning models for them. And after graduation, I'll be working as a strategy analyst in the auto loan industry. And I that's not been my focus in the past, but I'm excited to learn something new, and I do have a interest in healthcare strategy, and I hope to transition to that at some
+
+Unknown Speaker  
+point. They are an interesting bunch.
+
+Unknown Speaker  
+They are very interesting. They have strong background.
+
+Unknown Speaker  
+Yeah, I was gonna say I'm
+
+Unknown Speaker  
+looking forward to the presentation.
+
+Unknown Speaker  
+They are. They are teaching me AI. They're teaching machine learning. I feel like an old but I'm moving forward.
+
+Unknown Speaker  
+That'd be helped me set out my cock coat. I it.
+
+Unknown Speaker  
+Yeah, we heard you guys were interested in meeting with us in person. Hopefully we can make that happen for some of the Q and A sessions presentation.
+
+Unknown Speaker  
+So I was talking about Veronica, but they have a midterm on March 5, which is the week and then the week after spring break before, no, yeah, the week is March 10 to 12. Spring Break, yeah, yes, the week before, yeah.
+
+Unknown Speaker  
+Sorry.
+
+Unknown Speaker  
+I
+
+Unknown Speaker  
+so where they are, but I think maybe the same, maybe March 3, or something around that before spring break would be fine if they continue, because then after spring break, we're running on March 15, so we're.
+
+Transcribed by https://otter.ai

@@ -1,33 +1,30 @@
-# Week 6: Key Concepts - Forecasting with ARMA Models
+# Week 6: Key Concepts - Forecasting with ARMA & Forecast Evaluation
 
-## Concept Map
+## Full Week Concept Map
 
 ```mermaid
 graph TD
-    A[Week 6: Forecasting with ARMA] --> B[Loss Functions]
-    A --> C[Optimal Forecast]
-    A --> D[Forecasting Mechanics]
-    A --> E[Forecast Properties]
-    A --> F[Interval & Density Forecasts]
+    A["Week 6: Forecasting & Evaluation"] --> B["Part A: ARMA Forecasting<br/>(Tuesday)"]
+    A --> G["Part B: Forecast Evaluation<br/>(Wednesday, Feb 19)"]
 
-    B --> B1["Quadratic: L(e) = e²"]
-    B --> B2["Absolute: L(e) = |e|"]
-    B --> B3["Linlin: asymmetric slopes"]
+    B --> B1[Loss Functions]
+    B --> B2[Forecasting Mechanics]
+    B --> B3[Forecast Properties]
+    B --> B4[Interval & Density Forecasts]
 
-    C --> C1["Quadratic → Conditional Mean"]
-    C --> C2["Absolute → Conditional Median"]
-    C --> C3["Linlin → Conditional Quantile"]
+    G --> G1["Absolute Evaluation<br/>(Is my forecast good?)"]
+    G --> G2["Relative Evaluation<br/>(Is Model A better than B?)"]
+    G --> G3["External Forecasts<br/>(Markets & Surveys)"]
 
-    D --> D1["MA(q): forecast q steps, then mean"]
-    D --> D2["AR(1): ŷ = φʰyT (recursive)"]
-    D --> D3["ARMA: combine AR + MA logic"]
+    G1 --> G1a["Unforecastability Principle"]
+    G1 --> G1b["Mincer-Zarnowitz (EXAM)"]
+    G1 --> G1c["Accuracy: MSE, RMSE, MAE"]
 
-    E --> E1["E(error) = 0"]
-    E --> E2["Cov(forecast, error) = 0"]
-    E --> E3["Var(actual) > Var(forecast)"]
+    G2 --> G2a["Diebold-Mariano Test"]
+    G2 --> G2b["Predictive R², Theil U"]
 
-    F --> F1["CI: ŷ ± 1.96σₕ"]
-    F --> F2["Density: N(ŷ, σₕ²)"]
+    G3 --> G3a["Forward/Futures Markets"]
+    G3 --> G3b["SPF, Michigan Survey"]
 ```
 
 ## The Forecasting Pipeline
@@ -162,6 +159,8 @@ flowchart LR
 
 ## The Big Ideas
 
+### Part A: Forecasting
+
 ### 1. The loss function determines what "optimal" means
 Under quadratic loss, the optimal forecast is the conditional mean (what OLS gives you). Under absolute loss, it's the median. Under asymmetric loss, the optimal forecast is deliberately biased. **You must choose your loss function before you can say what the "best" forecast is.**
 
@@ -190,6 +189,23 @@ The exact forecast error includes terms like $(\theta - \hat{\theta})\varepsilon
 ### 8. Pseudo out-of-sample testing is how you validate before the future arrives
 You pretend you're at time $T$, forecast $h$ steps ahead using only data through $T$, then compare to the actual realization (which you already have). **The key requirement is fairness — no peeking at future data.**
 
+### Part B: Forecast Evaluation
+
+### 9. You cannot just eyeball MSEs — you need the Diebold-Mariano test
+Forecast errors are random variables, so the difference in MSEs between two models is also random. Just because Model A has a smaller MSE than Model B doesn't mean it's significantly better. The DM test formalizes this: it's a t-test for whether the mean loss differential is zero, using HAC standard errors. The Southern Company example proves the point: teams had different MSEs, but the DM test showed no significant difference.
+
+### 10. The Mincer-Zarnowitz regression is the gold standard for testing forecast optimality
+Regress $y_{t+h}$ on $\hat{y}_{t+h,t}$. If $(\beta_0, \beta_1) = (0, 1)$, your forecast is optimal (the actual differs from the forecast only by unpredictable noise). The professor marked this as EXAM material.
+
+### 11. Bias is not always bad — the bias-variance trade-off
+$MSE = \text{bias}^2 + \text{variance}$. A slightly biased model that dramatically reduces variance can have a lower MSE than an unbiased model. This is the forecasting analog of the regularization principle in statistics.
+
+### 12. Markets aggregate forward-looking information
+Financial market prices (forwards, futures, options) embed the collective expectations of participants who have real money on the line. Even without a causal story, these variables can be powerful predictors on the RHS of a forecasting model. The S&P 500 doesn't "cause" GDP growth, but it anticipates it.
+
+### 13. Survey consensus forecasts are surprisingly good
+Individual survey forecasts are noisy, but the average (consensus) of professional forecasters often beats sophisticated models. The SPF, Livingston Survey, and Michigan Survey are all practical data sources. The professor specifically suggested the Michigan inflation expectations survey for the consumer loans project.
+
 ## Formulas to Know
 
 1. **Forecast error:** $e_{T+h,T} = y_{T+h} - \hat{y}_{T+h,T}$
@@ -207,6 +223,19 @@ You pretend you're at time $T$, forecast $h$ steps ahead using only data through
 13. **Density forecast:** $N(\hat{y}_{T+h,T}, \sigma_h^2)$
 14. **Trend forecast:** $\hat{y}_{T+h,T} = \hat{\beta}_0 + \hat{\beta}_1(T+h)$
 15. **ARMA(1,1) 2-step error variance:** $\sigma_2^2 = \sigma^2(1 + (\phi + \theta)^2)$
+
+### Part B Formulas (Forecast Evaluation)
+16. **MSE:** $\widehat{MSE} = \frac{1}{T}\sum e^2_{t+h,t}$
+17. **MSE decomposition:** $MSE = \sigma^2_e + \mu^2_e$ (variance + bias squared)
+18. **RMSE:** $\widehat{RMSE} = \sqrt{\widehat{MSE}}$
+19. **MAE:** $\widehat{MAE} = \frac{1}{T}\sum |e_{t+h,t}|$
+20. **Predictive $R^2$:** $R^2 = 1 - \frac{\sum e^2_{t,t-1}}{\sum (y_t - \bar{y})^2}$
+21. **Theil U:** $U = 1 - \frac{\sum e^2_{t,t-1}}{\sum (y_t - y_{t-1})^2}$
+22. **Mincer-Zarnowitz (EXAM):** $y_{t+h} = \beta_0 + \beta_1 y_{t+h,t} + u_t$; optimality: $(\beta_0,\beta_1) = (0,1)$
+23. **Orthogonality (EXAM):** $e_{t+h,t} = \alpha_0 + \alpha_1 y_{t+h,t} + u_t$; optimality: $(\alpha_0,\alpha_1) = (0,0)$
+24. **DM test:** $DM_{12} = \bar{d}_{12} / \hat{\sigma}_{\bar{d}_{12}} \sim N(0,1)$; where $d_{12t} = L(e^a_t) - L(e^b_t)$
+25. **Fisher equation:** $i_t(t+h) = r_t(t+h) + E_t(\pi_{t+h})$
+26. **Forward rate (risk neutral):** $F_t(t+h) = E_t(S_{t+h})$
 
 ## Common Exam Traps
 
@@ -226,16 +255,145 @@ You pretend you're at time $T$, forecast $h$ steps ahead using only data through
 
 - **Trap:** Not knowing the forecast error structure grows with horizon. At $h=1$: error is WN ($\sigma^2$). At $h=2$: error is MA(1) ($\sigma^2(1 + \theta_1^2)$). Variance grows with horizon until it reaches $\text{Var}(y_t)$.
 
+### Part B Exam Traps (Forecast Evaluation)
+
+- **Trap (EXAM):** Forgetting the Mincer-Zarnowitz regression. Regress $y_{t+h}$ on $\hat{y}_{t+h,t}$, test $(\beta_0, \beta_1) = (0, 1)$. The equivalent form: regress $e_{t+h,t}$ on $\hat{y}_{t+h,t}$, test $(\alpha_0, \alpha_1) = (0, 0)$. To go from one to the other, subtract $\hat{y}$ from both sides of the MZ regression.
+
+- **Trap (EXAM):** Confusing orthogonality testing. The forecast error should be orthogonal to ALL available information, not just the forecast itself. The general test: $e = \alpha_0 + \sum \alpha_i x_i + u$, F-test that all $\alpha = 0$.
+
+- **Trap:** Comparing MSEs without a formal test. Two models' MSEs will never be exactly equal (they're random variables). The Diebold-Mariano test is needed. Just because one MSE is numerically smaller does NOT mean the model is significantly better.
+
+- **Trap:** Thinking bias is always bad. MSE = bias$^2$ + variance. A slightly biased model can have lower MSE than an unbiased one if the variance reduction is large enough.
+
+- **Trap:** Using Theil's U and misinterpreting a value near zero. Many economic variables are near-random-walks, so beating the "no change" forecast (the benchmark for Theil's U) is very hard. A low U doesn't necessarily mean your model is bad.
+
+- **Trap:** Forgetting HAC standard errors in the DM test. Multi-step-ahead forecast errors are serially correlated, so the loss differentials may also be serially correlated. The DM standard error must account for this (use HAC, or regress on intercept with AR(p) errors selected by AIC).
+
+- **Trap:** Thinking market-based forecasts imply causation. The S&P 500 helps forecast GDP not because it causes growth, but because market participants anticipate future conditions. The predictive relationship runs through information aggregation, not causality.
+
+## Part B: Forecast Evaluation (Feb 19 Lecture)
+
+### 9. The Unforecastability Principle
+
+> **Professor:** "If I can forecast in any way my forecast error, that means there was something in the model I have not exploited... my forecast in the first place was not optimal."
+
+This is the **master property** of good forecasts. It holds regardless of:
+- Whether you use linear projection or conditional mean optimality
+- Whether the loss function is quadratic or not
+- Whether the series is stationary or not
+
+### 10. Checking Forecast Quality — The Mincer-Zarnowitz Regression (EXAM)
+
+```mermaid
+flowchart TD
+    FORECAST["You have forecasts ŷ_{t+h,t}<br/>and realizations y_{t+h}"] --> CHECK{"Is the forecast<br/>optimal?"}
+
+    CHECK --> ORTHO["Test 1: Orthogonality<br/>e = α₀ + Σαᵢxᵢ + u<br/>F-test: all α = 0"]
+    CHECK --> MZ["Test 2: Mincer-Zarnowitz<br/>y_{t+h} = β₀ + β₁ŷ_{t+h,t} + u<br/>Test: (β₀,β₁) = (0,1)"]
+    CHECK --> BIAS["Test 3: Zero bias<br/>Regress e on constant<br/>Test: mean = 0"]
+    CHECK --> SERIAL["Test 4: Serial correlation<br/>1-step: errors should be WN<br/>h-step: at most MA(h-1)"]
+
+    MZ --> EQUIV["Equivalent form:<br/>e = α₀ + α₁ŷ + u<br/>Test: (α₀,α₁) = (0,0)"]
+
+    style MZ fill:#ffcdd2
+    style EQUIV fill:#ffcdd2
+    style ORTHO fill:#fff3e0
+```
+
+> **Professor:** "If you regress your forecast error on your forecast, these two coefficients should all be zero."
+
+**Why the MZ regression works:** If $\beta_0 = 0$ and $\beta_1 = 1$, then $y_{t+h} = y_{t+h,t} + u_t$, which says the forecast differs from the actual only by an unpredictable error — exactly the optimality condition.
+
+### 11. Accuracy Measures — The Hierarchy
+
+```mermaid
+flowchart TD
+    ERRORS["Forecast Errors<br/>e_{t+h,t} = y_{t+h} - ŷ_{t+h,t}"] --> BIAS["Forecast Bias<br/>μ̂ = (1/T)Σe"]
+    ERRORS --> VAR["Error Variance<br/>σ̂² = (1/T)Σ(e - μ̂)²"]
+    ERRORS --> MSE["MSE = (1/T)Σe²<br/>= σ² + μ²<br/>(bias² + variance)"]
+
+    MSE --> RMSE["RMSE = √MSE<br/>⭐ Professor's #1 choice<br/>(same units as forecast)"]
+    ERRORS --> MAE["MAE = (1/T)Σ|e|<br/>(less popular)"]
+    MSE --> PRED_R2["Predictive R²<br/>= 1 - Σe²/Σ(y-ȳ)²<br/>(vs. mean benchmark)"]
+    MSE --> THEIL["Theil U<br/>= 1 - Σe²/Σ(y-y₋₁)²<br/>(vs. random walk)"]
+
+    style RMSE fill:#c8e6c9
+    style MSE fill:#e3f2fd
+```
+
+**The bias-variance trade-off:** $MSE = \sigma^2_e + \mu^2_e$
+
+> **Professor:** "Sometimes you may be willing to take a little bit of bias if it gives you a much, much smaller variance."
+
+This means: don't automatically reject a model just because it's slightly biased. If that bias buys you a big reduction in variance, the overall MSE can be lower.
+
+### 12. Comparing Models — Diebold-Mariano Test
+
+```mermaid
+flowchart TD
+    TWO["Model A and Model B<br/>both produce forecasts"] --> LOSS["Compute loss for each:<br/>L(eᴬ) and L(eᴮ)"]
+    LOSS --> DIFF["Loss differential:<br/>d_t = L(eᴬ_t) - L(eᴮ_t)"]
+    DIFF --> MEAN["Sample mean: d̄"]
+    MEAN --> PROBLEM{"d̄ is never<br/>exactly zero<br/>(random variable!)"}
+    PROBLEM --> DM["DM = d̄ / σ̂_d̄ → N(0,1)<br/>(t-test with HAC SE)"]
+    DM --> REJECT{"Reject H₀?"}
+    REJECT -->|"Yes"| BETTER["One model is<br/>significantly better"]
+    REJECT -->|"No"| SAME["Models have equal<br/>predictive ability"]
+
+    style DM fill:#e3f2fd
+    style PROBLEM fill:#fff3e0
+```
+
+> **Professor (Southern Company example):** "From a pure pointwise view, one team did better, but when we tested the difference, there was no significant difference."
+
+**Key insight the professor emphasized:** Forecast errors are random variables. Loss functions of random variables are random variables. So the difference in MSEs between two models is itself random. You MUST do a formal test — you cannot just eyeball which MSE is smaller.
+
+**Simple implementation:** Regress the loss differential $d_t$ on a constant with HAC standard errors. The t-test on the intercept IS the DM test.
+
+### 13. Market-Based and Survey-Based Forecasts
+
+```mermaid
+flowchart TD
+    EXTERNAL["External Forecast Sources"] --> MARKET["Market-Based"]
+    EXTERNAL --> SURVEY["Survey-Based"]
+
+    MARKET --> FWD["Forward/Futures Rates<br/>F_t(t+h) = E_t(S_{t+h})"]
+    MARKET --> FISHER["Bond Yields (Fisher eq.)<br/>i = r + E(π)<br/>→ extract expected inflation"]
+    MARKET --> OTHER["VIX, term premium,<br/>default premium,<br/>dividend yield"]
+
+    SURVEY --> SPF["Survey of Professional<br/>Forecasters (SPF)<br/>— Philly Fed, quarterly"]
+    SURVEY --> MICH["Michigan Survey<br/>— household inflation<br/>expectations"]
+    SURVEY --> LIV["Livingston Survey<br/>— bi-annual, 50+ years"]
+
+    MARKET --> WHY["Why markets work:<br/>aggregate info from<br/>participants with skin<br/>in the game"]
+    SURVEY --> CONSENSUS["Consensus (average)<br/>often performs very<br/>well relative to<br/>individual forecasts"]
+
+    style FISHER fill:#fff3e0
+    style MICH fill:#fff3e0
+```
+
+> **Professor on markets:** "It's not a causal relationship, but helpful in forecasting, because the market anticipates what's going to happen."
+
+> **Professor on Michigan Survey (directly for BofA project):** "If you need to think about inflation for your consumer loans, there is data — University of Michigan — individual forecasts are all over the place, but on average, they do pretty well."
+
 ## Connections to the Climate-Risk-Loans Project
 
-This lecture is directly relevant to Phase 2 modeling:
+This week's material is directly relevant to Phase 2 modeling:
 
-1. **AR baseline models** (from empirical analysis notebook): We estimated AR(12) for BUSLOANS and AR(4) for CONSUMER — the recursive forecast formula $\hat{y}_{T+h,T} = \hat{\phi} \hat{y}_{T+h-1,T}$ is how we'll generate baseline loan growth forecasts.
+1. **AR baseline models** (from empirical analysis notebook): We estimated AR baselines for BUSLOANS and CONSUMER — the recursive forecast formula is how we generate baseline loan growth forecasts.
 
 2. **Loss function choice**: BofA cares about scenario ranges (best/worst case), not just point forecasts. This maps to interval/density forecasts, and potentially asymmetric loss if downside risk matters more.
 
-3. **Pseudo out-of-sample validation**: The professor's framework for fair testing is exactly what we need — train on pre-2020 data, forecast 2020-2025, compare to actuals.
+3. **Pseudo out-of-sample validation**: The professor's framework for fair testing is exactly what we implemented — expanding window, exclude COVID from evaluation.
 
 4. **Forecast variance inequality**: When we present forecast plots to BofA, the forecast will be smoother than actual loan data. We should explain this, not apologize for it.
 
-5. **Thursday preview**: Forecast evaluation methods are coming — this will give us the tools (RMSE, Diebold-Mariano test) to compare our AR baseline against VAR/ADL models.
+5. **MSE/RMSE** are exactly the metrics used in our OOS evaluation in `scenario_forecasting.ipynb` — the professor confirmed RMSE is the #1 choice.
+
+6. **Diebold-Mariano test**: We should add this to formally compare AR baseline vs. VAR — just comparing RMSE numbers isn't enough (as the professor demonstrated with the Southern Company example). Our current 10-17% improvement could be statistically significant or not — the DM test would tell us.
+
+7. **Mincer-Zarnowitz regression**: We should run this on our pseudo-OOS forecast errors to verify forecast optimality before presenting to BofA.
+
+8. **Market variables as predictors**: The professor explicitly said putting financial variables like the S&P 500 on the RHS helps forecasting — this supports our use of DGS10 and FEDFUNDS as predictors in the consumer VAR. It's not a causal story; it's information aggregation.
+
+9. **Survey inflation expectations**: For the consumer loan model, the Michigan Survey inflation expectations could be a useful additional predictor — the professor mentioned this specifically in the context of consumer loans.

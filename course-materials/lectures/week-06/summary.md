@@ -1,49 +1,92 @@
-# Week 6: Forecasting with ARMA Models
+# Week 6: Forecasting with ARMA Models & Forecast Evaluation
 
-## Main Topic
-How to construct optimal forecasts from ARMA models: the role of loss functions in defining "optimal," the mechanics of computing h-step-ahead forecasts from MA, AR, and ARMA models, properties of forecast errors, and the construction of interval and density forecasts. This lecture is the bridge between model estimation (Weeks 3-4) and forecast evaluation (coming in Week 6 Thursday / Week 7).
+## Main Topics
+**Lecture 1 (Tuesday):** How to construct optimal forecasts from ARMA models: the role of loss functions in defining "optimal," the mechanics of computing h-step-ahead forecasts from MA, AR, and ARMA models, properties of forecast errors, and the construction of interval and density forecasts.
+
+**Lecture 2 (Wednesday, Feb 19):** Point forecast evaluation — how to assess whether your forecasts are any good (absolute evaluation) and how to compare two competing models (relative evaluation). Covers accuracy measures (MSE, RMSE, MAE), the Mincer-Zarnowitz regression, the Diebold-Mariano test, and market/survey-based forecast combinations.
 
 ## Recording Insights
 
-### Key Things the Professor Said (not on slides)
+### Lecture 1 (Tuesday) — Key Things the Professor Said
 
 **On model complexity vs parsimony (Southern Company example):**
 > "When I was consulting with Southern Company, their model was super simple — five items. They forecast electricity demand, but they have to bring that in front of the Georgia Public Commissioner, because it's semi-regulated. For them, being able to explain the model in a way that makes sense to people is very important."
 
-This directly connects to the BofA project: BofA explicitly said they value explainable, transparent models over black-box approaches. Parsimony is not just theoretical — it's what practitioners need.
+This directly connects to the BofA project: BofA explicitly said they value explainable, transparent models over black-box approaches.
 
 **On COVID and structural change:**
 > "Is COVID a structural change? Is COVID just a blip? All these are decisions that you have to make."
 
-The professor flagged this as a key forecasting decision, exactly matching what BofA said in the kickoff about COVID treatment being a major question.
-
 **On out-of-sample vs pseudo out-of-sample:**
 > "I could use my data between 1970 to 2024, then pretend I'm in 2024 — I use no information pertaining to 2025. I forecast, and then you can see what your model would have done. But this has to be done fair — no information past 2024."
-
-The professor stressed the importance of "fair" pseudo out-of-sample testing: you cannot use any future information, including for data transformations or variable selection.
-
-**On nowcasting:**
-> "Nowcasting is when you want to forecast now. For example, you may want to forecast GDP now, but GDP doesn't come out until the end of the quarter. You're trying to forecast what's happening right now before the actual release."
-
-She distinguished nowcasting (filling current gaps) from forecasting (predicting future) and backcasting (filling past gaps).
 
 **On why MA models are limited for forecasting:**
 > "This is another reason why people don't tend to like moving average models. Because they basically tell you that you can only forecast for a couple steps ahead. After that, it doesn't tell you more than the mean."
 
-This is the practical motivation for preferring AR and ARMA specifications — they can forecast arbitrarily far ahead.
-
 **On the forecast variance inequality (VAR(Y) > VAR(ŷ)):**
-> "Don't expect your forecast to match the actual data identically. Your forecast will always be a bit smoother, with a smaller variance. Plotting the two together, you have to be very careful how you interpret this graph."
-
-This is a critical practical point: when you overlay actual vs. forecast on the same plot, the forecast will always appear smoother. This is mathematically guaranteed, not a sign of a bad model.
+> "Don't expect your forecast to match the actual data identically. Your forecast will always be a bit smoother, with a smaller variance."
 
 **On the forecasting workflow:**
 > "Spend first all the time you have to get the best model you can from what we've learned. Then once you have the model, write it down, and think about what happens in the future."
 
-**On ARMA preference:**
-> "ARMA preferred because you can forecast far into the future."
+### Lecture 2 (Wednesday, Feb 19) — Key Things the Professor Said
+
+**On the unforecastability principle (foundational):**
+> "If I can forecast in any way my forecast error, that means that there was something in the model that I have not exploited in my forecast, and that was left as residuals in my forecast error, and therefore my forecast in the first place was not optimal."
+
+She emphasized this holds regardless of model type — even "super complicated" models must satisfy this property.
+
+**On estimating forecast error variance from past data (stationarity assumption):**
+> "Assuming that this beta one is constant, assuming that the sigma square is constant, so that I can do this projection to the future... Only happens if this is a stationary model."
+
+Key insight: the ability to estimate future forecast error variance from historical data depends critically on stationarity. If coefficients change over time, past information cannot reliably estimate future uncertainty.
+
+**On MSE as the go-to accuracy measure:**
+> "The mean square error is a very popular measure that is used, and you will see it a lot... is a good way between two models that produce two forecasts. You could choose the one with the smaller MSE."
+
+**On RMSE being preferred in practice:**
+> "For sure the number one would be the root mean square error" — because it preserves the same units as the forecast variable.
+
+**On the bias-variance trade-off:**
+> "Sometimes you may be willing to take a little bit of bias if it gives you a much, much smaller variance. So sometimes, even if you have a little bit of bias, you may have a smaller mean square error between two different forecasts."
+
+This is a critical insight for model selection: a slightly biased but more stable model can beat an unbiased but high-variance model on MSE.
+
+**On comparing models — the Diebold-Mariano test:**
+> "Simply looking at the mean square error, one team did better, but when we tested the difference, there was no significant difference. At the end, they all did very well."
+
+She told the story of last year's Southern Company project: three teams had different MSEs, but the DM test showed the difference was not statistically significant. The point: you cannot just eyeball which MSE is smaller — you must formally test whether the difference is real.
+
+> "The DM test... some smart people have showed that scaling it by the variance is distributed like a normal, and therefore you can use the Z critical value. It should all be done in a package."
+
+**On forecast errors being random variables (not just numbers):**
+> "The forecast error is a random variable. So this is a function of a random variable — it's going to be a random variable. So when I compare the two, which way am I comparing them?"
+
+This is why you need a formal test (DM), not just pointwise comparison of MSE values.
+
+**On market-based forecasts — S&P 500 and financial variables as predictors:**
+> "If you put something like the S&P 500 or something similar on your right hand side, it's going to turn out to be helpful for forecasting... it's not a causal relationship, but helpful in forecasting, because probably the true relationship goes the other way. It's just that the market anticipates what's going to happen."
+
+This is directly relevant to the BofA project: financial market variables (equity indices, yield curves) can be useful RHS variables in forecasting models even without a causal story — they aggregate forward-looking information.
+
+**On surveys for inflation expectations (directly relevant to consumer loans):**
+> "If you need to think about inflation for your consumer loans, there is data — the University of Michigan and others — that ask households what their expectations for inflation are. Individual forecasts are all over the place, but on average, they do pretty well."
+
+She explicitly connected inflation surveys to the consumer loans project. The Survey of Professional Forecasters (SPF) and Michigan Survey are potential data sources.
+
+**On forecastability being a matter of degree:**
+> "Whether a series is predictable or not should be replaced by how predictable it is. Predictability is always a matter of degree."
+
+And more importantly: predictability depends on horizon and loss function. A series may be forecastable at short horizons but not long ones.
+
+**On the slides she skipped (self-study):**
+> "The second part of the slide is very talky, and so I'm going to let you read them through."
+
+She explicitly told students to read the market-based and survey-based forecast combination slides on their own — this material (forward markets, Fisher equation, SPF, Livingston, Michigan) is fair game but was not lectured in detail.
 
 ## Key Concepts
+
+### PART A: Forecasting with ARMA (Tuesday Lecture)
 
 ### 1. General Considerations for Forecasting (10 Items)
 The lecture begins with 10 considerations for any forecasting task:
@@ -192,6 +235,97 @@ If innovations are normally distributed:
 
 **Practical note (slide 23):** The exact forecast error includes a parameter estimation term $(\theta_2 - \hat{\theta}_2)\varepsilon_T$. We make a convenient approximation by assuming estimated = true parameters, dropping this term. This is standard practice.
 
+### PART B: Forecast Evaluation (Wednesday, Feb 19 Lecture)
+
+### 12. The Unforecastability Principle
+The key property of optimal forecast errors: they should be **unforecastable** based on information available at the time the forecast was made. This holds in great generality — regardless of loss function, linearity, or stationarity.
+
+**Practical checks:**
+- 1-step-ahead errors should be **white noise** with **zero mean**. Regress on a constant, check mean is zero. DW test for serial correlation.
+- Multi-step-ahead errors will be serially correlated (at most MA(h-1)) but should still have zero mean.
+- Forecast error variance should be **non-decreasing in h** — you're always more precise forecasting next month than 10 months out.
+
+### 13. Testing Orthogonality of Errors (EXAM MATERIAL)
+Errors should be orthogonal to available information. Test via regression:
+$$e_{t+h,t} = \alpha_0 + \sum \alpha_i x_{it} + u_t$$
+Do an F-test that all $\alpha$ are jointly zero.
+
+**The Mincer-Zarnowitz Regression (EXAM):**
+$$y_{t+h} = \beta_0 + \beta_1 y_{t+h,t} + u_t$$
+Optimality requires $(\beta_0, \beta_1) = (0, 1)$, which means:
+$$y_{t+h} = y_{t+h,t} + u_t$$
+Equivalently, regress forecast error on forecast: $e_{t+h,t} = \alpha_0 + \alpha_1 y_{t+h,t} + u_t$, test $(\alpha_0, \alpha_1) = (0, 0)$.
+
+> **Professor:** "If you regress your forecast error on your forecast, these two coefficients should all be zero... It's called the Mincer-Zarnowitz regression."
+
+### 14. Accuracy Measures
+**Forecast bias:** $\hat{\mu}_e = \frac{1}{T} \sum_{t=1}^{T} e_{t+h,t}$ — should be zero for optimal forecasts.
+
+**Error variance:** $\hat{\sigma}^2_e = \frac{1}{T} \sum (e_{t+h,t} - \hat{\mu}_e)^2$ — should be small.
+
+**Mean Squared Error (MSE):** $\widehat{MSE} = \frac{1}{T} \sum e_{t+h,t}^2$ — combines bias and variance: $MSE = \sigma^2_e + \mu^2_e$ (bias-variance decomposition).
+
+**Root Mean Squared Error (RMSE):** $\widehat{RMSE} = \sqrt{\widehat{MSE}}$ — same units as the forecast. **Professor's preferred measure.**
+
+**Mean Absolute Error (MAE):** $\widehat{MAE} = \frac{1}{T} \sum |e_{t+h,t}|$ — less popular but still used.
+
+> **Professor:** "Most forecasting packages will give you MSE... is a good way between two models. For sure the number one would be the root mean square error."
+
+### 15. Predictive $R^2$ and Theil's U-Statistic
+
+**Predictive $R^2$:**
+$$R^2 = 1 - \frac{\sum e^2_{t,t-1}}{\sum (y_t - \bar{y})^2}$$
+Compares 1-step-ahead OOS forecast error variance to unconditional variance. If close to 1, your model is much better than the historical mean.
+
+**Theil's U-statistic:** Same idea but benchmark is the "no-change" forecast $y_{t-1}$ instead of $\bar{y}$:
+$$U = 1 - \frac{\sum e^2_{t,t-1}}{\sum (y_t - y_{t-1})^2}$$
+Important caveat from slides: many economic variables are nearly random walks, so beating the no-change forecast is very hard. Theil's U may be near 0 through no fault of the forecaster.
+
+> **Professor's board note:** "Stick to MSE or RMSE" — suggesting these are the most important for this course.
+
+### 16. Forecastability
+- It is hard to measure forecastability in general
+- Predictability is always a **matter of degree**, not binary (forecastable vs. not)
+- Depends on: the forecast horizon, the loss function, and the series itself
+- A series may be highly predictable at short horizons but not at long horizons
+- Financial data are often "not very forecastable"
+
+> **Professor:** "Does it make sense to think about forecasting 10 years down the road?" — this is something to think carefully about for the BofA project.
+
+### 17. Comparing Predictive Ability: Diebold-Mariano Test
+When comparing Model A vs Model B:
+1. Compute loss differential: $d_{12t} = L(e^a_{t+h,t}) - L(e^b_{t+h,t})$
+2. Test $H_0: E(d_{12t}) = 0$ (equal predictive accuracy)
+3. The DM statistic: $DM_{12} = \frac{\bar{d}_{12}}{\hat{\sigma}_{\bar{d}_{12}}} \rightarrow N(0,1)$
+
+**Key properties:**
+- DM is just a t-statistic for zero mean loss differential
+- Requires covariance stationarity of the loss differential
+- Standard errors should be HAC (robust to serial correlation in loss differentials)
+- Simple implementation: regress loss differential on intercept, use HAC standard errors
+- If you don't reject, the two models have "the same predictive ability"
+
+> **Professor (Southern Company example):** "From a pure pointwise view, simply looking at the mean square error, one team did better, but when we tested the difference, there was no significant difference. At the end, they all did very well."
+
+### 18. Market-Based Forecast Combinations
+Financial markets aggregate forward-looking information. Useful market-based forecasts include:
+- **Forward exchange rates**: $F_t(t+h) = E_t(S_{t+h})$ under risk neutrality
+- **Futures markets**: exist for currencies, interest rates, commodities, energy, weather, real estate, VIX
+- **Bond yields and inflation** (Fisher equation): $i_t(t+h) = r_t(t+h) + E_t(\pi_{t+h})$ — extract expected inflation from nominal-real yield spread
+- **Term premium, default premium, dividend yield** — all contain forward-looking information
+
+> **Professor:** "Imagine the financial market as an agglomeration of information... it's not a causal relationship, but helpful in forecasting, because probably the true relationship goes the other way."
+
+**Caveats:** market inefficiencies, moral hazard, manipulation, and risk neutrality assumptions may not hold.
+
+### 19. Survey-Based Forecast Combinations
+- **Survey of Professional Forecasters (SPF)**: leading U.S. consensus macro forecast, quarterly since late 1960s, maintained by Philadelphia Fed
+- **Livingston Survey**: bi-annual, maintained by Philadelphia Fed, over half a century of data
+- **Michigan Consumer Survey**: household inflation expectations — useful for consumer loan modeling
+- Consensus (average) of survey forecasts often performs very well relative to individual forecasts
+
+> **Professor:** "If you need to think about inflation for your consumer loans, there is data — the University of Michigan and others that ask households what their expectations for inflation are. Individual forecasts are all over the place, but on average, they do pretty well."
+
 ## Important Formulas
 
 | Formula | Expression | When to Use |
@@ -210,6 +344,25 @@ If innovations are normally distributed:
 | Density forecast | $N(\hat{y}_{T+h,T}, \sigma_h^2)$ | Full distributional forecast |
 | Trend forecast | $\hat{y}_{T+h,T} = \hat{\beta}_0 + \hat{\beta}_1(T+h)$ | Deterministic trend |
 | Seasonality forecast | $\hat{y}_{T+h,T} = \sum \hat{\gamma}_i D_{i,T+h}$ | Deterministic seasonality |
+
+### Part B Formulas (Forecast Evaluation)
+
+| Formula | Expression | When to Use |
+|---------|-----------|-------------|
+| Forecast bias | $\hat{\mu}_e = \frac{1}{T}\sum e_{t+h,t}$ | Check unbiasedness |
+| Error variance | $\hat{\sigma}^2_e = \frac{1}{T}\sum(e - \hat{\mu}_e)^2$ | Measure precision |
+| MSE | $\widehat{MSE} = \frac{1}{T}\sum e^2_{t+h,t}$ | Primary accuracy measure |
+| MSE decomposition | $MSE = \sigma^2_e + \mu^2_e$ | Bias-variance trade-off |
+| RMSE | $\sqrt{\widehat{MSE}}$ | Same units as forecast |
+| MAE | $\frac{1}{T}\sum\|e_{t+h,t}\|$ | Robust to outliers |
+| Predictive $R^2$ | $1 - \frac{\sum e^2_{t,t-1}}{\sum(y_t - \bar{y})^2}$ | Compare to mean benchmark |
+| Theil's U | $1 - \frac{\sum e^2_{t,t-1}}{\sum(y_t - y_{t-1})^2}$ | Compare to random walk |
+| Mincer-Zarnowitz | $y_{t+h} = \beta_0 + \beta_1 y_{t+h,t} + u_t$; test $(\beta_0,\beta_1)=(0,1)$ | Test optimality (EXAM) |
+| Orthogonality test | $e_{t+h,t} = \alpha_0 + \alpha_1 y_{t+h,t} + u_t$; test $(\alpha_0,\alpha_1)=(0,0)$ | Equivalent to MZ (EXAM) |
+| DM test statistic | $DM_{12} = \bar{d}_{12} / \hat{\sigma}_{\bar{d}_{12}} \sim N(0,1)$ | Compare two models |
+| Loss differential | $d_{12t} = L(e^a_{t+h,t}) - L(e^b_{t+h,t})$ | Input to DM test |
+| Forward rate (risk neutral) | $F_t(t+h) = E_t(S_{t+h})$ | Market-based forecasts |
+| Fisher equation | $i_t(t+h) = r_t(t+h) + E_t(\pi_{t+h})$ | Extract expected inflation |
 
 ## Examples from Class
 
@@ -233,11 +386,29 @@ If innovations are normally distributed:
 - **Key finding:** $\text{Var}(y_{T+h}) > \text{Var}(\hat{y}_{T+h,T})$ always holds — the forecast will always appear smoother than the actual data.
 - **Takeaway:** Don't be alarmed if your forecast doesn't match the actual data's volatility. This is a mathematical property of optimal forecasts, not a deficiency.
 
+### Example 5: Southern Company Forecast Comparison (Feb 19 lecture)
+- **Setup:** Three student teams forecast electricity demand for Southern Company; actual 2025 data available for comparison
+- **Key finding:** One team had a smaller MSE, but the Diebold-Mariano test showed the difference was NOT statistically significant
+- **Takeaway:** You cannot just compare raw MSE numbers. Forecast errors are random variables — you must formally test whether differences are significant. The DM test is the standard tool.
+
+### Example 6: White Noise Forecastability Paradox
+- **Setup:** If the best forecast of a white noise process is zero (the mean), the forecast and actual data look completely different when plotted
+- **Key finding:** A flat line (forecast) vs. a noisy series (actual) — yet this IS the optimal forecast
+- **Takeaway:** Visual comparison of forecast vs. actual can be misleading. The variance inequality guarantees the forecast is smoother. Don't judge model quality from visual overlap alone.
+
 ## Connections
 - **Builds on:** Week 3-4 ARMA model estimation, AR/MA process properties, AIC/BIC model selection
-- **Related to:** Stock & Watson Chapter 14 (forecasting), Diebold textbook Chapters 2 and 5
-- **Prerequisite for:** Forecast evaluation (Thursday / Week 7), VAR forecasting, and the climate-risk-loans project's scenario-conditional forecasting
-- **Direct project relevance:** The ARMA forecasting framework is how we'll generate baseline loan growth forecasts; the loss function discussion matters for how BofA evaluates forecast quality; the pseudo out-of-sample concept is exactly what we need for model validation.
+- **Related to:** Stock & Watson Chapter 14 (forecasting), Diebold textbook Chapters 2, 5, and 13 (market-based forecasts)
+- **Prerequisite for:** VAR forecasting, and the climate-risk-loans project's scenario-conditional forecasting
+- **Direct project relevance:**
+  - The ARMA forecasting framework generates baseline loan growth forecasts
+  - The loss function discussion matters for how BofA evaluates forecast quality
+  - The pseudo out-of-sample concept is exactly what we use for model validation
+  - **MSE/RMSE** are the metrics used in our OOS evaluation (scenario_forecasting.ipynb)
+  - **Diebold-Mariano test** could be used to formally compare AR baseline vs. VAR model
+  - **Market-based forecasts**: Professor explicitly said S&P 500 and financial variables help forecast — supports our use of DGS10 and FEDFUNDS as predictors
+  - **Survey forecasts for inflation**: Michigan/SPF data could supplement our consumer loan model — professor mentioned this specifically for consumer loans
+  - **Mincer-Zarnowitz regression**: we should run this on our pseudo-OOS forecasts to verify optimality
 
 ## Questions to Consider
 1. Why does minimizing quadratic loss lead to the conditional mean as the optimal forecast?
@@ -247,11 +418,16 @@ If innovations are normally distributed:
 5. Why is $\text{Var}(y_{T+h}) > \text{Var}(\hat{y}_{T+h,T})$? What does this mean for interpreting forecast plots?
 6. How do you construct a 95% interval forecast for an ARMA(1,1) at $h = 2$?
 7. What is the difference between out-of-sample and pseudo out-of-sample forecasting?
-8. Why do we approximate by assuming estimated parameters equal true parameters when computing forecast error variance?
-9. How does the forecast error variance grow with horizon $h$ for an AR(1)? Does it converge?
-10. In what sense is the forecast "smoother" than the actual data?
+8. How does the forecast error variance grow with horizon $h$ for an AR(1)? Does it converge?
+9. **(EXAM)** What is the Mincer-Zarnowitz regression? What do you test and why?
+10. What is the bias-variance decomposition of MSE? When would you accept a biased forecast?
+11. What does the Diebold-Mariano test actually test? Why can't you just compare MSEs directly?
+12. How can financial market data (e.g., forward rates, VIX) be useful for forecasting even without a causal relationship?
+13. What is the Fisher equation and how can bond yields help forecast inflation?
 
 ## Review Checklist
+
+### Part A: Forecasting with ARMA
 - [ ] Understand the 10 general considerations for forecasting
 - [ ] Know the three loss functions (quadratic, absolute, linlin) and their optimal forecasts
 - [ ] Can explain why quadratic loss → conditional mean, absolute → median, linlin → quantile
@@ -266,3 +442,19 @@ If innovations are normally distributed:
 - [ ] Know the forecast error structure: WN at $h=1$ for MA, growing MA for larger $h$
 - [ ] Understand the parameter estimation approximation (slide 23)
 - [ ] Know the practical preference for ARMA over pure MA in forecasting
+
+### Part B: Forecast Evaluation
+- [ ] Understand the unforecastability principle and why it is general (any loss, any model)
+- [ ] Know how to check forecast error properties: zero mean, WN at h=1, MA(h-1) at h>1
+- [ ] **(EXAM)** Can set up and interpret the Mincer-Zarnowitz regression ($\beta_0 = 0$, $\beta_1 = 1$)
+- [ ] **(EXAM)** Can test orthogonality of errors via regression on available information
+- [ ] Know how to compute forecast bias, error variance, MSE, RMSE, MAE
+- [ ] Understand the bias-variance decomposition: $MSE = \sigma^2_e + \mu^2_e$
+- [ ] Know when to accept a biased model (if it reduces MSE enough)
+- [ ] Can explain Predictive $R^2$ and Theil's U-statistic (and their benchmarks)
+- [ ] Understand forecastability as a matter of degree (depends on horizon, loss function)
+- [ ] Know how to set up and interpret the Diebold-Mariano test for equal predictive ability
+- [ ] Understand that DM is a t-test with HAC standard errors on the loss differential
+- [ ] Know about market-based forecast combinations: forward rates, Fisher equation
+- [ ] Know about survey-based combinations: SPF, Livingston Survey, Michigan Survey
+- [ ] Can explain why financial variables help forecast (information aggregation, not causation)

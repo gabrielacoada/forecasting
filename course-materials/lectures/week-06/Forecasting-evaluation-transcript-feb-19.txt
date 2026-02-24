@@ -1,0 +1,150 @@
+Unknown Speaker  
+Party monitoring from your forecasts.
+
+Speaker 1  
+And we're going to, we're going to do some here. I'm probably not going to get able to go through everything today. The second part of the slide is very talky, and so I'm going to let you read them through. Okay? They're just very general thoughts, but remember that we start with the idea that your YT anytime series, YT can be written as an infinite moving average, and therefore on set as time, the one step, the each step ahead, is simply the mean plus epsilon t, epsilon t minus one, and all the past anything. So YT plus h will be epsilon t plus h plus beta one, epsilon h minus one, etc, everything that is in the future. When I go ahead and forecast disappears because of white noise, I cannot forecast. So what I'm going to be left with is beta H, epsilon t, beta h plus one, epsilon t minus one, right? Remember from last time. Now the errors is going to be exactly what, basically what I zero out, right? So the error is the difference between the actual the forecast, and so has all this component, which is all the futures epsilon are going to be in your errors. You technically don't observe those, and you cannot forecast them. So what I have, but that gives you an idea of what the variance, or your forecast error is, but it's going to depend on the variance of each of this which is assume that they're stationary, so it's going to be sigma squared plus the square of this coefficient. So how do I estimate those coefficients. Okay, so remember, you cannot see this, you cannot see this, but this one, I could potentially estimate it by simply estimating this. Now, why T Now that one is the coefficient in front of the past. So when I, when I go in the future, I can still use that estimated coefficient to compute the bias of your forecast and how, and then I'm going to have to estimate sigma square. But I guess sigma square, I can estimate it from the past information, because it is stationary, was in the past, is also going to be in the future. And this is the key, right? Assuming that this better one is constant, assuming that the sigma square is constant, so that I can do this projection to the future and assume that this is the same coefficient. Only happen if this is a sustainable model.
+
+Unknown Speaker  
+Think of also about that
+
+Unknown Speaker  
+when you do your forecasting
+
+Speaker 1  
+now, what are the property of these forecasts, right? Well, the first thing to think about it, what is the property of a good forecast error, if I did my forecast really, really well, what should be, and let's say the man forecasts are the best possible so they're optimal. What should be the property optimal forecast error? The first thing should be, is the forecast, and those are things that you can check. So those are good check that you can do yourself, is that the forecast error should be unforecastable, all based on information of time, t if I can forecast in any way my forecast error, that means that there was something in the model that I have not exploit in my forecast, and that was left, has left a residuals in my forecast error, and therefore my forecast In the first place was not optimal. So this outward scalability principle is general, okay? And it should all no matter what model you're using. So even if you matter super complicated, it should be the same. So what does also mean one optimal forecasts are unbiased. What do I mean? I cannot systematically over forecast or systematically under forecast, otherwise, you just need to do better. Change your model. We saw last time, the optimal forecasts have one step ahead arrows that are white noises. If you're forecast one step ahead, your forecast error should be a completely random if I forecast H step ahead, before the cast errors, mAh, we did last time, optimal forecast. Have for H step ahead, I have a variance that is known decreasing H in H, and it compares to an unconditional virus. We haven't done this, this in mathematics. But the more important thing is, what does it mean that is non decreasing H? Is that, if you think about it, it means that you are going to be always more precise in forecasting next month, then you're going to be on forecasting 10 months from now, your your forecast further away is going to be more imprecise, And the forecast variance is going to be larger.
+
+Speaker 1  
+The forecast error for a one step edge, we said, should be one noise and also have zero min. So what you can do, for example, you take your forecast error, you regress another constant, and that constant coefficient should be zero. So this should have been zero. You can do it that. Beware some test on that forecast error. Remember Gabriela Test, test for serial correlation. You should be able to say that there is no serial correlation in the forecast error. Now, for multi step ahead, there will be serial correlated, but you should still have zero and you can look at the barriers.
+
+Speaker 1  
+Like we said, the forecast error should be orthogonal to the available information. So you could do a simple regression, right? You're going to have for each forecast you have, you're going to have the actual data when the actual data is available, or if you do through the album sample. So you're going to have your forecast error. You can regress the forecast error on your available information, the same information that you use to do your forecast, and it better be at least coefficient that are all
+
+Unknown Speaker  
+not significantly different with zero.
+
+Speaker 1  
+If you have any of those that are significant, then your model is your model is not good. In particular, if you regress your forecast error on your forecast,
+
+Unknown Speaker  
+these two coefficients should all be zero.
+
+Unknown Speaker  
+It's called the mean size regression.
+
+Speaker 1  
+And also to identify graph the actual data only forecast. Then statistically, we want this to be zero and this to be non significantly different
+
+Unknown Speaker  
+than one. So those are all regression that you actually can do
+
+Speaker 1  
+once you have data the actual value to see how well before, if You forecast we are optimal,
+
+Unknown Speaker  
+suppose you have
+
+Speaker 1  
+right so you so again, you have your forecast. You have your actual data. This is your forecast error, the mean on this forecast error. We call it u How do I estimate this? I just take one over T, the sum over T, above my forecast error. This is your forecast bias, because we know that on average, this should be zero, but if it's not, there, in average, is your forecast error biased and the variance? How do I compute it? I have your forecast error minus mean squared, and this is, this is the expectation, right? This is the bias your forecast error. This is in population. How do I actually estimate every time we estimate anything that is an expectation, we can substitute in the sampling with the mean, with the average, and then the mean will use how we estimate it. This is the
+
+Unknown Speaker  
+error variance.
+
+Speaker 1  
+An ideal forecast as an arrow that have very small bias and very small variance. So what do we usually measure that? We call the mean square error. So the mean square arrow is the expectation of this forecast error squared which is sample is just this. You take all your your
+
+Unknown Speaker  
+mean square error.
+
+Unknown Speaker  
+This is a measure of
+
+Unknown Speaker  
+accuracy, because
+
+Speaker 1  
+because, like in regular estimation, the mean square error is going to be equal to your forecast variance plus the bias squared. Have you ever seen the term mean square error before? Yeah, right. The mean square error is already equal to the BI square plus the variance and the same here in just an hour, thinking in terms of forecast. So this is the bias the forecast error plus the bias where the forecast Why do we like the mean square? Because, in a sense, we want the small mean squared error, because it combines both of them, right? So if your forecast error is completely unbiased, this is zero. So minimizing the mean square error is equal to minimizing your bias error. But sometimes you may be willing to take a little bit of bias if it gives you a much, much smaller value. So sometimes, if you have, even if you have a little bit of bias, you may have a smaller mean square error between two different forecasts. Okay, questions, so this is a mean square error is a very popular measure that is used, and you will see it a lot, and most forecasting and Python should be able to give you the least square error is a good way between two models that produce two forecasts. You could choose the one with the smaller b squared. Sometimes, it's not often, I would say, instead of looking at this, you may want to look at the root mean square error, because that way you'll have the same unit of your forecast, which is nothing else that the square root of the mean square
+
+Speaker 1  
+error, you also going to see the mean absolute error, which is the sum of the absolute value of the errors. Or also sometimes you see an ape make
+
+Speaker 1  
+one you can also compute. Those are all measures that you can compute. And I don't know which Python will give so I would say for sure the number one would be the root mean square error, or the main another option would be the predictive R square. And here is so you have, if you see is similar to the original R square in the sense that here you have the variance of the Y, but the difference to the regular R squared is here on the numerator, you just have the one step ahead out of sample forecast variance. So buckets.
+
+Speaker 1  
+Okay, so this is another measure. It's not it's not super common.
+
+Unknown Speaker  
+And then
+
+Unknown Speaker  
+you can also do the statistics. You
+
+Unknown Speaker  
+I will say you can be distinctively square or
+
+Unknown Speaker  
+questions.
+
+Speaker 1  
+So then you can so these are measure of accuracy of your forecast. Okay, this is a measure. Is your measure is somehow you're trying to compute a summary measure all your forecast errors. Then you have to think about the measure first, stability. How well is a variable forecast? So for example, right? Like we said last time, one thing you can do is simply graph your actual data and your forecast. But even that is simply is a little bit tricky, because we know that the forecast will always have less variance than the actual data, so they're never going to overlap. Exactly why? For example, if you have a y noise, you know that the best forecast for the Y not just zero, but if you drop in a one on top of the head rate is one is going to be like this, and one going to be straight line. So it doesn't mean anything. You can't really so easily look at the actual data in the forecast to know how well you're doing, so how predictable a series cannot be decided in general, okay? It depends on many things. Depends on the forecast horizon. It depends on the loss function. We know that a lot of financial data are not very forecastable, okay? And sometimes you may be doing very good on short horizon, but also in the long horizon. So your question of how what it is, how fast you expect to forecast, that's something that you should think about it really carefully. Right? Is it does make sense to think about forecasting 10 years down the road? Do
+
+Speaker 1  
+you also may want to do some comparison. For example, suppose that I have Model A and Model B, and I'm trying to compare which model forecast the better. I'm going to try to say what model has the best forecast predictive ability? That's not an easy question. Why? Because, if you think about it, I could simply compare the forecast error of the two models. Well, that's not enough. It depends on the loss function. Okay, so then I conclude I measure the loss function, if it's quadratic, will be quadratic of Model A, Model B. But remember, this is the forecast. Forecast is random variable. That means the forecast error is random variable. So this is a function of random variable is going to be a random variable. So when I compare the two which way am I comparing them, right? So one option to say that I'm going to look at what is the average loss function given Model A and what is the average loss function given Model B. If the two model have the same average loss function, then I'm going to say that they have the same predictive ability. Another way to say is that if I compute the difference between these two quantities, I would like that to be zero, but this is random. This is random. So if I compute the difference between two you can have as many more. Is never going to be exactly zero, right? This is a this itself is a random variable, so you have to think about this in term of a testing. When is this? So it's never going to be equal to zero. But what is the value for this, for this expected difference that is low enough that I am going to consider is not significantly different than zero. To do that, I have to think about this in terms of testing. So I need to think about this, what is the distribution of this test? Because I need to find a critical value that will give me the threshold for my testing. I'm not going to ask you to do it, but this is what is
+
+Speaker 2  
+called in case, oh, it's not deep. Bolt is D bold. It should be D, I, E, B, O, L is
+
+Speaker 1  
+a, d, bold and mariet test. So if Python offered these options, is a good test. So if you have forecast one and two and you can ask Python to do a de Bode Mariano test to test whether they are that whether the two models have the same predictive ability, don't worry about how it's done when you compute this di bold and Mariano test. And some smart people have showed that the DI bold de Mayo test scale it by this. This difference between the two expected average errors divided by scaling on the variance is is distributed like a normal and therefore you can use the Z critical volume you should all be done in a package. If you do not reject then you find that the two models have the same predictive ability.
+
+Speaker 1  
+Is it's just a t statistics for the part of it. There is no population with loss differentials. To
+
+Unknown Speaker  
+give you an example,
+
+Speaker 1  
+which was fun last year, we did, you know the forecasting with the Southern Company. Then we had three teams. And then, because we gave them only up to seven point data, they done it to 2024 I think, then we asked them to complete the forecast for 2025 then we did for consumer electricity demand. We did have the actual data, the true consumer demand, so we were able to compute some of these measures. So the thing because we have their forecast for the three different team, they were all slightly different, and we have the actual data, so we compute the mean square error for all the three teams, and then other measure, and yeah, in terms of mean square arrow, the team had very different results. One team was a little bit smaller mean square arrow, so technically, they did better. But the question was, how significantly better did they do? Was that difference between the two forecasts significantly different when we did the test, actually they were not different. So yeah, from a pure point wise, simply looking at the mean square error, one team did better, but when we tested the difference, there was no significant difference. At the end, they all did very well. Make sense? Remember, this is all statistics, so there's always a certainty around those things, and so you have to
+
+Speaker 1  
+think about it the other way to think about it. So I don't know if that's applied to what you do, but for example, there are two things that people often use. One is market based forecast. So what I mean with that is that anything that is financially based, for example,
+
+Unknown Speaker  
+any forward you
+
+Speaker 1  
+art forward asset forward for an exchange for us, forward of future of spot, exchange rate, forward exchange rate, for example, a lot of the moment common commodities have futures or forward. They, in a sense, include a bunch of information that the market has implicitly in them that are very useful to actually help you forecast. Okay, so, currency, interest rates, I'm familiar of other things, even weather, right? Here's maybe something that may be interesting, real estate, stock market volatility, because those are traded on this change, you can learn you can learn a lot by contract. So it's imagine the market, the financial market, as a right agglomerations of information. So oftentimes, when you want to use, when you're looking at forecasting, something, if you put something like the SAP fab and somebody's Bible on your right hand side, is going to turn out to be helpful for forecasting. So keep this in mind also when you think and it's not like because you cannot argue that, oh,
+
+Unknown Speaker  
+we'll talk about this causality.
+
+Speaker 1  
+But is the for is the s and p5 rounded truly causing the economy to go in the directions? No, it's just that the knowledge of the market participant predict what's going to happen, and that is reflected on how the market works. And then when you put them in the right hand side, the help of forecast something else make sense. So, and it's not a causal relationship, but is a helpful in forecasting, because probably the true relationship, it goes the other way. It's just that the market anticipate what's going to happen.
+
+Speaker 2  
+So you can use some of this right same thing for
+
+Unknown Speaker  
+interest rate
+
+Speaker 1  
+expected inflation. Okay, interest rate will help you predict inflation. Here you have bonyl forecast for temporary relativity forecast. So you have many options. Just look around for some of this. If you need you have to be careful also, because there is sometimes this market are not efficient, so don't get sucked into something that does not give you the right information, and there's market regulations,
+
+Unknown Speaker  
+etc. So just be careful.
+
+Speaker 1  
+The other side of this is there are some other company and variable that people are collecting, which are actually surveys. That is the survey of Professional Forecasters. There is a server of a consumer forecast, especially when it comes to inflation. If you need to think about inflation for your consumer loans, there is a there is data the University of Michigan and other that ask how as professional in household, what the expectation for inflation are. Now, if you take individual forecasts that are all over the place, but on average, they do pretty well. So this is another way, right? So this is the survey professional forecasts. And Europe has even better, and Brazil is even better. But those are options, so that people ask them, what you expect in two
+
+Unknown Speaker  
+months, in six months, in a year, etc,
+
+Unknown Speaker  
+and the latest survey is another one. Okay,
+
+Speaker 1  
+so if you need to dig on some of those, don't be afraid, because that's it. That's all I have. Okay, I'm.
+
+You should know what the forecast error means. you shoud know that if you regress you should be comfortable with the definition of forecast error, this is what the forecast error looks like, how to go from here to here to here if you take this slide and digest, and say i dont understand this, why should this be zero? if you are not sure dont just memorize it take the two definitions, look at them, and figure out why this is case. i dont expect you to do a ton of derivations but you have to be careful of how you go from here to here etc, this is just adding and subtracting etc. if i give you regressions with data, what to expect. exam questions will be similar to problem set questions and to the practice exams. 
+
+Two questions: 

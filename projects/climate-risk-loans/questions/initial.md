@@ -9,54 +9,62 @@
 - Type: factual
 - Priority: high
 - Likely sources: web (NGFS portal documentation), course materials
-- Status: unanswered
-- Notes: Need to understand scenario narratives (Net Zero 2050, Delayed Transition, Current Policies, etc.), model families (GCAM, REMIND, MESSAGEix), and available variables (carbon prices, GDP, temperature, CO2 emissions, energy costs). Critical foundation for all downstream work.
+- Status: answered
+- Answered by: web-ngfs-and-transmission, case-study-pdf, feb20-qa-session
+- Summary: NGFS provides multiple scenario families (Net Zero 2050, Delayed Transition, Current Policies, Hot House World, etc.) across model families (GCAM, REMIND, MESSAGEix). Variables include carbon prices, GDP, temperature, CO2 emissions, energy costs. Different models may have different frequencies. BofA says use "any or all" scenarios and visualize how they differ in both climate and economic variables.
 
 ### Q2: What is the theoretical transmission mechanism from climate risk to bank loan portfolios?
 - Type: analytical
 - Priority: high
 - Likely sources: academic papers (Acharya et al. 2023, Jung et al. 2024), web
-- Status: unanswered
-- Notes: Must establish the causal chain — how do physical risks and transition risks (carbon taxes, policy changes, GDP shocks) flow through to commercial and consumer credit? Distinguishing direct vs. indirect channels.
+- Status: answered
+- Answered by: academic-papers, sr1058-jung-bank-climate-exposure, sr1059-acharya-climate-stress-testing, feb20-qa-session
+- Summary: Two channels — physical risk (storms, property damage → direct asset impairment) and transition risk (carbon taxes, policy → macro variables → credit quality). For C&I loans: climate → GDP, yields, corporate activity → loan volumes. For consumer loans: climate → unemployment, interest rates, house prices, disposable income, consumer confidence → repayment capacity → loan portfolios. BofA approved the indirect macro channel approach for consumer loans but pushed for thoroughness on consumer drivers beyond just unemployment and rates.
 
 ### Q3: What macroeconomic variables mediate the climate-to-loans relationship?
 - Type: analytical
 - Priority: high
 - Likely sources: academic papers, FRED documentation, course materials
-- Status: unanswered
-- Notes: Identify which FRED macro series (unemployment, CPI, interest rates, GDP) serve as intermediate variables linking NGFS scenario outputs to loan portfolio dynamics. Feature selection with economic rationale is a key evaluation criterion.
+- Status: answered
+- Answered by: web-fred-data, feb20-qa-session, kickoff-transcript
+- Summary: **C&I loans:** GDP, S&P 500/equity indices, corporate yields, interest rates (Fed Funds, 10Y Treasury). **Consumer loans:** Unemployment rate, interest rates, plus BofA pushed for house prices, disposable income, consumer confidence, and other consumer-specific drivers. Some series may not go back as far as others — trade-off to discuss. BofA warned about leading vs. lagging indicators: GDP is lagged (covers prior quarter), and accidentally including future data points is a real risk they've seen in practice.
 
 ### Q4: What are the key data characteristics and challenges for modeling this relationship?
 - Type: methodological
 - Priority: high
 - Likely sources: FRED data exploration, NGFS data exploration, course materials
-- Status: unanswered
-- Notes: Frequency mismatch (NGFS annual vs. FRED monthly/quarterly), time series stationarity, structural breaks (COVID), training window selection, regional vs. national granularity. How do different NGFS model families compare?
+- Status: answered
+- Answered by: feb20-qa-session, web-fred-data, case-study-pdf
+- Summary: (1) **Frequency mismatch:** NGFS is annual, FRED loans monthly/quarterly — open modeling choice, try multiple, pick what works. Professor will teach MIDAS. (2) **Training window:** At least 3 decades (1990s+) to capture GFC, 2001, 1990s cycles, but more data ≠ better — relevant business cycles matter. (3) **COVID:** Use dummy variables (BofA-confirmed standard), exclude from OOS evaluation. (4) **Leading/lagging:** Must track when each variable was realized vs. published. (5) **Granularity:** Stay aggregate US — going regional/sectoral creates driver-matching problems. (6) **Variable availability:** Some series don't go back as far, creating trade-offs.
 
 ### Q5: What forecasting frameworks are appropriate for climate stress testing of loan portfolios?
 - Type: methodological
 - Priority: high
 - Likely sources: course materials (AR, ARMA, ARIMA, VAR), academic papers, web
-- Status: unanswered
-- Notes: Must be transparent and explainable (no black-box ML). Consider: VAR models for multivariate relationships, scenario-conditional forecasting, bridge equations. How does the course methodology (weeks 1-5: trends, seasonality, ARMA, dynamic causal effects) apply here?
+- Status: partially answered
+- Answered by: course-materials, web-stress-testing-methods, feb20-qa-session
+- Summary: Must be transparent and explainable (no black-box ML). Course methods: AR, ARMA, VAR. BofA is open-ended on methodology — they care about justification, not specific technique. Professor will teach MIDAS for mixed-frequency. BofA wants confidence bands, sensitivity analysis across approaches, and scenario comparison. **Still open:** Specific model specification (e.g., VAR lag order, which variables in which equations) pending empirical work in Phase 2.
 
 ### Q6: How have regulators and central banks approached climate stress testing?
 - Type: factual
 - Priority: medium
 - Likely sources: web (ECB, Fed publications), academic papers
-- Status: unanswered
-- Notes: European vs. U.S. regulatory timelines. ECB climate stress tests, Fed's 2023 pilot exercise (rescinded in 2025). What methodologies did they use? What can we learn from their frameworks?
+- Status: answered
+- Answered by: web-stress-testing-methods, sr1058-jung-bank-climate-exposure, sr1059-acharya-climate-stress-testing
+- Summary: ECB conducted climate stress tests; Fed ran a 2023 pilot exercise (later rescinded in 2025). Acharya et al. (2023) provide a comprehensive climate stress testing framework. Jung et al. (2024) estimated U.S. bank exposures, finding max ~14% even in worst scenarios — BofA says use this as "interesting context" and "guideline" only, not a target. Those papers used bank-specific balance sheet data and regional segmentation we don't have.
 
 ### Q7: How do loan portfolio outcomes differ across NGFS scenarios?
 - Type: comparative
 - Priority: medium
 - Likely sources: analysis of model outputs, academic papers
-- Status: unanswered
-- Notes: Compare Net Zero 2050 vs. Delayed Transition vs. Current Policies. Which scenarios pose the greatest risk to commercial vs. consumer loans? Are transition risks or physical risks more impactful?
+- Status: partially answered
+- Answered by: feb20-qa-session, web-ngfs-and-transmission
+- Summary: BofA wants all scenarios explored ("any or all") and robust visualization of how they differ in both climate and economic variables. "Really try to show that you thought about what these variables mean, the story they're telling you." Different modeling approaches will yield different stories — use that. **Still open:** Actual empirical comparison pending model estimation in Phase 2.
 
 ### Q8: What are the implications for financial stability and risk management?
 - Type: analytical
 - Priority: medium
 - Likely sources: synthesis of findings, academic papers, regulatory publications
-- Status: unanswered
-- Notes: Translate model results into strategic insights for bank executives and regulators. What portfolio adjustments or hedging strategies might be warranted? This is the "so what?" that BofA sponsors care about.
+- Status: partially answered
+- Answered by: feb20-qa-session, academic-papers
+- Summary: BofA wants actionable insights beyond point estimates. "Can you dig into that number? Answer some important policy questions or systemic risk questions?" Frame for executive decision-making: "If you're going to present this to an executive making strategic decisions about increasing loan exposures, you want to be able to derive granular suggestions." Confidence bands are explicitly valued. **Still open:** Specific insights pending model results.
