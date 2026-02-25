@@ -1,0 +1,58 @@
+## Source Manifest — ARDL-MIDAS Research (2026-02-25)
+
+sources:
+  # Web sources (freely accessible)
+  - id: ghysels-2004-midas-touch
+    type: web-pdf
+    url: https://rady.ucsd.edu/_files/faculty-research/valkanov/midas-touch.pdf
+    title: "The MIDAS Touch: Mixed Data Sampling Regression Models"
+    authors: Ghysels, Santa-Clara, Valkanov (2004)
+    relevant_to: [Q9, Q10]
+    status: pending
+
+  - id: ghysels-2007-further-results
+    type: web-pdf
+    url: https://rady.ucsd.edu/_files/faculty-research/valkanov/midas-regressions.pdf
+    title: "MIDAS Regressions: Further Results and New Directions"
+    authors: Ghysels, Sinko, Valkanov (2007)
+    relevant_to: [Q9, Q10, Q12]
+    status: pending
+
+  - id: ghysels-2016-midasr-jss
+    type: web
+    url: https://www.jstatsoft.org/article/view/v072i04
+    title: "Mixed Frequency Data Sampling Regression Models: The R Package midasr"
+    authors: Ghysels, Kvedaras, Zemlys (2016)
+    relevant_to: [Q9, Q10, Q12]
+    status: pending
+
+  - id: foroni-2015-umidas
+    type: web-pdf
+    url: https://www.bundesbank.de/resource/blob/703636/67ebc41ad0284bfe43aa7b6cd2c000f6/mL/2011-12-30-dkp-35-data.pdf
+    title: "U-MIDAS: MIDAS regressions with unrestricted lag polynomials"
+    authors: Foroni, Marcellino, Schumacher (2015)
+    relevant_to: [Q10]
+    status: pending
+
+  - id: franses-2016-another-look
+    type: web-pdf
+    url: https://repub.eur.nl/pub/93331/EI2016-32.pdf
+    title: "Yet another look at MIDAS regression"
+    authors: Franses (2016)
+    relevant_to: [Q10, Q12]
+    status: pending
+
+  # Local sources
+  - id: week-07-midas-lecture
+    type: local
+    path: course-materials/lectures/week-07/summary.md
+    title: "Week 7 MIDAS Lecture Summary"
+    relevant_to: [Q9, Q10]
+    status: already-extracted (in course-materials factbase, needs ARDL-MIDAS-specific re-extraction)
+
+  - id: midas-notebook-code
+    type: local
+    path: projects/climate-risk-loans/scenario_forecasting_midas.ipynb
+    title: "Current ADL-MIDAS implementation and results"
+    relevant_to: [Q10, Q12]
+    status: already-read (needs diagnostic fact extraction)

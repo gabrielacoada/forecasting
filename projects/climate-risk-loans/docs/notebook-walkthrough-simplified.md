@@ -1,32 +1,39 @@
 # What Our Code Actually Does — The Plain English Version
 
-This explains everything in our three notebooks without assuming you know anything about statistics, coding, or econometrics. If you're making slides, writing the report, or doing the narrative section, this is your guide.
+This explains everything in our notebooks without assuming you know anything about statistics, coding, or econometrics. If you're making slides, writing the report, or doing the narrative section, this is your guide.
+
+**Updated Feb 25** to include the satellite model, which is now our primary scenario forecasting tool.
 
 ---
 
 ## The 30-Second Summary
 
-We built three notebooks that answer one question: **"If the world takes different approaches to climate change, what happens to the loans that US banks hold?"**
+We built six notebooks that answer one question: **"If the world takes different approaches to climate change, what happens to the loans that US banks hold?"**
 
 Here's the flow:
 
 ```
-Notebook 1                    Notebook 2                    Notebook 3
-"Understand the               "Understand the               "Connect them and
- historical loan data"         climate scenario data"         predict the future"
-        |                            |                            |
-        v                            v                            v
-What patterns exist            What do the climate          If unemployment goes
-in past loan growth?           scenarios say will           up under Scenario X,
-What drives it?                happen to the economy?       what happens to loans?
-        |                            |                            |
-        +----------------------------+----------------------------+
-                                     |
-                                     v
-                        FINAL OUTPUT: "Under Net Zero 2050,
-                        C&I loans grow to 243% of today's level.
-                        Under Delayed Transition, only 226%."
+Notebook 1                    Notebook 2
+"Understand the               "Understand the
+ historical loan data"         climate scenario data"
+        |                            |
+        +----------------------------+
+                    |
+        +-----------+-----------+
+        |                       |
+        v                       v
+Notebook 4 (VAR)         Notebook 6 (Satellite)     <-- PRIMARY
+"WHY do macro             "WHAT happens to loans
+ variables affect          under each scenario?"
+ loans?"                   (Fed's methodology)
+        |                       |
+        v                       v
+Granger causality         FINAL OUTPUT: "Under Net Zero,
+Impulse responses         C&I loans grow to 188% of today's
+(the causal story)        level by 2050."
 ```
+
+Notebooks 3 (annual VAR) and 5 (MIDAS) are reference analyses. The satellite model is what we present.
 
 ---
 
@@ -376,13 +383,11 @@ The C&I model tracks 4 variables as a system:
 
 **What the model learned:**
 
-The most important finding: **unemployment is the dominant driver of C&I loan growth.** When unemployment rises by 1 percentage point, C&I loan growth drops by about 5.8 percentage points the following year. This is statistically very strong (p < 0.001, meaning there's less than a 0.1% chance this is random noise).
+The most important finding: **unemployment is the dominant driver of C&I loan growth.** When unemployment rises by 1 percentage point, C&I loan growth drops by about 5 percentage points the following year. This is statistically very strong (p < 0.001, meaning there's less than a 0.1% chance this is random noise).
 
 Intuition: when people are losing jobs, it means businesses are struggling. Struggling businesses don't take out new loans, and some can't repay existing ones. The banking system contracts.
 
-The Fed Funds rate has a weaker but interesting effect: rate hikes actually *boost* C&I loan growth slightly (coefficient: +2.04). This seems backwards, but there's a logic — when the Fed raises rates, banks earn higher interest on new loans, making lending more profitable. This effect is only marginally significant though (p = 0.085).
-
-The COVID dummy confirms what we already knew: COVID boosted C&I loans by about 12 percentage points (PPP lending).
+The Fed Funds rate and the COVID dummy are not statistically significant with corrected data (Fed Funds: +0.82, p = 0.285; COVID: +6.26, p = 0.154). The directions make intuitive sense — rate hikes slightly boost C&I growth (banks earn more on new loans), and COVID had a positive PPP effect — but with only 36 annual observations, only unemployment has enough statistical power to stand out.
 
 **Granger causality tests:**
 
@@ -399,7 +404,7 @@ These answer: "If unemployment suddenly jumps, what happens to loan growth over 
 
 Think of it like dropping a rock in a pond. The IRF traces the ripples.
 
-What we found: an unemployment shock depresses C&I loan growth for about 4 years before the effect fades. The initial impact is large (about -6 percentage points in year 1), then gradually shrinks.
+What we found: an unemployment shock depresses C&I loan growth for about 4 years before the effect fades. The initial impact is large (about -5 percentage points in year 1), then gradually shrinks.
 
 **Residual diagnostics (did we miss anything?):**
 
@@ -426,19 +431,19 @@ BofA also specifically asked us to be "more thorough about consumer drivers."
 
 **What the model learned:**
 
-Surprise: the consumer model tells a completely different story from C&I.
+Surprise: the consumer model tells a completely different story from C&I — but with corrected data, the individual coefficients are weaker than originally reported.
 
-- **Consumer loan growth has mean reversion** (coefficient: -0.40, p = 0.02). This means if growth was high last year, it tends to be lower next year, and vice versa. Think of it like a pendulum swinging back and forth.
+- **Consumer loan growth shows weak mean reversion** (coefficient: -0.15, p = 0.45). The direction suggests that if growth was high last year, it tends to be lower next year, but with corrected data this is not statistically significant.
 
-- **COVID had the opposite effect** (coefficient: -12.87, p = 0.04). While PPP boosted C&I loans by +12pp during COVID, consumer loans dropped by -13pp. People weren't buying cars or taking out personal loans during lockdowns.
+- **COVID had the opposite effect from C&I** (coefficient: -3.42, p = 0.50). Consumer loans dropped during COVID while C&I surged (PPP). But the effect is smaller and not significant with corrected data.
 
 - **Unemployment is NOT the main driver** (p = 0.21 — not statistically significant). This was surprising. For C&I loans, unemployment was the star of the show. For consumer loans, it matters less.
 
-- **The 10-year yield IS a significant driver** in the Granger test (p = 0.023). Long-term borrowing costs are what drive consumer lending decisions.
+- **The 10-year yield is the most relevant predictor** in the Granger test (p = 0.084), though it is only marginally significant (no longer below the 5% threshold). Long-term borrowing costs are directionally what drive consumer lending decisions. Unemployment does not Granger-cause consumer loans (p = 0.86).
 
-**In plain English:** Businesses borrow based on how the economy is doing (unemployment). Consumers borrow based on how expensive it is to borrow (long-term interest rates). Different drivers for different types of loans.
+**In plain English:** Businesses borrow based on how the economy is doing (unemployment). Consumers borrow based on how expensive it is to borrow (long-term interest rates). Different drivers for different types of loans. But with only 36 annual observations, no macro variable reaches conventional significance in the consumer model individually.
 
-*A caveat:* the unemployment result might be partly because we only have 35 annual data points. With more data (quarterly), unemployment might show up as significant for consumer loans too. Annual data averages out within-year dynamics that could matter.
+*A caveat:* this is largely a sample size problem. With more data (quarterly, 142 observations), both interest rate variables (Fed Funds and 10-year yield) become significant for consumer loans, confirming the theoretical channel works — it just needs more data to detect reliably.
 
 ### Step 7: Testing the models (Out-of-Sample Evaluation)
 
@@ -459,12 +464,14 @@ We skip COVID years (2020-2021) when measuring accuracy, because BofA said those
 
 **Results:**
 
-| | "Dumb" model (AR) | "Smart" model (VAR) | Improvement |
+| | "Dumb" model (AR) | "Smart" model (VAR) | Difference |
 |---|---|---|---|
-| C&I loans | 10.09% error | 9.05% error | 10.4% better |
-| Consumer loans | 16.85% error | 14.03% error | 16.7% better |
+| C&I loans | 10.09% error | 10.32% error | 2.2% worse |
+| Consumer loans | 9.78% error | 12.52% error | 28.1% worse |
 
-The VAR beats the AR baseline for both loan types. Adding economic variables (unemployment, rates) actually helps predict loans better than just using past loan growth alone. The improvement is especially large for consumer loans — adding the 10-year yield makes a meaningful difference.
+With corrected data, the annual VAR does NOT beat the AR baseline for either loan type. The previous "VAR beats AR" result was an artifact of a data bug (DGS10 daily data not aggregated to monthly, causing ~36% of rows to drop). With only 36 annual observations and 4-5 variables, the VAR has too many parameters to estimate reliably from so few data points.
+
+This does NOT mean the economic variables are useless — it means annual frequency does not give us enough data to exploit them. The quarterly model (142 observations, in a separate notebook) DOES beat the AR baseline: C&I by 11.7%, consumer by 7.5%. The annual model is still valuable for its cleaner interpretability (annual growth rates are more intuitive to explain to executives), but the quarterly model is the one that demonstrates genuine forecasting improvement.
 
 ### Step 8: Scenario-Conditional Forecasts (the main event)
 
@@ -493,28 +500,24 @@ So we convert growth rates into a **balance index**. We set 2025 = 100 (today's 
 
 | Loan Type | Scenario | 2050 Balance (2025 = 100) |
 |-----------|----------|--------------------------|
-| C&I | Net Zero | **243** (loans are 2.43x today's level) |
-| C&I | Delayed Transition | 226 |
-| C&I | NDCs | 229 |
-| Consumer | Net Zero | 351 |
-| Consumer | Delayed Transition | **410** (loans are 4.1x today's level) |
-| Consumer | NDCs | 385 |
+| C&I | Net Zero | **247** (loans are 2.47x today's level) |
+| C&I | Delayed Transition | 232 |
+| C&I | NDCs | 235 |
+| Consumer | Net Zero | 346 |
+| Consumer | Delayed Transition | **352** (loans are 3.52x today's level) |
+| Consumer | NDCs | 349 |
 
 ### The Most Important Finding
 
-**C&I and consumer loans respond in OPPOSITE directions to climate policy:**
+**C&I and consumer loans respond in opposite directions to climate policy, but the consumer effect is much weaker than originally reported:**
 
-- **C&I loans do BEST under Net Zero** (the aggressive policy). Why? Because Net Zero keeps unemployment low through gradual transition, and unemployment is what drives business lending.
+- **C&I loans do BEST under Net Zero** (the aggressive policy). Why? Because Net Zero keeps unemployment low through gradual transition, and unemployment is what drives business lending. The C&I gap is meaningful: Delayed Transition is 6.4% lower than Net Zero (247 vs 232).
 
-- **Consumer loans do BEST under Delayed Transition** (the wait-then-panic policy). Why? Because Delayed Transition keeps long-term interest rates lower for longer, and long-term rates are what drive consumer borrowing costs.
+- **Consumer loans do slightly better under Delayed Transition**, but the gap is very small: Delayed Transition 352 vs Net Zero 346 — only a 1.6% difference. Before the DGS10 bug fix, this gap appeared to be 16.8%. The corrected data shows consumer loans are much less sensitive to scenario choice in the annual model.
 
-This creates a genuine strategic dilemma: there is no single "best" scenario for the entire loan book. What's good for one half is bad for the other.
+The "opposite directions" story is still directionally true and still creates a strategic tension — what is best for C&I is slightly worse for consumer. But the consumer side of the tension is weaker than it initially appeared. The practical implication: climate scenario choice matters primarily for the C&I book. Consumer loan portfolios are relatively insensitive to which climate path materializes, at least in the annual model.
 
-The difference is material:
-- Under Delayed Transition, C&I loans are 7.1% LOWER than under Net Zero
-- Under Delayed Transition, consumer loans are 16.8% HIGHER than under Net Zero
-
-This is exactly the kind of insight BofA said they want — not just "loans go up or down" but "here's a tension that executives need to think about."
+This is still a useful insight for BofA: the risk is concentrated in C&I, and Net Zero is clearly the best scenario for that portfolio.
 
 ### Step 10: Diagnostics (did everything work?)
 
@@ -529,22 +532,124 @@ Everything checks out.
 
 ---
 
-## What Each Notebook Gives to the Next
+---
+
+## Notebook 6: The Satellite Model — Our Primary Scenario Tool
+
+This is the most important notebook for the presentation and report. It uses the methodology that the Federal Reserve, European Central Bank, and Bank of England all use for climate stress testing.
+
+### Why did we build a different model?
+
+The VAR in Notebook 3 has a problem when you try to use it for scenario forecasting. A VAR tries to predict *everything* — loans, unemployment, interest rates, and inflation all at once, each affecting the others. But when we plug in the NGFS scenario values for unemployment and rates, we're overriding what the VAR *wants* to predict. It's like hiring a chef to design a full menu, then telling them "actually, the appetizer and sides are already decided — just figure out the main course." The chef's whole system is designed to work together.
+
+The satellite model doesn't have this problem. It's designed from the start to say: **"I'll take the economic path as given — just tell me what unemployment and rates will be, and I'll predict what happens to loans."** That's exactly what the climate scenarios give us.
+
+This is also what real banks do. We researched how the Fed runs its annual stress tests (called DFAST), how the ECB ran its climate stress test, and how the Bank of England ran its Climate Biennial Exploratory Scenario. They all use satellite models — single equations that take the macro scenario as an input and produce a credit outcome.
+
+### What data does it use?
+
+Everything from Notebooks 1 and 2, plus three new consumer driver series we downloaded because BofA asked us to explore more consumer drivers:
+
+| New Data | What It Is | Why We Got It |
+|----------|-----------|---------------|
+| Case-Shiller Home Price Index | Tracks US house prices over time | BofA said: "house prices might matter for consumers" |
+| Real Disposable Personal Income | How much money people actually take home after taxes and inflation | BofA said: "disposable income might matter" |
+| Michigan Consumer Sentiment | A survey of how optimistic consumers feel about the economy | BofA said: "consumer confidence might matter" |
+
+We also discovered that the NGFS climate scenario database includes projections for house prices and income under each scenario. This means the satellite model can use these variables for both historical estimation AND future scenario forecasts — something the VAR couldn't do without becoming too complicated.
+
+### How does the satellite model work?
+
+It's actually simpler than the VAR. For C&I loans, the equation is:
+
+> **Next quarter's C&I loan growth = some baseline + (0.78 x this quarter's growth) + (-1.77 x this quarter's unemployment change) + (adjustments for rates, inflation, COVID)**
+
+In plain English: "C&I loans have momentum (if they grew last quarter, they'll probably grow again), and that momentum gets knocked down when unemployment rises."
+
+For consumer loans:
+
+> **Next quarter's consumer loan growth = some baseline + (small momentum) + (0.84 x this quarter's Fed Funds rate change) + (adjustments for other variables, COVID)**
+
+In plain English: "Consumer lending responds to the Fed's interest rate. When rates change, consumer borrowing responds."
+
+Notice the key difference: C&I is about **unemployment** (the job market). Consumer is about **interest rates** (the cost of borrowing). Different parts of the loan book respond to different economic forces.
+
+### What about house prices and income?
+
+We tested them. The result: **they don't help.** Adding house prices and disposable income to the consumer model does not improve its predictions. The statistical model selection criterion (BIC) prefers the simpler model without them.
+
+This is itself a useful finding for BofA. It means that for stress testing consumer loan portfolios, tracking the Fed Funds rate is more important than tracking house prices or income. If you're designing a monitoring dashboard, interest rates should be the first thing on it.
+
+### How well does it predict?
+
+We did the same out-of-sample test as Notebook 3 — pretend it's 2005, predict 2005, then pretend it's 2006, predict 2006, all the way to 2025, never letting the model see the future. Skip COVID quarters.
+
+| Model | C&I: How much better than the "dumb" model? | Consumer: How much better? |
+|-------|----------------------------------------------|---------------------------|
+| Annual VAR (Notebook 3) | 2.2% *worse* | 28.1% *worse* |
+| Quarterly VAR (Notebook 4) | 11.7% better | 7.5% better |
+| **Satellite (Notebook 6)** | **22.8% better** | **19.1% better** |
+
+The satellite model is the clear winner for both loan types. We ran a formal statistical test (Diebold-Mariano) to make sure this isn't just luck:
+- C&I: p = 0.015 — yes, the improvement is statistically real
+- Consumer: p = 0.077 — significant at the 10% level (pretty good given only ~75 test quarters)
+
+### Scenario forecasts: what happens under each climate path?
+
+This is where the satellite model shines. For each scenario, we take the NGFS's projected path for unemployment, interest rates, inflation, etc. and plug them directly into the equation. No tricks, no overrides — just simple algebra.
+
+**Cumulative loan balance by 2050 (starting from 100 today):**
+
+| Loan Type | Net Zero 2050 | Delayed Transition | NDCs |
+|-----------|---------------|--------------------|----- |
+| C&I Loans | **188** | 186 | 187 |
+| Consumer Loans | 325 | 326 | 326 |
+
+**What to make of these numbers:**
+
+The scenario differences are small — about 2 points for C&I, less than 1 for consumer. This does NOT mean climate policy doesn't matter. It means the *aggregate US macro variables* that our model uses (unemployment, interest rates) don't diverge dramatically across NGFS scenarios. At a sector level or regional level, the differences would likely be larger. But BofA told us to stay aggregate.
+
+The direction is consistent: **Net Zero is slightly better for C&I** because the gradual transition keeps unemployment lower. Consumer loans are essentially the same across scenarios because US interest rate paths barely differ.
+
+### Why is this better than the VAR for the presentation?
+
+Three reasons:
+
+1. **Credibility.** When you tell a BofA audience "we used the same methodology as the Fed's stress tests," they immediately understand and trust the approach. It's not a classroom exercise — it's industry practice.
+
+2. **Clean scenario connection.** "We plugged the NGFS unemployment path into our model and got the loan forecast" is a sentence anyone can understand. The VAR's scenario conditioning is harder to explain without getting technical.
+
+3. **Performance.** It actually predicts better than the alternatives, and we can prove it statistically.
+
+### What's the VAR still good for?
+
+The VAR from Notebook 4 (quarterly) gives us the **causal story** — the impulse response functions and Granger causality tests that show *why* unemployment drives C&I and *why* interest rates drive consumer. The satellite model tells us *what happens*; the VAR tells us *why it happens*. We need both for a complete presentation.
+
+---
+
+## How the Notebooks Work Together (Updated)
 
 ```
-NOTEBOOK 1 teaches us:                    NOTEBOOK 3 uses this to:
-─────────────────────                     ─────────────────────
+NOTEBOOK 1 teaches us:                    SATELLITE MODEL uses this to:
+─────────────────────                     ─────────────────────────────
 "Work in growth rates, not levels"    →   Transform all data to growth rates
-"AR(4) is the baseline to beat"       →   Compare VAR against AR(4)
-"COVID needs a dummy variable"        →   Include COVID dummy in VAR
-"Unemployment and rates matter"       →   Put them in the VAR
+"AR baseline is the benchmark"        →   Compare satellite against AR
+"COVID needs a dummy variable"        →   Include COVID dummy
+"Unemployment drives C&I"             →   Put unemployment in C&I equation
+"Interest rates drive consumer"       →   Put Fed Funds in consumer equation
 
-NOTEBOOK 2 teaches us:                    NOTEBOOK 3 uses this to:
-─────────────────────                     ─────────────────────
-"NiGEM has the economic variables"    →   Read from the NiGEM file
+NOTEBOOK 2 teaches us:                    SATELLITE MODEL uses this to:
+─────────────────────                     ─────────────────────────────
+"NiGEM has economic variables"        →   Read scenario paths from NiGEM
+"Also has house prices + income"      →   Test expanded consumer drivers
 "Baseline = levels, others = diffs"   →   Reconstruct scenario paths correctly
-"5 variables map to FRED"             →   Use same 5 variables in VAR
 "3 scientific models available"       →   Run each scenario through all 3
+
+NOTEBOOK 4 (quarterly VAR):              PRESENTATION uses this for:
+────────────────────────────             ────────────────────────────
+Granger causality tests               →   "Unemployment CAUSES C&I changes"
+Impulse response functions             →   "Here's how a shock ripples through"
+These tell the WHY story                   (complements the satellite's WHAT)
 ```
 
 ---
@@ -570,11 +675,15 @@ NOTEBOOK 2 teaches us:                    NOTEBOOK 3 uses this to:
 | **KPSS test** | A statistical test that checks whether a series is stationary. Opposite null hypothesis from ADF — both agreeing gives stronger evidence. |
 | **Ljung-Box test** | Checks whether the errors from a model have any leftover patterns. If p > 0.05, the residuals are "clean" and the model hasn't missed anything obvious. |
 | **MIDAS** | Mixed Data Sampling. A technique for combining data at different frequencies (like monthly loans with annual climate data) without forcing everything to the same frequency. |
+| **Newey-West / HAC** | A correction for standard errors that accounts for the fact that time series errors are often correlated with each other. "HAC" = Heteroskedasticity and Autocorrelation Consistent. We use this in the satellite model to get honest uncertainty estimates. |
 | **NGFS** | Network for Greening the Financial System. A group of 121 central banks that created standardized climate scenarios. |
 | **NiGEM** | National Institute Global Econometric Model. The macro model used by NGFS to project how climate scenarios affect GDP, unemployment, rates, etc. |
 | **OOS evaluation** | Out-of-sample evaluation. Testing a model on data it wasn't trained on, to see if it actually predicts well (not just fits the past well). |
 | **p-value** | The probability that the result is due to random chance. p < 0.05 means "probably real." p < 0.001 means "almost certainly real." p > 0.05 means "could be random noise." |
 | **RMSE** | Root Mean Squared Error. The average size of prediction errors. Lower = better predictions. |
+| **Satellite model** | A single-equation regression that takes the economic scenario as a given input and predicts a credit outcome (like loan growth). Used by the Fed, ECB, and Bank of England for stress testing. Simpler than a VAR because it doesn't try to predict the macro variables — just translates them into loan outcomes. |
 | **Stationarity** | A series is "stationary" if its behavior is consistent over time — same average, same variability. Non-stationary series trend or wander, making them harder to predict. |
 | **VAR model** | Vector Autoregression. Like AR but for multiple variables at once. Captures how variables affect each other over time. |
+| **DFAST** | Dodd-Frank Act Stress Tests. The Fed's annual stress testing program that assesses whether large banks have enough capital to absorb losses under adverse economic conditions. Uses satellite models. |
+| **Diebold-Mariano test** | A formal statistical test that compares two forecasting models and tells you whether one is significantly better than the other, or if the difference could be due to chance. |
 | **z-score** | How many standard deviations a value is from the average. z = 0 is perfectly average. z = 2 is unusual. z = 13.9 is essentially impossible under normal conditions. |

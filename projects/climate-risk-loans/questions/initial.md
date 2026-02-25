@@ -68,3 +68,31 @@
 - Status: partially answered
 - Answered by: feb20-qa-session, academic-papers
 - Summary: BofA wants actionable insights beyond point estimates. "Can you dig into that number? Answer some important policy questions or systemic risk questions?" Frame for executive decision-making: "If you're going to present this to an executive making strategic decisions about increasing loan exposures, you want to be able to derive granular suggestions." Confidence bands are explicitly valued. **Still open:** Specific insights pending model results.
+
+---
+
+## ARDL-MIDAS Deep Dive (added 2026-02-25)
+
+### Q9: What is the formal ARDL-MIDAS specification and how does it extend standard ADL models?
+- Type: methodological
+- Priority: high
+- Likely sources: Ghysels et al. (2004, 2007), Andreou et al. (2010), Week 7 lecture
+- Status: answered
+- Answered by: midas-touch-ghysels-2004, ghysels-sinko-valkanov-2007-midas, jss-midasr-ghysels-kvedaras-zemlys-2016, umidas-franses-midas-specification
+- Summary: ADL-MIDAS: y_t = beta_0 + rho*y_{t-1} + beta_1 * SUM w(k;theta) * x_{t-k/m} + e_t. MIDAS replaces K free lag coefficients with 2 hyperparameters (Almon or Beta), making estimation feasible with small samples. Nests temporal aggregation (flat weights) as a special case. The ADL component (lagged y) enters at low frequency. Relationship to Week 5: MIDAS is a restricted distributed lag where the lag polynomial is parametrically constrained. Three main weighting schemes: exponential Almon (2 params), Beta (2 params), step function. U-MIDAS (unrestricted OLS) as alternative for small frequency gaps.
+
+### Q10: Why do MIDAS weight functions collapse to degenerate solutions, and how can this be fixed?
+- Type: diagnostic/methodological
+- Priority: high
+- Likely sources: MIDAS estimation literature, NLS convergence guidance, applied MIDAS papers
+- Status: answered
+- Answered by: midas-touch-ghysels-2004, ghysels-sinko-valkanov-2007-midas, jss-midasr-ghysels-kvedaras-zemlys-2016, umidas-franses-midas-specification, notebook diagnostics
+- Summary: Seven compounding causes: (1) Nelder-Mead optimizer without bounds — should use BFGS or Ghysels-Qian grid+OLS profiling, (2) poor starting values, (3) 8 params from 32 obs (4:1 ratio), (4) CPI transformation bug (level/12 instead of differencing), (5) flat NGFS interpolation destroying within-year variation, (6) competing MIDAS polynomials for 2 regressors, (7) no robustness checks (Beta, U-MIDAS). Answer: primarily (a) and (b) — optimization failure + small sample + too many nonlinear params. Fix: grid search profiling, single-regressor models, fix CPI, add Beta/U-MIDAS comparison.
+
+### Q12: What are best practices for MIDAS forecast evaluation and model comparison?
+- Type: methodological
+- Priority: medium
+- Likely sources: Ghysels survey papers, forecast evaluation literature (Week 6), applied MIDAS studies
+- Status: answered
+- Answered by: ghysels-sinko-valkanov-2007-midas, jss-midasr-ghysels-kvedaras-zemlys-2016, umidas-franses-midas-specification
+- Summary: Use recursive OOS with MSFE ratios relative to AR benchmark. Diebold-Mariano with Harvey-Leybourne-Newbold small-sample correction for pairwise tests (but low power with 16 eval periods). Mincer-Zarnowitz for optimality. AGK test (Andreou et al. 2010) for whether MIDAS weights add value over flat weights. Compare MIDAS vs. VAR at a common annual frequency. BIC-weighted forecast combination across model types. Current consumer MIDAS OOS result (+21%) should be re-evaluated after fixing degenerate weights. With 34 obs, improvements will be modest.

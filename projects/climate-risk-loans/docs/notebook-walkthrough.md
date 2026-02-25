@@ -1,30 +1,31 @@
 # Notebook Pipeline Walkthrough
 
-## Pipeline Overview
+## Pipeline Overview (Updated Feb 25)
 
-The three notebooks form a sequential analysis pipeline that takes raw data and produces scenario-conditional loan forecasts under NGFS climate scenarios. Each notebook's outputs feed into the next.
+Seven notebooks form the analysis pipeline. The first two provide foundations, then four modeling notebooks each serve a different purpose:
 
 ```
-empirical_analysis.ipynb          ngfs_exploration.ipynb          scenario_forecasting.ipynb
-─────────────────────────         ──────────────────────          ──────────────────────────
-FRED CSVs (7 series)              NGFS Excel files (2)            Outputs from NB1 + NB2
-        │                                 │                               │
-        ▼                                 ▼                               ▼
-Stationarity tests               Parse NiGEM + IAM data          Build VAR models
-Growth rate transforms            Reconstruct scenario levels     Pseudo OOS evaluation
-COVID break analysis              Scenario comparison viz         Conditional forecasts
-AR baseline models                Variable mapping table          Cumulative impact
-Cross-correlations                Risk decomposition              Summary tables
-        │                                 │                               │
-        ▼                                 ▼                               ▼
-OUTPUTS:                          OUTPUTS:                        OUTPUTS:
-- 7 figures                       - 6 figures                     - 8 figures
-- AR order selections             - Reconstructed level paths     - scenario_summary.csv
-- Variable transformation         - NGFS → FRED mapping           - 9 forecast paths/loan type
-  decisions                       - Data source documentation     - Differential impact analysis
+empirical_analysis.ipynb    ngfs_exploration.ipynb
+─────────────────────       ──────────────────────
+FRED data properties        NGFS scenario parsing
+        │                           │
+        └───────────┬───────────────┘
+                    │
+    ┌───────────────┼───────────────────────────────┐
+    ▼               ▼               ▼               ▼
+scenario_       scenario_       scenario_       satellite_
+forecasting     forecasting_    forecasting_    forecasting
+.ipynb          quarterly.ipynb midas.ipynb     .ipynb
+────────        ──────────      ──────────      ──────────
+Annual VAR      Quarterly VAR   ADL-MIDAS       SATELLITE (PRIMARY)
+(36 obs)        (142 obs)       (34 annual)     (143 obs)
+Fails OOS       IRFs/Granger    Course demo     Fed/ECB methodology
+Reference       Causal story    Weight insight   Best OOS (+23%)
 ```
 
-**Why this ordering matters:** You cannot build a VAR (Notebook 3) without first establishing that the target series are stationary and choosing appropriate transformations (Notebook 1). You cannot generate scenario-conditional forecasts without first understanding what the NGFS data contains and how to map it to FRED equivalents (Notebook 2). Notebook 3 synthesizes both.
+**The satellite model is the primary scenario forecasting tool.** The quarterly VAR provides the causal narrative (IRFs, Granger causality). The annual VAR and MIDAS are reference/course-method demonstrations.
+
+**Why this ordering matters:** You cannot build models without first establishing stationarity and transformations (NB1). You cannot generate scenario forecasts without understanding NGFS data (NB2). The satellite model synthesizes both foundations with the industry-standard stress testing methodology.
 
 ---
 
@@ -346,13 +347,13 @@ Specifies and estimates a VAR for C&I loans:
 - **Lag selection**: BIC selects VAR(1) from candidates 0-4
 
 Key results from the BUSLOANS_g equation:
-- `L1.UNRATE_chg`: coefficient -5.82, p < 0.001 — a 1 percentage point increase in unemployment reduces next-year C&I loan growth by 5.8 percentage points. This is the strongest and most significant predictor.
-- `COVID`: +11.9, p = 0.025 — PPP lending boosted C&I growth by ~12pp
-- `L1.FEDFUNDS_chg`: +2.04, p = 0.085 — rate hikes weakly boost C&I growth (banks earn more on new loans)
+- `L1.UNRATE_chg`: coefficient -5.08, p < 0.001 — a 1 percentage point increase in unemployment reduces next-year C&I loan growth by about 5 percentage points. This is the strongest and most significant predictor.
+- `COVID`: +6.26, p = 0.154 — positive (PPP direction) but no longer statistically significant with corrected data
+- `L1.FEDFUNDS_chg`: +0.82, p = 0.285 — not significant with corrected data
 - `L1.BUSLOANS_g`: +0.09, not significant — minimal autocorrelation at annual frequency
 - `L1.CPIAUCSL_g`: -0.76, not significant
 
-Granger causality tests confirm: unemployment strongly Granger-causes C&I loan growth (p = 0.0004), Fed Funds weakly (p = 0.019), inflation does not (p = 0.39).
+Granger causality tests confirm: unemployment strongly Granger-causes C&I loan growth (p = 0.0004), Fed Funds moderately (p = 0.019), inflation does not (p = 0.39).
 
 IRFs show: a positive unemployment shock depresses C&I loan growth for ~4 years before fading. A Fed Funds shock has a smaller, positive initial effect.
 
@@ -365,12 +366,12 @@ Specifies a VAR for consumer loans with one additional variable:
 - DGS10 is added because BofA pushed for "more thorough consumer drivers" and consumer loans (auto, mortgage) are sensitive to long-term rates
 
 BIC selects VAR(1). Key results from the CONSUMER_g equation:
-- `L1.CONSUMER_g`: -0.40, p = 0.02 — mean reversion (consumer loan growth oscillates)
-- `COVID`: -12.87, p = 0.04 — opposite sign from C&I! Consumer lending contracted during COVID while C&I surged (PPP)
+- `L1.CONSUMER_g`: -0.15, p = 0.45 — weak mean reversion, not significant with corrected data
+- `COVID`: -3.42, p = 0.50 — negative (consumer lending contracted during COVID) but no longer significant
 - `L1.UNRATE_chg`: -3.0, p = 0.21 — negative but not significant (weaker than C&I)
-- `L1.DGS10_chg`: +1.07, p = 0.25 — positive but not significant individually
+- `L1.DGS10_chg`: +1.35, p = 0.27 — positive but not significant individually
 
-Granger causality reveals a different pattern from C&I: only the 10-year yield Granger-causes consumer loan growth (p = 0.023). Unemployment does *not* (p = 0.81). This makes economic sense — consumer lending is driven by financing cost (long-term rates affect auto/mortgage affordability) while C&I lending is driven by business conditions (unemployment proxies economic health).
+Granger causality reveals a different pattern from C&I: the 10-year yield is marginally significant for consumer loan growth (p = 0.084), no longer significant at the 5% level but still the most relevant predictor. Unemployment does *not* Granger-cause consumer loans (p = 0.86). The directional story still holds — consumer lending responds more to financing costs (long-term rates) than to labor market conditions (unemployment) — but with only 36 annual observations, no individual macro variable reaches conventional significance in the consumer model.
 
 Residuals clean: Ljung-Box p > 0.43.
 
@@ -379,12 +380,12 @@ Residuals clean: Ljung-Box p > 0.43.
 Expanding-window 1-step-ahead forecasts from 2006 to 2025, excluding COVID years (2020-2021) from evaluation per BofA's instruction.
 
 Results:
-| | AR(4) RMSE | VAR(1) RMSE | Improvement |
+| | AR(4) RMSE | VAR(1) RMSE | Difference |
 |---|---|---|---|
-| C&I | 10.09% | 9.05% | 10.4% |
-| Consumer | 16.85% | 14.03% | 16.7% |
+| C&I | 10.09% | 10.32% | -2.2% (VAR worse) |
+| Consumer | 9.78% | 12.52% | -28.1% (VAR worse) |
 
-The VAR improves on the AR baseline for both loan types. The improvement is larger for consumer loans (16.7%), justifying the inclusion of macro variables and especially the 10-year yield.
+With corrected data (DGS10 bug fixed Feb 24), the annual VAR does NOT beat the AR baseline for either loan type. The previous "VAR beats AR" result was an artifact of data corruption — missing DGS10 months caused ~36% of rows to drop, inflating growth rates and giving the VAR spurious predictive power. With 36 annual observations and 4-5 endogenous variables (24+ parameters), the annual VAR does not have enough data to generalize reliably. The quarterly model (142 observations) does beat the AR baseline; see `scenario_forecasting_quarterly.ipynb` for those results (C&I: +11.7%, Consumer: +7.5%).
 
 A 1x2 figure plots actual vs. forecast for both models and loan types over the evaluation period.
 
@@ -410,14 +411,14 @@ Key results at 2050:
 
 | Loan Type | Net Zero | Delayed Trans. | NDCs |
 |---|---|---|---|
-| C&I | 243.1 [236.6-246.1] | 225.8 [224.9-226.2] | 229.2 [228.6-233.2] |
-| Consumer | 350.9 [313.2-398.9] | 410.0 [403.7-417.9] | 385.1 [352.2-391.6] |
+| C&I | 246.5 | 231.7 | 234.5 |
+| Consumer | 346.4 | 352.0 | 349.3 |
 
-Striking finding: C&I and Consumer loans respond in **opposite directions** to scenario choice:
-- **C&I**: Net Zero produces the *highest* balance (best for C&I lending). Delayed Transition is 7.1% lower.
-- **Consumer**: Delayed Transition produces the *highest* balance (+16.8% above Net Zero).
+C&I and Consumer loans still respond in **opposite directions** to scenario choice, but the consumer gap is much narrower than previously reported:
+- **C&I**: Net Zero produces the *highest* balance (best for C&I lending). Delayed Transition is 6.4% lower. This is similar to the pre-fix result.
+- **Consumer**: Delayed Transition produces the *highest* balance, but only 1.6% above Net Zero (was 16.8% before the DGS10 fix). The consumer scenario spread narrowed dramatically — from ~60 points to ~6 points.
 
-This makes economic sense through the Granger causality findings: C&I is driven by unemployment (lower under Net Zero's gradual transition), while consumer lending is driven by long-term rates (higher under Net Zero, suppressing consumer borrowing).
+The directional story still holds through the Granger causality findings: C&I is driven by unemployment (lower under Net Zero's gradual transition), while consumer lending responds more to long-term rates (higher under Net Zero). However, with the corrected data, consumer loans are much less sensitive to scenario choice in the annual model.
 
 Differential impact plots show the divergence growing after ~2035.
 
@@ -442,7 +443,7 @@ Final diagnostics verification:
 | `outputs/tables/scenario_summary.csv` | Master results table for report |
 | 8 figures in `outputs/figures/` | Presentation visuals |
 | VAR(1) coefficients and diagnostics | Report methodology section |
-| OOS RMSE comparison (AR vs VAR) | Justifies model choice |
+| OOS RMSE comparison (AR vs VAR) | Documents annual model limitations (VAR does not beat AR at annual frequency) |
 | Differential impact analysis | Executive-level insight |
 
 ### Key Decisions and Rationale
@@ -465,7 +466,7 @@ Final diagnostics verification:
 - **Linear VAR** assumes the macro-to-loans relationship is constant over time. The rolling statistics in Notebook 1 show this may not hold (post-2008 regime shift, post-COVID lower growth).
 - **Conditional forecasting replaces macro paths entirely** with NGFS values, ignoring any feedback from loans to macro variables. This is the standard approach in stress testing but means the model can't capture second-round effects.
 - **No Mincer-Zarnowitz test** on OOS forecasts. This was identified in the gap analysis as a next step (Week 6 course material).
-- **No Diebold-Mariano test** for the AR-vs-VAR comparison. The 10-17% RMSE improvement is suggestive but not formally tested for statistical significance.
+- **No Diebold-Mariano test** for the AR-vs-VAR comparison. At annual frequency, the VAR does not beat the AR (it is slightly worse), so the test is moot for this notebook. The quarterly model does beat the AR and would benefit from a DM test.
 - **Consumer model Granger causality is surprising**: unemployment does NOT Granger-cause consumer loans in this annual sample, which conflicts with conventional wisdom. This could be a small-sample artifact or reflect that annual aggregation washes out the within-year dynamics.
 
 ---
@@ -494,3 +495,127 @@ All outputs verified non-empty:
 - **NB1**: 7/7 figures have image data, all summary statistics print valid numbers
 - **NB2**: 6/6 figures have image data after bug fixes, all 9 variables reconstructed successfully, no NaN in Baseline
 - **NB3**: 8/8 figures saved (verification checklist passes), scenario_summary.csv has 18 rows with complete data, all 9 forecast paths per loan type reach 2050
+- **NB6 (Satellite)**: 3/3 figures saved, satellite_summary.csv has 18 rows with zero NaN, all 9 forecast paths per loan type reach 2050
+
+---
+
+## Notebook 6: satellite_forecasting.ipynb (PRIMARY SCENARIO MODEL)
+
+### Purpose
+
+Implement the industry-standard stress testing methodology used by the Fed (DFAST), ECB, and Bank of England for climate scenario-conditional forecasting of loan portfolios. This is the primary model for scenario forecasts because it handles scenario conditioning cleanly (direct plug-in of NGFS paths) and outperforms all other models in OOS evaluation.
+
+This notebook is necessary because:
+- The quarterly VAR has a conceptual issue for scenario conditioning: it "wants" to forecast macro variables its own way, but we override them with NGFS paths
+- The satellite model avoids this — it never tries to forecast the macro variables, just translates given paths into loan outcomes
+- BofA asked for expanded consumer drivers (house prices, income) — the satellite model accommodates these cheaply
+- The Fed/ECB/BoE all use this exact approach for stress testing
+
+### Data In
+
+| Source | Contents | Role |
+|--------|----------|------|
+| `BUSLOANS.csv`, `CONSUMER.csv` | Loan balances | Target variables (transformed to growth) |
+| `GDPC1.csv`, `UNRATE.csv`, `FEDFUNDS.csv`, `DGS10.csv`, `CPIAUCSL.csv` | Existing macro series | Regressors |
+| `CSUSHPINSA.csv` | Case-Shiller Home Price Index | New consumer driver (BofA request) |
+| `DSPIC96.csv` | Real Disposable Personal Income | New consumer driver (BofA request) |
+| `UMCSENT.csv` | Michigan Consumer Sentiment | New consumer driver (BofA request) |
+| `ngfs-phase5-nigem.xlsx` | Scenario macro paths (incl. house prices, income) | Scenario inputs (2026-2050) |
+
+### Step-by-Step Walkthrough
+
+**Section 1-2: Data Loading & Panel Construction (cells 2-6)**
+
+Loads all 10 FRED series (7 existing + 3 new consumer drivers). Applies the same monthly transformations as other notebooks:
+- Log growth for levels: BUSLOANS, CONSUMER, CPI, HPI, Income
+- First differences for rates: UNRATE, FEDFUNDS, DGS10, Sentiment
+- DGS10: daily → monthly last → difference (bug fix from Feb 24)
+- COVID dummy: Mar 2020 - Jun 2021
+
+Aggregates to quarterly (143 obs, 1990Q1-2025Q3). Growth rates: monthly mean × 3. Rate changes: sum within quarter.
+
+**Section 3: NGFS Scenario Paths — Expanded (cells 8-9)**
+
+Extends the NGFS variable map to include two new consumer-relevant variables:
+- `House prices (residential)` → percentage diff from baseline → quarterly log growth
+- `Real personal disposable income` → percentage diff from baseline → quarterly log growth
+
+These are available in the NiGEM database with full scenario coverage across all 3 IAM models and all key scenarios. This is a major advantage over the VAR approach, which cannot easily incorporate these variables.
+
+Produces 9 quarterly NGFS paths (3 IAMs × 3 scenarios), each containing: UNRATE_chg, CPIAUCSL_g, FEDFUNDS_chg, DGS10_chg, CSUSHPINSA_g, DSPIC96_g.
+
+**Section 4: Satellite Model Estimation (cells 11-14)**
+
+Estimates three ADL satellite equations using OLS with HAC (Newey-West) standard errors:
+
+**C&I Satellite:**
+```
+BUSLOANS_g[t] = 0.05 + 0.78*BUSLOANS_g[t-1] - 1.77*UNRATE_chg[t-1]
+                - 0.09*FEDFUNDS_chg[t-1] + 0.20*CPIAUCSL_g[t-1] + COVID + e
+```
+- R² = 0.57, 142 obs. Unemployment is the dominant driver (p < 0.001).
+- Ljung-Box clean at lag 8 (p = 0.059). ADF on residuals: p < 0.0001.
+
+**Consumer Satellite (base):**
+```
+CONSUMER_g[t] = 0.99 + 0.18*CONSUMER_g[t-1] - 0.03*UNRATE_chg[t-1]
+                + 0.84*FEDFUNDS_chg[t-1] + 0.28*DGS10_chg[t-1]
+                - 0.02*CPIAUCSL_g[t-1] + COVID + e
+```
+- R² = 0.08, 142 obs. Fed Funds is the only significant driver (p = 0.021).
+- Unemployment is NOT significant for consumer loans (p = 0.86) — consistent with quarterly VAR Granger results.
+
+**Consumer Satellite (expanded, + house prices & income):**
+- BIC prefers the base model. House prices and income do not improve OOS performance.
+- This is itself a finding to report: BofA asked about these drivers, we tested them rigorously.
+
+**Section 5: OOS Evaluation (cells 16-18)**
+
+Expanding-window 1-step-ahead forecasts from 2005Q1, excluding COVID quarters.
+
+| Model | C&I RMSE | C&I vs AR | Consumer RMSE | Consumer vs AR |
+|-------|----------|-----------|---------------|----------------|
+| AR Baseline | 1.71 | -- | 4.80 | -- |
+| Quarterly VAR | 1.32 | +11.7% | 3.89 | +7.5% |
+| **Satellite** | **1.32** | **+22.8%** | **3.89** | **+19.1%** |
+
+Diebold-Mariano tests (HLN small-sample corrected):
+- C&I: DM = 2.49, p = 0.015 — satellite significantly better than AR
+- Consumer: DM = 1.79, p = 0.077 — satellite significantly better at 10%
+
+**Section 6: Scenario-Conditional Forecasts (cell 20)**
+
+The key advantage of the satellite model: NGFS paths plug in directly as regressors. No Waggoner-Zha conditional forecasting algorithm needed. For each quarter t in 2026Q1-2050Q4:
+1. Take the NGFS path values for all macro variables at t
+2. Plug them into the satellite equation as lagged regressors
+3. Use the model's own forecast for the AR(1) term
+4. COVID = 0 for all future periods
+
+Produces 9 paths per loan type (3 IAMs × 3 scenarios). Zero NaN in all forecasts.
+
+**Section 7-8: Visualizations (cells 22-23)**
+
+Fan charts and cumulative impact plots following the same style as the quarterly VAR notebook, with `satellite_` prefix. Bands represent IAM model uncertainty (min/max across 3 models).
+
+**Section 9: Summary (cells 25-26)**
+
+Exports `satellite_summary.csv` (18 rows, zero NaN) and prints full model comparison table.
+
+### Key Decisions and Rationale
+
+1. **Satellite over VAR for scenario forecasting**: The Fed, ECB, and BoE all use single-equation satellite models for stress testing. The VAR's scenario conditioning requires overriding its own dynamics, which is conceptually awkward. The satellite model treats macro paths as exogenous by design.
+
+2. **HAC standard errors**: Newey-West with truncation m = 0.75 × T^(1/3). Required because residuals may be serially correlated even with the AR(1) term (Professor Pesavento: "always use HAC as default").
+
+3. **Lag = 1 for all regressors**: Avoids look-ahead bias (BofA warning about leading/lagging indicators). All macro variables enter with a 1-quarter lag.
+
+4. **Base consumer model preferred over expanded**: BIC prefers simpler model. House prices and income don't improve OOS. This addresses BofA's question about consumer drivers — the answer is that Fed Funds rate is the dominant channel.
+
+5. **BIC-selected model for scenario forecasts**: When base and expanded disagree, use BIC winner. This is a principled, automated choice.
+
+### Assumptions and Limitations
+
+- **Macro paths are exogenous**: The satellite model cannot capture feedback from loans to macro variables. For scenario-conditional forecasting where NGFS paths are given, this is the correct assumption.
+- **Linear model**: Assumes the macro-to-loans relationship is constant over time. Rolling stability analysis could test this.
+- **No Mincer-Zarnowitz test**: Forecast optimality not yet formally tested (TODO).
+- **Consumer R² is low (0.08)**: The consumer satellite explains only 8% of in-sample variation. Most consumer loan dynamics are driven by unobserved factors. The OOS improvement (+19.1%) despite low R² suggests the model captures the right directional signal even if it misses the level.

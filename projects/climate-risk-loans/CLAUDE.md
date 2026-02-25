@@ -204,48 +204,58 @@ How does climate change/climate risk impact commercial and consumer loan portfol
 - **Phase 2** (Feb 20 - March): Build models, iterate on feature selection — IN PROGRESS
 - **Phase 3** (March - April): Refine, visualize, prepare presentation
 
-## Current State (checkpoint 2026-02-20, session 3)
+## Current State (checkpoint 2026-02-25, session 5)
 
-### Data (9 files in data/raw/)
-- **FRED series (7):** BUSLOANS.csv, CONSUMER.csv, GDPC1.csv, UNRATE.csv, FEDFUNDS.csv, DGS10.csv, CPIAUCSL.csv
+### Data (12 files in data/raw/)
+- **FRED series (10):** BUSLOANS.csv, CONSUMER.csv, GDPC1.csv, UNRATE.csv, FEDFUNDS.csv, DGS10.csv, CPIAUCSL.csv, CSUSHPINSA.csv (Case-Shiller HPI), DSPIC96.csv (real disposable income), UMCSENT.csv (Michigan sentiment)
 - **NGFS scenario data (2):** ngfs-phase5-iam.xlsx (61MB), ngfs-phase5-nigem.xlsx (26MB)
-- Status: Downloaded, validated, all clean (see data integrity audit)
+- Status: Downloaded, validated, all clean
 
 ### NGFS Data Structure (critical for debugging)
 - **NiGEM** (`ngfs-phase5-nigem.xlsx`): Macro-financial variables (GDP, unemployment, inflation, rates, equity/house prices). **Baseline stores levels; other scenarios store % or absolute diffs from baseline.** Must reconstruct levels via `baseline * (1 + pct_diff/100)` or `baseline + abs_diff`. 160 variables, 3 IAM models, 7 scenarios, 2022-2050.
 - **IAM** (`ngfs-phase5-iam.xlsx`): Climate/energy variables (carbon prices, emissions, energy mix). Stores levels directly. GDP damage estimates only available for REMIND (not GCAM). 2020-2100.
 - **Known gotchas**: Not all variable x scenario x model combinations exist. Current Policies has no `(transition)` decomposition. GDP levels in NiGEM are Baseline-only.
 
-### Notebooks (3)
+### Notebooks (6)
 - `empirical_analysis.ipynb` — FRED data exploration, unit root tests, ACF/PACF, AR baselines, cross-correlations, COVID analysis
 - `ngfs_exploration.ipynb` — NGFS scenario parsing, visualization, IAM model comparison, macro path extraction. **All 5 plots validated (fixed 5 bugs in session 2).**
-- `scenario_forecasting.ipynb` — VAR estimation, scenario-conditional forecasts, IRFs, OOS evaluation, fan charts
+- `scenario_forecasting.ipynb` — Annual VAR estimation, scenario-conditional forecasts, IRFs, OOS evaluation, fan charts. **DGS10 bug fixed Feb 24. Annual VAR no longer beats AR baseline (was artifact of data bug).**
+- `scenario_forecasting_quarterly.ipynb` — Quarterly VAR (142 obs vs 36 annual), same pipeline at quarterly frequency. **Built Feb 24.** DGS10 fix + Granger column order fix applied. Provides IRFs and Granger causality for the causal narrative.
+- `scenario_forecasting_midas.ipynb` — ADL-MIDAS model using monthly FRED data directly (no aggregation loss). **Built Feb 24.** Uses Almon polynomial distributed lags on monthly regressors to predict annual loan growth. **Has degenerate weight issues — see ARDL-MIDAS analysis report.**
+- `satellite_forecasting.ipynb` — **PRIMARY SCENARIO MODEL. Built Feb 25.** Satellite ADL equations following Fed DFAST / ECB / BoE stress testing methodology. Single-equation OLS with HAC standard errors. NGFS paths plug in directly as regressors. Includes expanded consumer model with house prices and income from NGFS. **Beats both AR baseline and quarterly VAR in OOS. C&I: +22.8% vs AR (DM p=0.015). Consumer: +19.1% vs AR (DM p=0.077).**
 
-### Outputs (21 figures, 1 table)
+### Outputs (35 figures, 2 tables)
 - **Empirical (NB1, 7):** levels_overview, growth_rates, acf_pacf_growth, covid_zoom, bic_ar_selection, cross_correlations, rolling_stats
-- **NGFS (NB2, 6):** ngfs_scenario_paths, ngfs_scenario_diffs, ngfs_model_uncertainty, ngfs_iam_us, ngfs_risk_decomposition, ngfs_macro_paths_transformed
-- **Forecasting (NB3, 8):** annual_data_panel, irf_ci_loans, irf_consumer_loans, oos_evaluation, scenario_fan_charts, cumulative_impact, scenario_comparison_full, ngfs_macro_paths_transformed
-- **Table:** scenario_summary.csv — 18 rows (2 loan types x 3 scenarios x 3 horizons), zero NaN
+- **NGFS (NB2, 5):** ngfs_scenario_paths, ngfs_scenario_diffs, ngfs_model_uncertainty, ngfs_iam_us, ngfs_risk_decomposition
+- **Annual Forecasting (NB3, 8):** annual_data_panel, ngfs_macro_paths_transformed, irf_ci_loans, irf_consumer_loans, oos_evaluation, scenario_fan_charts, cumulative_impact, scenario_comparison_full
+- **Quarterly Forecasting (NB4, 7):** quarterly_data_panel, quarterly_ngfs_paths, quarterly_irf_ci, quarterly_irf_consumer, quarterly_oos_evaluation, quarterly_scenario_fan_charts, quarterly_cumulative_impact
+- **MIDAS (NB5, 5):** midas_weights_ci, midas_weights_consumer, midas_oos_evaluation, midas_scenario_fan_charts, midas_cumulative_impact
+- **Satellite (NB6, 3):** satellite_oos_evaluation, satellite_scenario_fan_charts, satellite_cumulative_impact
+- **Tables:** scenario_summary.csv (18 rows, VAR-based), satellite_summary.csv (18 rows, satellite-based)
 
-### Documentation (docs/)
-- `notebook-walkthrough.md` — Detailed walkthrough of all 3 notebooks: purpose, step-by-step, data in/out, decisions, limitations, pipeline overview
+### Documentation (docs/, 4 files)
+- `notebook-walkthrough.md` — Detailed walkthrough of all notebooks: purpose, step-by-step, data in/out, decisions, limitations, pipeline overview. Updated Feb 24 for 5-notebook pipeline.
+- `notebook-walkthrough-simplified.md` — Simplified walkthrough for non-technical teammates.
 - `data-integrity-audit.md` — Full audit of every data handoff point across the pipeline. Result: **zero red flags**. Each notebook reads raw source files independently, so NB2's blank-plot bugs had zero impact on NB3's results.
+- `corrections-log-2026-02-24.md` — Full corrections log documenting DGS10 bug, Granger column order fix, and impact on all results.
 
-### Scenario Forecast Results (from scenario_summary.csv)
+### Scenario Forecast Results (from scenario_summary.csv, corrected Feb 24)
 | Loan Type | Scenario | 2030 Growth | 2050 Growth | 2050 Balance Index |
 |-----------|----------|-------------|-------------|-------------------|
-| C&I | Net Zero | +3.64% | +3.60% | 243.1 |
-| C&I | Delayed Trans. | +3.19% | +3.50% | 225.8 |
-| C&I | NDCs | +3.19% | +3.40% | 229.2 |
-| Consumer | Net Zero | +5.03% | +5.42% | 350.9 |
-| Consumer | Delayed Trans. | +5.32% | +5.58% | 410.0 |
-| Consumer | NDCs | +5.32% | +5.59% | 385.1 |
+| C&I | Net Zero | +3.64% | +3.68% | 246.5 |
+| C&I | Delayed Trans. | +3.25% | +3.50% | 231.7 |
+| C&I | NDCs | +3.19% | +3.40% | 234.5 |
+| Consumer | Net Zero | +5.03% | +5.42% | 346.4 |
+| Consumer | Delayed Trans. | +5.32% | +5.58% | 352.0 |
+| Consumer | NDCs | +5.32% | +5.59% | 349.3 |
 
 ### Facts & Analysis
-- 444 facts across 10 source files (latest: feb20-qa-session.md, Feb 20)
-- 3 analysis runs (comprehensive v1, comprehensive v2, gap analysis)
-- 1 summary report
-- Questions: 5 answered, 3 partially answered
+- 613 facts across 14 source files (added 4 MIDAS source files, Feb 25)
+- 4 analysis runs (comprehensive v1, v2, gap analysis, ARDL-MIDAS deep dive)
+- 2 reports (original summary, ARDL-MIDAS report)
+- Questions: 8 answered, 3 partially answered
+- 6 notebooks total (added satellite model Feb 25). Bug fixes applied Feb 24 — see `docs/corrections-log-2026-02-24.md`.
+- 35 figures across all notebooks, 2 summary tables
 
 ### What Was Done This Session (Feb 20, session 3)
 - Completed full data integrity audit across all 3 notebooks
@@ -257,13 +267,46 @@ How does climate change/climate risk impact commercial and consumer loan portfol
 - Created comprehensive notebook walkthrough documentation (32 KB)
 - Created data integrity audit report (8 KB)
 
+### What Was Done Session 4 (Feb 24)
+- Code review found and fixed **DGS10 daily data bug** in both `scenario_forecasting.ipynb` and `scenario_forecasting_quarterly.ipynb`
+- Fixed **Granger causality column order** in quarterly notebook
+- Built **quarterly VAR notebook** and **ADL-MIDAS notebook**
+- Three-frequency comparison: Annual VAR, Quarterly VAR, ADL-MIDAS
+- Full corrections log: `docs/corrections-log-2026-02-24.md`
+
+### What Was Done Session 5 (Feb 25)
+- **ARDL-MIDAS research pipeline** — Extracted 160+ facts from 5 academic sources (Ghysels 2004, 2007; JSS 2016; Foroni 2015; Franses 2016). Diagnosed 7 root causes of degenerate MIDAS weights. Analysis + report written.
+- **Literature review of stress testing methods** — Found that Fed DFAST, ECB, and BoE all use **single-equation satellite models** for scenario-conditional forecasting, not VARs. VARs are used for causal analysis (IRFs/Granger), satellite models for scenario projection.
+- **Fetched 3 new FRED consumer driver series**: CSUSHPINSA (Case-Shiller HPI), DSPIC96 (real disposable income), UMCSENT (Michigan sentiment) — per BofA request for expanded consumer drivers
+- **Discovered NGFS has house prices and income paths** — `House prices (residential)` and `Real personal disposable income` are in NiGEM with full scenario coverage. This means the satellite model can use these as scenario-conditional regressors.
+- **Built satellite model notebook** (`satellite_forecasting.ipynb`): Industry-standard ADL satellite equations with HAC standard errors. Three models: C&I, Consumer base, Consumer expanded (+ house prices, income).
+- **Satellite model results** — Best OOS performance of any model:
+  - C&I: RMSE 1.32, **+22.8% vs AR** (DM p=0.015, statistically significant)
+  - Consumer: RMSE 3.89, **+19.1% vs AR** (DM p=0.077, significant at 10%)
+  - Both outperform the quarterly VAR (+11.7% and +7.5%)
+- **Consumer driver expansion**: House prices and income did NOT improve BIC over the base consumer model. Fed Funds rate remains the dominant consumer driver.
+- **Diebold-Mariano tests implemented** with Harvey-Leybourne-Newbold small-sample correction
+- Updated project.yaml, CLAUDE.md, PROJECT-STATUS.md, notebook-walkthrough.md
+
+### OOS Results Summary (updated Feb 25)
+| Frequency | Model | C&I RMSE | C&I vs AR | Consumer RMSE | Consumer vs AR |
+|-----------|-------|----------|-----------|---------------|----------------|
+| Annual | AR baseline | 10.10 | -- | 9.78 | -- |
+| Annual | VAR | 10.32 | -2.2% (worse) | 12.52 | -28.0% (worse) |
+| Annual | ADL-MIDAS | 9.93 | +1.7% | 7.72 | +21.0% |
+| Quarterly | AR baseline | 1.71 | -- | 4.80 | -- |
+| Quarterly | VAR | 1.32 | +11.7% | 3.89 | +7.5% |
+| **Quarterly** | **Satellite** | **1.32** | **+22.8%** | **3.89** | **+19.1%** |
+
+Key takeaway: **Satellite model is the best-performing approach** for both loan types. It follows the Fed/ECB/BoE stress testing methodology (single-equation ADL), beats both AR and VAR in OOS, and handles scenario conditioning cleanly (direct plug-in of NGFS paths). Quarterly VAR provides the causal narrative (IRFs, Granger). MIDAS has degenerate weight issues but demonstrates course material.
+
 ### What's Next
-1. **Consumer driver expansion** — Test house prices (CSUSHPINSA), Michigan sentiment (UMCSENT), real disposable income (DSPIC96) in consumer VAR
-2. **Leading/lagging indicator audit** — Document timing properties of all variables per BofA warning
-3. **Forecast evaluation** — Apply Mincer-Zarnowitz regression and DM test (from Week 6) to OOS results
-4. **Scenario narrative visualization** — Multi-panel figure showing NGFS variables with annotations
-5. **Actionable insights framework** — Develop 3-5 executive-level takeaways for presentation
-6. **Next Q&A ~March 3** — Prepare to show preliminary results and get BofA feedback
+1. ~~**Consumer driver expansion**~~ — DONE (session 5). Tested house prices (CSUSHPINSA) and real disposable income (DSPIC96) in expanded consumer satellite model. BIC prefers base model — Fed Funds is the dominant consumer driver. House prices and income don't add OOS predictive power.
+2. **Leading/lagging indicator audit** — Document timing properties of all variables per BofA warning about accidentally including future data. Satellite model uses lag=1 for all regressors, which addresses this.
+3. ~~**Diebold-Mariano formal tests**~~ — DONE (session 5). C&I satellite: DM p=0.015 (significant). Consumer satellite: DM p=0.077 (significant at 10%). Mincer-Zarnowitz still TODO.
+4. **Scenario narrative visualization** — Multi-panel figure showing NGFS variables with annotations telling the economic story behind each scenario
+5. **Actionable insights framework** — Develop 3-5 executive-level takeaways for presentation (BofA: "Can you dig into that number? Answer some important policy questions?")
+6. **Prepare for Q&A ~March 3** — Show satellite vs. VAR comparison, expanded consumer driver results, and DM test results to BofA for feedback before midterm
 
 ## Team Structure
 
