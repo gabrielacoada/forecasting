@@ -231,13 +231,18 @@ How does climate change/climate risk impact commercial and consumer loan portfol
 - **Quarterly Forecasting (NB4, 7):** quarterly_data_panel, quarterly_ngfs_paths, quarterly_irf_ci, quarterly_irf_consumer, quarterly_oos_evaluation, quarterly_scenario_fan_charts, quarterly_cumulative_impact
 - **MIDAS (NB5, 5):** midas_weights_ci, midas_weights_consumer, midas_oos_evaluation, midas_scenario_fan_charts, midas_cumulative_impact
 - **Satellite (NB6, 3):** satellite_oos_evaluation, satellite_scenario_fan_charts, satellite_cumulative_impact
-- **Tables:** scenario_summary.csv (18 rows, VAR-based), satellite_summary.csv (18 rows, satellite-based)
+- **R MIDAS (8):** midas_r_cumulative_ci, midas_r_cumulative_consumer, midas_r_oos_ci, midas_r_oos_consumer, midas_r_scenario_fan_ci, midas_r_scenario_fan_consumer, midas_r_weights_ci, midas_r_weights_consumer
+- **Tables (4):** scenario_summary.csv, satellite_summary.csv, midas_r_oos_summary.csv, midas_r_scenario_summary.csv
 
-### Documentation (docs/, 4 files)
+### Documentation (docs/, 8 files)
 - `notebook-walkthrough.md` — Detailed walkthrough of all notebooks: purpose, step-by-step, data in/out, decisions, limitations, pipeline overview. Updated Feb 24 for 5-notebook pipeline.
 - `notebook-walkthrough-simplified.md` — Simplified walkthrough for non-technical teammates.
 - `data-integrity-audit.md` — Full audit of every data handoff point across the pipeline. Result: **zero red flags**. Each notebook reads raw source files independently, so NB2's blank-plot bugs had zero impact on NB3's results.
 - `corrections-log-2026-02-24.md` — Full corrections log documenting DGS10 bug, Granger column order fix, and impact on all results.
+- `qa2-prep-2026-03-03.md` — Q&A 2 preparation: questions to ask, numbers to have ready.
+- `qa2-prep-2026-03-03.pdf` — PDF export of prep doc.
+- `qa2-takeaways-2026-03-03.md` — Q&A 2 takeaways: BofA feedback, action items, presentation guidance.
+- `qa2-takeaways-2026-03-03.pdf` — PDF export of takeaways.
 
 ### Scenario Forecast Results (from scenario_summary.csv, corrected Feb 24)
 | Loan Type | Scenario | 2030 Growth | 2050 Growth | 2050 Balance Index |
@@ -251,11 +256,12 @@ How does climate change/climate risk impact commercial and consumer loan portfol
 
 ### Facts & Analysis
 - 613 facts across 14 source files (added 4 MIDAS source files, Feb 25)
+- 15 source documents (added Q&A 2 transcript, Mar 3)
 - 4 analysis runs (comprehensive v1, v2, gap analysis, ARDL-MIDAS deep dive)
 - 2 reports (original summary, ARDL-MIDAS report)
 - Questions: 8 answered, 3 partially answered
 - 6 notebooks total (added satellite model Feb 25). Bug fixes applied Feb 24 — see `docs/corrections-log-2026-02-24.md`.
-- 35 figures across all notebooks, 2 summary tables
+- 43 figures across all notebooks + R MIDAS, 4 summary tables
 
 ### What Was Done This Session (Feb 20, session 3)
 - Completed full data integrity audit across all 3 notebooks
@@ -288,7 +294,7 @@ How does climate change/climate risk impact commercial and consumer loan portfol
 - **Diebold-Mariano tests implemented** with Harvey-Leybourne-Newbold small-sample correction
 - Updated project.yaml, CLAUDE.md, PROJECT-STATUS.md, notebook-walkthrough.md
 
-### OOS Results Summary (updated Feb 25)
+### OOS Results Summary (updated Mar 3 — consumer model improved with rate levels)
 | Frequency | Model | C&I RMSE | C&I vs AR | Consumer RMSE | Consumer vs AR |
 |-----------|-------|----------|-----------|---------------|----------------|
 | Annual | AR baseline | 10.10 | -- | 9.78 | -- |
@@ -296,17 +302,59 @@ How does climate change/climate risk impact commercial and consumer loan portfol
 | Annual | ADL-MIDAS | 9.93 | +1.7% | 7.72 | +21.0% |
 | Quarterly | AR baseline | 1.71 | -- | 4.80 | -- |
 | Quarterly | VAR | 1.32 | +11.7% | 3.89 | +7.5% |
-| **Quarterly** | **Satellite** | **1.32** | **+22.8%** | **3.89** | **+19.1%** |
+| **Quarterly** | **Satellite** | **1.32** | **+22.8%** | **3.94** | **+17.9%** |
 
-Key takeaway: **Satellite model is the best-performing approach** for both loan types. It follows the Fed/ECB/BoE stress testing methodology (single-equation ADL), beats both AR and VAR in OOS, and handles scenario conditioning cleanly (direct plug-in of NGFS paths). Quarterly VAR provides the causal narrative (IRFs, Granger). MIDAS has degenerate weight issues but demonstrates course material.
+**Consumer model improvement (Mar 3, session 7):**
+- Switched consumer regressor from FEDFUNDS_chg (rate changes) to FEDFUNDS_lvl (rate levels).
+- Economic rationale: consumer affordability depends on rate *levels*, not changes. A 5% rate is restrictive regardless of whether it changed.
+- **Post-GFC robustness fixed:** OOS from 2015Q1 improves from +1.2% (p=0.787) to +11.8% (DM p=0.031).
+- Full-sample DM test: p=0.040 (significant at 5%).
+- NGFS provides rate levels directly — clean scenario conditioning.
+- Also tested: consumer sentiment (UMCSENT), distributed lags, deleveraging dummy, delinquency rate as alternative DV. None improved over rate levels.
+- C&I Adj R² = 0.554, Consumer Adj R² = 0.035. The R² gap is itself a finding: C&I is more macro-sensitive.
+- Full findings: `artifacts/reports/2026-03-03-robustness-findings.md`
+
+Key takeaway: **Both satellite models now significantly outperform AR baselines with robust OOS results.** C&I is driven by unemployment, consumer by rate levels. The consumer R² gap means C&I portfolios face larger, more predictable climate transition impacts.
+
+### What Was Done Session 6 (Mar 3)
+- **Q&A 2 with BofA** — Presented progress slides. Key outcomes:
+  - Satellite model approach **confirmed** by BofA as industry standard
+  - Two-model structure (satellite + VAR) **approved**
+  - Consumer driver null result **accepted** — no new suggestions
+  - Heavy emphasis on presentation being **visual-first, plain English, minimal text**
+  - Fan charts preferred for confidence intervals
+  - They want: WHY drivers are drivers (economic intuition), COVID impact shown explicitly, NGFS data exploration section early in presentation
+  - 30 minutes confirmed for April 9 presentation
+  - AR benchmark framing corrected: don't frame as go/no-go gate — the point is understanding WHY
+- **Q&A 2 transcript** added to `sources/local/qa2-transcript-2026-03-03.txt`
+- **Q&A 2 takeaways** documented in `docs/qa2-takeaways-2026-03-03.md` + PDF
+- **R-based MIDAS analysis** completed (8 new figures, 2 new tables in outputs/)
+
+### What Was Done Session 7 (Mar 3, continued)
+- **Consumer model improvement analysis** — Tested 5 specification changes:
+  - Consumer sentiment (UMCSENT): not significant, no improvement
+  - Rate levels (FEDFUNDS_lvl): **fixes post-GFC robustness problem**. OOS from 2015Q1: +11.8% (DM p=0.031) vs +1.2% (p=0.787) with changes
+  - Distributed lags ADL(1,2)–ADL(1,4): BIC worsens, no improvement
+  - Post-GFC deleveraging dummy: insignificant (p=0.70)
+  - Delinquency rate as alternative DV: R²=0.97 in-sample but OOS *worse* than AR (persistence inflation — AR(1)≈0.96 dominates)
+- **Updated satellite_forecasting.ipynb** — Consumer model now uses FEDFUNDS_lvl. NGFS path extraction includes rate levels. All cells execute and produce output.
+- **Downloaded DRCCLACBS, DRCLACBS** from FRED for delinquency analysis
+- **Updated robustness findings report** with consumer improvement results
+- Scripts: `consumer_model_improvement.py` (analysis), `satellite_robustness.py` (original robustness)
 
 ### What's Next
-1. ~~**Consumer driver expansion**~~ — DONE (session 5). Tested house prices (CSUSHPINSA) and real disposable income (DSPIC96) in expanded consumer satellite model. BIC prefers base model — Fed Funds is the dominant consumer driver. House prices and income don't add OOS predictive power.
-2. **Leading/lagging indicator audit** — Document timing properties of all variables per BofA warning about accidentally including future data. Satellite model uses lag=1 for all regressors, which addresses this.
-3. ~~**Diebold-Mariano formal tests**~~ — DONE (session 5). C&I satellite: DM p=0.015 (significant). Consumer satellite: DM p=0.077 (significant at 10%). Mincer-Zarnowitz still TODO.
-4. **Scenario narrative visualization** — Multi-panel figure showing NGFS variables with annotations telling the economic story behind each scenario
-5. **Actionable insights framework** — Develop 3-5 executive-level takeaways for presentation (BofA: "Can you dig into that number? Answer some important policy questions?")
-6. **Prepare for Q&A ~March 3** — Show satellite vs. VAR comparison, expanded consumer driver results, and DM test results to BofA for feedback before midterm
+1. ~~**Consumer driver expansion**~~ — DONE (session 5).
+2. ~~**Diebold-Mariano formal tests**~~ — DONE (session 5).
+3. ~~**Prepare for Q&A ~March 3**~~ — DONE (session 6). BofA confirmed satellite approach.
+4. ~~**Satellite robustness analysis**~~ — DONE (session 6).
+5. ~~**Address consumer model weakness**~~ — DONE (session 7). Rate levels specification fixes post-GFC robustness. Both models now significantly beat AR.
+6. **Investigate C&I heteroskedasticity** — Breusch-Pagan and White tests reject. Consider WLS or regime-switching. May affect forecast interval width.
+7. **Build presentation-quality fan charts** — Lead visual. BofA: "start with a nice visual story."
+8. **Prepare plain-English driver narratives** — Economic intuition for every driver. BofA: "Tell me why."
+9. **Show COVID dummy impact explicitly** — BofA specifically asked.
+10. **NGFS scenario comparison visualization** — BofA: "a lot of value in doing that analysis."
+11. **Transition vs physical risk decomposition** — BofA asked directly. Our model captures transition risk primarily.
+12. **Actionable insights framework** — 3-5 executive-level takeaways.
 
 ## Team Structure
 

@@ -1,0 +1,19 @@
+"Loan_Type","Scenario","Horizon","Growth_Pct","Balance_Index"
+"C&I","Net Zero",2030,5.52,134.7
+"C&I","Net Zero",2040,5.5,225.2
+"C&I","Net Zero",2050,5.63,390.2
+"C&I","Delayed Trans.",2030,6.91,140.5
+"C&I","Delayed Trans.",2040,5.66,253.7
+"C&I","Delayed Trans.",2050,5.68,438.4
+"C&I","NDCs",2030,6.18,139.5
+"C&I","NDCs",2040,5.56,244.3
+"C&I","NDCs",2050,5.82,428.1
+"Consumer","Net Zero",2030,4.07,131.8
+"Consumer","Net Zero",2040,4.95,203.9
+"Consumer","Net Zero",2050,4.41,320
+"Consumer","Delayed Trans.",2030,4.69,133.4
+"Consumer","Delayed Trans.",2040,3.91,196.5
+"Consumer","Delayed Trans.",2050,4.13,301.7
+"Consumer","NDCs",2030,4.04,129.3
+"Consumer","NDCs",2040,4.6,207.9
+"Consumer","NDCs",2050,4.48,316

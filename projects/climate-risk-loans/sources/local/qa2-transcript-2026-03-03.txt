@@ -1,0 +1,1221 @@
+Unknown Speaker  
+We could have, like, a little bit of general conversation, and then each group could talk to you by themselves, in case they didn't want to share
+
+Unknown Speaker  
+what they
+
+Unknown Speaker  
+found. I think it should work.
+
+Unknown Speaker  
+This is what I'm given by social work. I think if you have to put it in, or you just get it or something,
+
+Unknown Speaker  
+and then each team could tell you a little bit about the class so far. And I'm sure they have questions. I know I read one report that didn't read the second. You guys submitted this group. Two submitted also on campus, okay,
+
+Unknown Speaker  
+yeah, yeah,
+
+Unknown Speaker  
+okay, I read yours. You must have submitted after I read this. I didn't have I didn't go back since yesterday.
+
+Unknown Speaker  
+So, like a Word doc or some slides they have. They submitted some slides to me as a proof, and they can decide whether they want to show you the slides or not. There is a computer there if they want to, or they can just discuss their challenges.
+
+Unknown Speaker  
+Okay, I can't promise we'll have all the answers, but
+
+Unknown Speaker  
+I think is actually the fun part is that maybe they're not answer. Maybe it's just a question on the side of together, what's the best question?
+
+Unknown Speaker  
+One thing we do is get a picture.
+
+Unknown Speaker  
+Absolutely,
+
+Unknown Speaker  
+two more pictures.
+
+Unknown Speaker  
+Okay, who you guys, so we can allot it as much time. I think at 330 sharp, I have to go, I told them. And I'm sure you also have to go, because I have a interview with the Gabriela students. But
+
+Unknown Speaker  
+I need to be here when they talk about peers,
+
+Unknown Speaker  
+somebody stick around
+
+Unknown Speaker  
+so I don't know you guys, and any general question that you think may also be useful to your
+
+Unknown Speaker  
+friends in the enemy group,
+
+Unknown Speaker  
+your friends, but also enemies at the same time, because you're in a competition. Still don't know the price will be, won't come up.
+
+Unknown Speaker  
+Any question. John, yeah, go ahead. So this is kind of a bit more general, just in terms of, like,
+
+Unknown Speaker  
+I guess the goal of our presentation, because the whole point of the forecast is obviously, to deliver some kind of an insight and some kind of, like a suggestion as to what we should do. But I was wondering it how what's kind of like the best practice for framing our narrative, for delivering these insights, like, do you want us to when we present our findings, to talk about specific numbers, like percent changes or growth rates or something like that? Or would you rather us have kind of, like a bigger picture, more talk about the direction, so that we can get more in depth about the suggestion, as opposed to our numerical findings?
+
+Unknown Speaker  
+My answer probably not the right one, but I definitely prefer the story instead of just the numbers, because, like, there's a famous quote that all models around somebody use very interesting to the insights instead of just numbers. Because, you know, we don't have, we don't have the most sophisticated models. So the numbers you guys got, or we got, probably are just short, but we want to know the direction of the things.
+
+Unknown Speaker  
+Yeah, I think
+
+Unknown Speaker  
+something that's written in the project outline is try to come with creative visualizations,
+
+Unknown Speaker  
+whether that's a lot to get you creative, but
+
+Unknown Speaker  
+when you try to tell a story and give the model waves or the amount that one driver was bigger than the other, it's not as impactful as saying these are the three biggest drivers. And it makes sense, because XYZ, there's a rational connection between them. Maybe they're related, so we shouldn't pay attention to one of the two.
+
+Unknown Speaker  
+Another question that's the outline, is, what are the policy and risk implications? So, you know, you can present this to,
+
+Unknown Speaker  
+let's say, a leader of a financial, financial institution, you know, show that, give them understanding of, how are we exposed to climate risk? And you know, how you communicate that message is up to you. But there's also, like the policy aspect to it, where
+
+Unknown Speaker  
+you know, transition risk is driven a lot by policy. Carbon emissions, you know, they may be more highly regulated in the future, if you think that, you know that's one.
+
+Unknown Speaker  
+The biggest drivers of the portfolio sizes, and that's an obvious false application. So just Yeah, tell tell a good story that someone can take action on.
+
+Unknown Speaker  
+But if you can come up with a nice graph for visualization, I think that would be really cool to see. Yeah,
+
+Unknown Speaker  
+it makes sense to me. Yeah. Also want to understand
+
+Unknown Speaker  
+why you choose this methodologies, and how do you data? So you need to explain why. Why was the rationale? So what's the pro and cons? You know, because different approaches and also get different results. And you know, in our in our daily work, we are more developers, so we are doing also the model MRM, called Model Management Group. So they will do not to do a lot of validation of our developments, to just to understand your model assumptions, your model limitations and your use cases. So did you know to want to see you know that I know how you
+
+Unknown Speaker  
+get to your conclusions, right? So, and also for your analysis barrier. So, as I say, about you
+
+Unknown Speaker  
+know you are putting your finance to those two various people who don't have much clinic backgrounds as you already,
+
+Unknown Speaker  
+convey some messages stories, see the indications of your
+
+Unknown Speaker  
+findings and integrate the results coming to the multiple people. Yeah, if I was like, you know, doing this project, if I was in your position, maybe I would think of it as like a headline Insights, where you derive strategic suggestions and biggest drivers of the portfolio sizes, whatever. And then there's the technical insights portion of it, where, if you have an executive who's more tech savvy or is more familiar with these models, you can, you know, convince them that your modeling decisions were correct, and you can justify some of the earlier strategic insights presented. Maybe that's how I would structure it,
+
+Unknown Speaker  
+as part of the class, per se,
+
+Unknown Speaker  
+I think that I would basically have two steps, because you're going to have the presentation first to them. And that, I think that what is, which is, what it happens in reality, in my field, especially because I do technical stuff, the presentation. I don't always go into all the details, right? I tried to give them an idea, the result, the policy application, the overview, something that an executive now, technical experience could understand. What you're trying to say, You hinted. Maybe that was like, Hey, by the way, this is where this come from, and but you just give a hint to make sure, like, Hey, I'm not making this up. There is, there is something behind. There's a modeling behind the model strategy with this clear decisions. And then when you're going to turn up the paper, or the whole research to me, which can be done at the end of April, so you can take what they say and you can digest it, and then you put it together into more like a written paper project, and in that case, you can go a little bit. I will want to know a little bit more details, right? How did you apply what we learned in this class into this project? But that doesn't necessarily have to be in the slides in the presentation. I just have like, a follow up on that. So if we're obviously like, the goal of the presentation is to make it easily understandable, so that there's people who don't have economics backgrounds will be able to understand it. But given the fact that we're presenting to you guys who obviously do have the economic background, how should we kind of reconcile it? Do you want us to kind of just pretend that you guys are people that don't really understand because obviously it's important that we keep our presentation as simple and straightforward. And straightforward as possible. But I want to know if, like, we have a little bit of wiggle room to add, like, specific economic context that, for example, like a business executive might not understand what you guys want.
+
+Unknown Speaker  
+What do you think, sir,
+
+Unknown Speaker  
+yeah. I think so,
+
+Unknown Speaker  
+yep.
+
+Unknown Speaker  
+Yeah. So for us, you know, you can, we definitely have some, you know, for questions, but you know, your some technical details interesting. You know, it can put something in your appendix, you know, it's too technical. But you know, general slides, maybe can, don't come in too much details. Maybe it's okay, yeah, I think if you were able to explain something in plain English, it shows you that you really have a deep understanding of it. So you know, why did you choose a seasonal forecasting model you
+
+Unknown Speaker  
+just did whatever, or why certain macro variables are more than others? If you can explain it well, it shows that you understand it. So I think you should be able to tell your message without really diving into the details. I will say that we're probably pretty interested in how you benchmark your models, how you examine performance. You know, feel free to get a little more technical there,
+
+Unknown Speaker  
+but I would try to start with just plain English.
+
+Unknown Speaker  
+Good.
+
+Unknown Speaker  
+Strategies, like you said, like you said, you can have a whole story, right? And then most, most lives nowadays, have a link button that you put in the corner with the technical details that jumps to something that you you only gonna show it people like is, they're very interesting. Just, oh my god. How did you get that? Okay, you tell me that this performance better than this. But what magic you use? And then only if that question come up, you can jump to that, and if not, you can go to the next point. So at a key point you could have, potentially have a slightly more technical slides, but that you save on the back pocket if people ask questions like an appendix, yeah, like you said, it's an appendix in the slides, which means, like you have, I have, usually, I have a beginning, I have an introduction, conclusion, blah, blah, and then I have the pending. So I have the slides. But rather than appending what I would like to do, I put the link to this slide at key point in the middle, so that I can jump to that slide. Otherwise, I
+
+Unknown Speaker  
+think there's general rule of thumb. There's very few instances where it makes sense to have code on slides.
+
+Unknown Speaker  
+Some advice in general, but
+
+Unknown Speaker  
+if you want to include it in the appendix because you have something cool, I
+
+Unknown Speaker  
+don't even think I want the code in the
+
+Unknown Speaker  
+project. You can this part of the project is evaluated on your coding by Jay. You can keep that completely separate, and then can send it to Jay and show it what the fancy things that you've done in your coding, if you want, right? You show him your Jupiter notebook or whatever. And then he can say, Oh, look, we did something really cool. I mean, instead of the code, you could just have, like, the output tables and stuff. Yeah, so in the paper, I want just the output table. If you did something super cool and you want to show off, you can say, hey, for this part, I'm not separately in a complete separate file, I'm going to cure your Jupyter notebook to show what cool stuff we did in Python, versus are, or jumping between Python
+
+Unknown Speaker  
+AI, feel free to show off if
+
+Unknown Speaker  
+you want to show off some AI agentic stuff or whatever.
+
+Unknown Speaker  
+Yeah,
+
+Unknown Speaker  
+not necessary, though.
+
+Unknown Speaker  
+But I just want to mention one thing that we during our internal discussion. You want to know that why, when you choose there more choosing a more complex model, why you're choosing that model, instead of just basic linear regression or largest regression? I think that's something
+
+Unknown Speaker  
+um, the last time during your Q and A, I don't remember which one of you, but someone specifically mentioned the value that you get out of confidence intervals, and seeing that kind of output in models and talking about that in our presentation. And this might be a technical question that you don't have the answer to, but I just wanted to sort of see if you had any thoughts, because we were thinking of a couple of different directions of going into in terms of the confidence intervals, and wanted to see if you had a specific approach that you liked more than the other, and if not, that's totally fine. But one of them was the parametric forecast with the confidence intervals, with like 1.96
+
+Unknown Speaker  
+and then the other is the cross im family ranges, so just showing the difference, how the different models diverge. And then the last option is kind of both the sort of like a fan chart, which sort of shows
+
+Unknown Speaker  
+basically the question is, which do you find more useful from a decision making perspective? If any of that even makes sense,
+
+Unknown Speaker  
+that's okay.
+
+Unknown Speaker  
+No, because we haven't, we haven't actually implemented any of this yet, because we wanted to see if there was a certain direction that you guys preferred that we go into. This is something that would be, well, I would say, if they don't have any particular price, right? Yeah, I would go with, when you do some sort of visualizations, which one looks more looks better from as well. Visualization point of view, which one of the model. So you probably have a takeaway from you can do both, right? And that will give you a picture, yeah, of some sort. And you had a sense of like, oh, yeah, sure, we forecast, but we can say that example, we can say that I can forecast, okay, five years down. But now you asked me to do 30 years, and I can tell you that 30 years, I have nothing to say, because there's certainly so big Yeah, that and so in that sense, if that's your point that you want to send across, find the image of the confidence that gives that point. Because, in a sense, you want to use whatever you.
+
+Unknown Speaker  
+You gives us, yeah, a message, yeah. So I think from that perspective, it seems like fan charts might make the most sense from a visualization standpoint, but now that makes total sense. I totally figured that that would be a little bit of a just expand document that so we can explain to us we will recommend that so we can explain to us, helps to understand, not just a level forecast, also, you know the randomness. You know, any, any kind of inspiration models, you know, machine learning that makes
+
+Unknown Speaker  
+sense.
+
+Unknown Speaker  
+Anyone, general questions,
+
+Unknown Speaker  
+Okay, who wants to which team wants to go first?
+
+Unknown Speaker  
+You can go first. Okay, that is
+
+Unknown Speaker  
+green.
+
+Unknown Speaker  
+Green Horizon.
+
+Unknown Speaker  
+You have slides that you want
+
+Unknown Speaker  
+to
+
+Unknown Speaker  
+use. You may have to move Close. Yeah.
+
+Unknown Speaker  
+Be
+
+Unknown Speaker  
+sorry. I
+
+Unknown Speaker  
+to be really careful with the table, because my coffee's on here.
+
+Unknown Speaker  
+Wait, I'm gonna hold it. Just wanted to give you a heads up. We're gonna shoot
+
+Unknown Speaker  
+back there at 310 because she's leaving at 330 yeah, there's also 52 right now. So,
+
+Unknown Speaker  
+yeah,
+
+Unknown Speaker  
+yeah, be really
+
+Unknown Speaker  
+careful. So I've seen some other team that's real presenting their shit. So wait, I think they might be presenting their shit,
+
+Unknown Speaker  
+because no, we have a lot, Oh, you mean, like, in terms of content, not just questions, yeah, I feel like they're probably presenting, because it'll give them more stuff to say, yeah. But I think we have, like, very specific questions that, yeah, we don't necessarily need a presentation to ask, but it could, it like, still looks nice, you know?
+
+Unknown Speaker  
+Feel like, no,
+
+Unknown Speaker  
+no,
+
+Unknown Speaker  
+wait, I'm sure they do, but my guess is that they no, my guess is that they probably at work like they had to know how to do it to get into this job. But they probably, they probably outsource their code, yeah? They probably tell someone in India, seems like they're interested in in AI and agentic stuff, yeah? So, I mean, they probably do the same thing that UI and PwC does, like they outsource to a different country's team, and they write all the code and run all the software, and then they send it back.
+
+Unknown Speaker  
+Do, them
+
+Unknown Speaker  
+well, I mean, they probably, they probably, like, tell them exactly what they wanted, their code though, like what Gabriela, they're probably doing with someone in a different country. That person's gonna be out of work soon. Yeah.
+
+Unknown Speaker  
+No. They'll probably have, like, platforms that they use, which has all the data that somebody has kind of puts together, and then they go, Yeah, I feel like there's no way that they you can pull reports and stuff, yeah, kind of like, see what you can infer, all all of,
+
+Unknown Speaker  
+like, the beginning busy work that we have to do to, like, prepare, is probably what the other outsource team does. They probably just, like, read the actual code. So
+
+Unknown Speaker  
+do you think, like, Native America, like has their own software that, like, already has, like, rewritten code, and they just, like, insert, for sure, they definitely do. There's no
+
+Unknown Speaker  
+way to go consistent, yeah. So it's like they can't have, like, a different code for the same normal model.
+
+Unknown Speaker  
+So then, okay, well, I don't have any questions for our one on one.
+
+Unknown Speaker  
+Wait, we have enough.
+
+Unknown Speaker  
+Yeah, but I don't have any questions. Like, I don't have anything that I'm like, because we have, like, the
+
+Unknown Speaker  
+first of all, we have the we have the question where it's like, well, gabrie, you wanted to ask this one where you want to ask if, like, there are any additional consumer drivers. Precisely, when we tried ones, we tried to include that might help us model consumer loans. And then you wanted to ask about the possibility of using consumer loans as like a preliminary model and a dependent model as a dependent model to see, like, if different kinds of loans go in different directions, and if different consumer drivers might impact some consumer loans but not others, which is perhaps maybe, why adding those consumer drivers? Yes. And then, like, if we have the time, would you probably will, we're going to go over, like, presentation, okay, okay,
+
+Unknown Speaker  
+yeah, that's, that's like, our biggest question is, what we have so far
+
+Unknown Speaker  
+is everything we're Doing fine, and then we have, like, the president presentation specifications, like,
+
+Unknown Speaker  
+how many people do you want us to present? How long should the presentation be? Like, do you want us to focus on how we got to the model? Or do you want to you want us to focus on how the model works, versus Do you want us to focus on the output from our model, etc? Because if it's a 15 minute presentation, and we have to do all three, then it's five minutes
+
+Unknown Speaker  
+for each one.
+
+Unknown Speaker  
+And that's not okay personally. It's just like, pick
+
+Unknown Speaker  
+whichever
+
+Unknown Speaker  
+model is best. Yeah, yeah, going back.
+
+Unknown Speaker  
+So I think, like, what we should do is, if we have like, a 15 minute presentation, we should do like an eight slide
+
+Unknown Speaker  
+so one person presents two slides each, and they're in order, so that nobody has to go back and forth. It's just, yeah, one person presented and they're done. I think that's good. Yeah, let's ask, I don't know. Yeah, we
+
+Unknown Speaker  
+should, we should. We should definitely ask that.
+
+Unknown Speaker  
+I mean, and then what we can just, like, present the presentation up on the screen really quick. And then if you guys want, I could just like, read through the important parts.
+
+Unknown Speaker  
+And then we can get into asking about our satellite model,
+
+Unknown Speaker  
+but I'll take like, two, three minutes to go through basically what we've done thus far.
+
+Unknown Speaker  
+YEAH. I
+
+Unknown Speaker  
+I'm like
+
+Unknown Speaker  
+for Atlanta,
+
+Unknown Speaker  
+Twig my cowboy cat.
+
+Unknown Speaker  
+Do I have to extend my piece? I don't know why I thought I was like, I will only be here for a year, and then I'm out of this. Yeah. Password.
+
+Unknown Speaker  
+Birds are removing, yeah,
+
+Unknown Speaker  
+no, I, like, picked it because it's like, right off the 75 and
+
+Unknown Speaker  
+that
+
+Unknown Speaker  
+just makes it so much
+
+Unknown Speaker  
+easier. But Oh, my God, Spring Street is so bad when traffic
+
+Unknown Speaker  
+hits again. Oh god, it's really bad, but it is
+
+Unknown Speaker  
+totally Oh, because I got it so last minute prices were like insane,
+
+Unknown Speaker  
+but
+
+Unknown Speaker  
+it's just good nervous for this. Got it. I stir shit up though. I mean, I calculated it, and
+
+Unknown Speaker  
+I was talking to President coffee, and I was trying to, like, get her to like, and tell me what she was putting on the exam, and she told me she hasn't even written it yet. And I was like. I was like, Okay, well, can you I was like, can you just tell me if what I'm studying is the right thing to be studying? And then I basically just told her what I've been going over. And she was like, all of those are good. Well, you've been going over every single
+
+Unknown Speaker  
+part, every single part of what what we've learned? No, no, I haven't. I've been going over very specific parts of what we've learned, because I don't have time to go over everything we've learned. I only.
+
+Unknown Speaker  
+Have time to go for what I think will be on the exam. What have you gone over that you think is going to be on the exam? Share with the class? Yes, that's what I'm saying. I shared the three things that I've gone over that I think, well, three broad topics. So I went over the derivations for the expect, like the mean, the auto covariance and the variance. AR, one, AR two, Ma, one, Ma, two, but AR, one, ar, two is the same process. Yeah, it's the same thing. I just went over it, just so that I, like, knew exactly how to write it down. Yeah, yeah. And then, and then Arma one, arm a, one, one. There's nothing other than Arma one, one, right. Arm a, two, two. Well, you could do arm a, two, two, you can do arm a, three, four, okay, but, like, we're just, probably just gonna do one, one, right? Yeah? Okay,
+
+Unknown Speaker  
+probably similar to the other exams. I don't know. Dude, the other final thing has so many, yeah, yeah. Um, I've done forecasting stuff, like knowing forecasting errors, um, like knowing how to do the stuff by hand, like, step one, step two.
+
+Unknown Speaker  
+Stuff by hand, like, recursively, how to, like,
+
+Unknown Speaker  
+how to, what does it come for all the what
+
+Unknown Speaker  
+is that model? Called the delayed what's it called distributed lab model?
+
+Unknown Speaker  
+Yeah,
+
+Unknown Speaker  
+for the dynamic. It's
+
+Unknown Speaker  
+you're
+
+Unknown Speaker  
+getting
+
+Unknown Speaker  
+your diploma. Don't worry, it's no
+
+Unknown Speaker  
+forecasting errors by hand. Yeah, she wrote. She didn't do this a lot on the problem sets, but it appears a lot in previous exams.
+
+Unknown Speaker  
+Um, and I asked her about that, and she didn't say she wasn't like, Oh, don't study that. She just was like, nodding her head. And I was like, okay, cool.
+
+Unknown Speaker  
+Yeah, I'm like, hoping to influence her gonna be evil. And no, because I asked her,
+
+Unknown Speaker  
+because I was like, I was like, no, like, I just don't I told her, because I was like, I just don't want to be like, studying the wrong thing by putting a lot of hours into something that's not worth it. And then she was like, she's like, I think you've
+
+Unknown Speaker  
+made good choices so far. The
+
+Unknown Speaker  
+density for No, there's no way density functions, right? No way she's gonna be whipping out integration.
+
+Unknown Speaker  
+There's integrals on it. Then I'm killing
+
+Unknown Speaker  
+myself, the Infinity representation stuff. Oh, you gotta
+
+Unknown Speaker  
+know, yeah,
+
+Unknown Speaker  
+yeah, the world, world theorem thing,
+
+Unknown Speaker  
+walled theorem, wall theorem.
+
+Unknown Speaker  
+It's like the
+
+Unknown Speaker  
+way I literally just it is,
+
+Unknown Speaker  
+like a time series can be represented as an MA of the order infinity. I don't think that's what the wall is, that not any stationary process is infinite Ma,
+
+Unknown Speaker  
+literally, I'm like way before ma shows up. It does show up over time, but, yeah, it was
+
+Unknown Speaker  
+like way before she brought
+
+Unknown Speaker  
+it up at the very beginning, and it just keeps coming up, okay, any zero mean covariance, stationary process can be written as MA infinite.
+
+Unknown Speaker  
+So the MA infinite representation of AR one is a specific case of this theorem.
+
+Unknown Speaker  
+Oh, yeah, it comes up, like, really early
+
+Unknown Speaker  
+on, blah, blah, blah, when p equals one, the world representation doesn't apply. The process is non stationary, and the whole framework, okay, okay, wait, I'll tell you guys the next things that I'm preparing for, preparing to study for, but I don't know if they'll be on the exam, because I haven't asked her, but this is, this is what I'm planning. Oh, I asked her about the forecast stuff that was on the exam, like the
+
+Unknown Speaker  
+structural breaks and the dummies and the broken trend thing. And she like, was like, she goes that one more conceptually. And I was like, Okay, that's all I told her, is there even?
+
+Unknown Speaker  
+Yeah, I guess, no, it's all conceptual. Anyway, yeah,
+
+Unknown Speaker  
+dynamic.
+
+Unknown Speaker  
+Was that one's pretty, that one's easy, straightforward. It's just
+
+Unknown Speaker  
+like a regression. I think I'm just, I think we need to know how to do F tests from regression outputs. Yeah, I think we need to do how. I think we know how to, like, evaluate a way. I really don't know how to use an F table. I like, don't know either. I just like, This is what I'm putting on my list of things to study. I just haven't done it yet. How. Haven't done it yet. Next time, like, Would it be horrible and heinous if I just, like, use the rule of thumb. And if it's like, if f is bigger than three, yes, I'm scared of that. No, don't do that. Why? It's literally in the size. So she's like, generally, just use this. I think that's fine too. Just like with cow test, it's 10. Just like look at the problems. It's three or four. Look at the problems she put on previous exams. Because on all three exams, she asks questions about F tests. So just look what she asked. Does she ask you to do the f test? I don't know. You have to compute f using the SSR. We've never done that before. Yes, true. Maybe in the previous exams. She specifically says that if there are questions that you've never seen before, I'm not going to put them on the that's so facts, yeah, because she's like, it's for a different class. Yeah, that's true. It's just like, I get scared. We've never, ever had to. But she also specifically was like, she was literally like, you want like, she specifically said in the practice
+
+Unknown Speaker  
+problems that she uploaded. She was like, like, we won't go over smoothing curves and Midas, but everything else you should be able to know how to do. So that's why I'm scared, because she said everything else you should know how to do. And I'm like, some of the
+
+Unknown Speaker  
+stuff, well, no, but there's stuff, yeah, but like,
+
+Unknown Speaker  
+yeah, specific things,
+
+Unknown Speaker  
+or, like, more mathy things, like, though, she'll put them up on the board, and she'd be like, we're not doing it, and she'll just skip the slide. Yeah,
+
+Unknown Speaker  
+yeah. Every single formula that we see on the board, she goes, I'm not gonna expect Yeah. So
+
+Unknown Speaker  
+I'm like, willing to bet my firstborn child that she said that about the F value. I hope so, because it's like, we have to learn it for 220 we had to learn
+
+Unknown Speaker  
+like, the only specific formation except for like, the actual like, no infinite representation. Also, yeah,
+
+Unknown Speaker  
+those,
+
+Unknown Speaker  
+yeah, but not like formula for like, I don't know like, more specific we will need to know, like, the ACF, pacf stuff, loss functions. I remember actually writing down in class loss functions with you on the exam. Yeah,
+
+Unknown Speaker  
+loss functions are easy because there's no math.
+
+Unknown Speaker  
+Loss functions.
+
+Unknown Speaker  
+Yeah, I don't send you my study guide when I'm done writing it, I'll be done with it in like an hour. And so the first, like 60 pages are just me rewriting every single note we ever took in class. And then the last, like 2030, pages are like actual study guides. So yeah, I didn't know. I didn't have time
+
+Unknown Speaker  
+for that, but that's just like, how I study.
+
+Unknown Speaker  
+That's just like, the only way I know how to study
+
+Unknown Speaker  
+I have, like, well, because I take notes in class, but I just don't have time to rewrite everything that, like, scares me. I'm like, I feel like I'm gonna run out of time to actually do, like, practice stuff. It's just how I've studied since I was, like, in high school. Yeah. I mean, it works out well for you. So I always start studying, like,
+
+Unknown Speaker  
+over like, two weeks in advance, so that I have the time to do it. Yeah, I
+
+Unknown Speaker  
+feel pretty good about the MA stuff, though, the auto covariance. I feel like I actually wrote pretty good notes on that. I
+
+Unknown Speaker  
+don't know. I honestly feel pretty good about this exam.
+
+Unknown Speaker  
+That's good. Like, I don't know if it's just like, No, that's good because I'm expecting it to be a lot easier than I will be. But I'm like, every time I don't really understand something,
+
+Unknown Speaker  
+I'm like, as long as I get the gist.
+
+Unknown Speaker  
+No, not at all. And I think she wouldn't even want to, because she wants us. I think she's more concerned about us doing well on this project than she is about doing well on the midterm, also, considering the fact that she's not giving a final, this midterm, to me, seems like it's just like a box to check off.
+
+Unknown Speaker  
+So I just like, I don't know, yeah, like, I don't know if I'm being hopeful, but I just like, personally, truly believe that it is going to be an easy exam.
+
+Unknown Speaker  
+Do. Like all signs point to that as the trip. You see, I've been attending
+
+Unknown Speaker  
+every single class before start reviewing the notes, and then I started reviewing the notes, and not at all me.
+
+Unknown Speaker  
+I kind
+
+Unknown Speaker  
+of feel like
+
+Unknown Speaker  
+I honestly, because I just know, I feel like there's just a lot of concepts,
+
+Unknown Speaker  
+forget, like it's not that I don't understand, yeah, and it's just that I think, so, I think he remembers, and why though that she wouldn't make it an open note exam is because the content is a lot, but it's too easy. Do you know what I mean? It's like? The only reason why this exam, I think, is going to be hard, is because there's so much to remember. But when it comes down to like, each individual thing, it's easy,
+
+Unknown Speaker  
+and a lot of them are kind of just rapid. Yeah? So that's why I don't think that she would ever eat,
+
+Unknown Speaker  
+but that would be super lit, because if it was open book, I would stop studying right now.
+
+Unknown Speaker  
+If it was open book, I would literally stop studying right now. I'm so Wait, yeah, like I see some of the undergraduate
+
+Unknown Speaker  
+friends, I have a more studying
+
+Unknown Speaker  
+that. Graduate. I like, don't remember sitting down and studying. I'm like, I must have done that at some level. I literally don't remember.
+
+Unknown Speaker  
+I used to, like, literally lock myself into the library for like, hours and hours on end. And I like, have your recollection of it, because, like, I never want to be in that
+
+Unknown Speaker  
+position. La, la, la. I thank you.
+
+Unknown Speaker  
+You're welcome,
+
+Unknown Speaker  
+dude. I like to not I'm like, not interested in studying.
+
+Unknown Speaker  
+It's like, just a bit of my existence.
+
+Unknown Speaker  
+Every morning, I wake up and
+
+Unknown Speaker  
+I'm like, let's find
+
+Unknown Speaker  
+mercury.
+
+Unknown Speaker  
+As long as I get above a 73 I can maintain an A in this
+
+Unknown Speaker  
+class. Sorry, I feel like that's a pretty low bar. All
+
+Unknown Speaker  
+right, let me start heading over?
+
+Unknown Speaker  
+Yeah, yeah, let's go.
+
+Unknown Speaker  
+But they're okay. She's leaving at 330 but we don't have to leave at 330 Yeah, but they probably
+
+Unknown Speaker  
+no, I think we're not
+
+Unknown Speaker  
+doing
+
+Unknown Speaker  
+it. So if you want to
+
+Unknown Speaker  
+go, Okay, thank you guys for you. Captures.
+
+Unknown Speaker  
+You can
+
+Unknown Speaker  
+connect your computer.
+
+Unknown Speaker  
+Yeah, there's, there's already a bunch of cords.
+
+Unknown Speaker  
+Oh,
+
+Unknown Speaker  
+there is no, I'm saying
+
+Unknown Speaker  
+I have a USB C cord. But like my charger.
+
+Unknown Speaker  
+Do you need an HDMI? Yeah, yeah, we have an HDMI on your computer. Let's put the presentation up on yours.
+
+Unknown Speaker  
+Where
+
+Unknown Speaker  
+is it gonna immediately broadcast everything, maybe open it up.
+
+Unknown Speaker  
+What do you have there? Wait, no, it's fine. I
+
+Unknown Speaker  
+was just curious.
+
+Unknown Speaker  
+Oh, I sent it to you. It should be here.
+
+Unknown Speaker  
+Thank you.
+
+Unknown Speaker  
+Yeah, thank you.
+
+Unknown Speaker  
+Everyone's all of the all of the Masters ticketed events, exactly
+
+Unknown Speaker  
+all
+
+Unknown Speaker  
+of my all of my purchases, exactly your order confirmation,
+
+Unknown Speaker  
+okay, oh, did I send you? We know I sent you.
+
+Unknown Speaker  
+I just sent it to you. Yeah, got it. Got it.
+
+Unknown Speaker  
+How do I present? I feel like this is how little I know how to use PowerPoint.
+
+Unknown Speaker  
+Oh, very good.
+
+Unknown Speaker  
+Very good.
+
+Unknown Speaker  
+So we just wanted to give you guys kind of an overview of what we've done thus far, just super quickly before we get into our main questions.
+
+Unknown Speaker  
+There we go. Okay, so I think we're gonna kind of go over mostly just our progress highlights, because we've put into words our current obstacles and what we want to do moving forward, but just for like context purposes. So before we started making our model, we had to obviously come up with some decisions. And so we decided to treat covid with a dummy, which is pretty typical for our benchmark model. We
+
+Unknown Speaker  
+colloquially call it or dumb model. It's AR for for our CNI loans and consumer loans. And so we chose this using the information criteria. So the lowest Bic gave us the best number of lags. And our rationale for using a benchmark of just like the most simple AR model with only lag variables, is that if our slightly more or very much more complex models can't outperform our benchmark, then it's not worth our time, and we can just kind of toss it. And so the variables that we decided to focus on, obviously the consumer and business loans, for consumer and CNI loans, and then additional macroeconomic variables, so the unemployment rate, the Fed funds rate, the inflation rate, our covid dummy that we created, as well as the 10 year treasury yield for consumer loans, because most consumer loans are long term. And the training window we decided on was 1990 to 2025 because we thought that maybe three and a half decades would be enough to capture enough business cycles but still stay consistent in baking practices as current day.
+
+Unknown Speaker  
+So our first pass was really bad
+
+Unknown Speaker  
+as expected.
+
+Unknown Speaker  
+I have to go, you guys know, can you Yes? We'll be we'll be quick and make sure they know Yes, yes, we'll make bye. Much.
+
+Unknown Speaker  
+Yeah. So our first pass, we decided to use a VAR model because we wanted to include other variables besides for just our lags. Our initial model, at first looked really promising because it outperformed our benchmark, and we were like, Okay, maybe we're going in the right direction. But then we realized that we were treating the 10 year treasury yield rate as a monthly variable like the rest of our macroeconomic data. But it turns out the frequency was actually daily, and so when we adjusted for the frequency, it came out really, really bad, and we no longer outperformed our benchmark. So we moved on to another model. We tried to adjust the frequency. We thought maybe, if we were using it on a Yeah, go ahead. Why do you think adding more
+
+Unknown Speaker  
+information, adding more information to a model? Well, our original thought process was just like it was kind of first of all, because of the way that we were treating it as a monthly variable, we kind of got all of like, the data points wrong, right, because it's a daily variable. But then if we, like, added more daily, then we obviously would have to aggregate to monthly, because all the Treasury yield data points are on a daily frequency. And if we aggregate, then we lose a lot of information. And thus it makes our model, I guess, intuitively, less accurate. So we thought that maybe
+
+Unknown Speaker  
+our O's, our annual frequency, not our Yeah, we were. We were treating the variable like a monthly variable, but our actual VAR model was the annual model, and so because of that, we had to aggregate it like a ton from daily too yearly. Part of the model performance issues was because our first model was an annual one, because we were the NGFS scenario. Data is all annual, so you kind of have to work with what we have. And when we started off with our models, we only had 36 observations per year, and that caused the model to perform pretty badly. So our solution was to try to do quarterly bonds. Yeah, just the next thing that we were doing, we got, like, slightly better. Yeah, it was actually a lot, but they were a lot better than our annual one. And we kind of credited that to the fact that it quadrupled our number of observations. So obviously, our model was a little bit more powerful. We also ran a Granger causality test to see which of the additional variables besides we will act that we included were significant. And we found, you know, I've listed them here, but obviously these are just kind of details.
+
+Unknown Speaker  
+And then we learned about Midas in class, and we were like, OMG, let's use this one and see how that goes. And it ended up not working out for us. We found that, like, the weight functions collapsed so they were just, like, really, really small. Yeah. I mean, they weren't helping. Midas works for mixed frequency data, which is what we have. But yes, I
+
+Unknown Speaker  
+know.
+
+Unknown Speaker  
+A it's mixed. It's like a model that just is very it's designed to work with mixed frequency. So if you're trying to, like, train or or conduct a forecasting model on like, yearly data and quarterly or monthly or even daily data, it'll attach weights to the different variables so that they work out together properly. But the again, the issue is that our outcome variable, the NGFS data, is yearly, and the Midas data kind of works better if you're trying to aggregate daily and monthly to yearly or vice versa. But because the NGFS data is yearly, aggregating like or trying to you can't really interpolate, like, the year into try, trying to, like, break that out down into months, like, trying to predict, okay, you have the outcome for a year, not trying to just predict what each month's variable was based off of what you know of the average of that whole entire year is a little bit hard to do. If that makes sense. You have to know every single month to get to the year, but going from year to monthly is harder. So we did a couple of variations with MIDAS, and they were okay, but they weren't performing better than the quarterly var. So at this point, quarterly var was like our number one model, yeah, but we also moving forward, we do kind of want to play around with MIDAS a little bit to see if there are little things we can change to make it perform better. Like during our lab, we learned that Midas actually runs better if we use R instead of Python. So that's something that we're going to try moving forward. Oh, how did that go? Okay,
+
+Unknown Speaker  
+well, so yeah, I mean, we're still tweaking at it, because we do think it would be interesting to include a mixed frequency model, because we are working with mixed frequency data, but we're not going to, like, you know, take it too personally that it keeps blowing up in our face. Yeah, yeah. So then the last thing I was thinking quarterly of our like, seemed to have, like, a good result, but then the last thing that we wanted to look into was the papers that you guys sent us were all stress tests like using forecasting models. So we decided to look into the kind of models that all the different fed papers used to do their forecasts. And then we found out that they were using
+
+Unknown Speaker  
+one models. They were using satellite models, basically,
+
+Unknown Speaker  
+and when we ran that model, that gave us the best performance out of all the other models that we tried. And then we also thought that it was pretty justified in the sense that the other banks use it and the other fed papers use it in their papers,
+
+Unknown Speaker  
+and it has, like, performance wise, it's doing the best. So we were really excited, because we were like, oh, okay, so this works best. And then we found that, like other other central banks, like across Europe, also use satellite models for stress testing as it relates to, I guess, like, climate outcomes. So we were like, Okay, so maybe we're on the right track. Also, we thought it was good because the satellite model is, like, I guess, like, conceptually, a lot more simple than the VAR model, just because we're able to use the NGFS data, like paths, numerical paths, directly, as opposed to, like, overriding the results of the VAR model. That's like, trying to simultaneously predict the macroeconomic variables within the model itself. So, yeah, we just kind of, this is where we want to, like, leave off for the Q and A. We wanted to ask you, like, if there's any insights for using a satellite model, like, if you kind of agree with our approach, or if you think we should pivot and scratch everything, start something new, because we're open to it all. Yeah.
+
+Unknown Speaker  
+Yeah. So the satellite model? Well, something that we found when we were looking through the papers again was that we used it we had never come into contact with satellite models before, neither in class nor in the past year. So we tried to do our best to research as much as we could. And conceptually, what we understood about a satellite model was that the VAR model obviously, when you include other variables in addition to the lags, the VAR model itself, is also trying to forecast the path that the other additional variables are taking right. So not only are you trying to Yeah, yeah, actually does try to forecast those, it creates like a path that it expects these independent variables to also take on. And so we thought that perhaps maybe a lot of the reason why we might be getting kind of subpar results is because the NGFS numerical paths are obviously different than what var has predicted the macroeconomic paths are going to be, and so by like putting the NGFS data in, we're forcibly rewriting what var is telling us these macroeconomic variables are supposed to be. But satellite models don't do that. They kind of allow the NGFS datas to be taken at face value, and they don't try to estimate where the macroeconomic variables are going to be, but instead, just take the NGFS path data. It's almost treating them as like an OLS model, where you're given inputs, which is what the NGFS is. It's like telling you like I 2035 given this scenario A.
+
+Unknown Speaker  
+Unemployment is going to be at this rate. So we're taking that NGFS data as an input, and we're using that to sort of predict what the model's outcome is going to be, rather than trying to predict unemployment rates.
+
+Unknown Speaker  
+Replacing that with the NGFS data, which is what we're using the if that makes sense, yeah. And we also we did for all of our models. We did out of sample evaluation just to see how well our models perform using like pseudo out of sample very data, and we found that our satellite model, this is kind of how we decided to use the benchmark, using the Diebold Mariano test, we found that the improvement was like, significantly larger than any of the other models that we've seen based off of the benchmark. Also for besides for our initial model, which we basically scrapped because it performed poorly, all of our latter three models, we use the same benchmark, obviously, because we didn't want to have a different benchmark for every model, which is just a regular AR four model, but yeah, our satellite models showed
+
+Unknown Speaker  
+a much better improvement.
+
+Unknown Speaker  
+So which record variables, you know,
+
+Unknown Speaker  
+significant unemployment and interest rates have, are the biggest drivers so far, we noticed that you guys wanted us to look into other consumer drivers, which I think we decided to add in five other variables to see if there were other drivers.
+
+Unknown Speaker  
+Some of them was
+
+Unknown Speaker  
+some of them were housing. It was housing real disposable income and consumer sentiment that we added as additional consumer drivers. Yeah, they didn't help our model at all. They didn't improve the model performance. They didn't significantly worsen it. But it wasn't really that important to keep in because our model didn't do significantly better with it. Yeah, but kind of that's another question. Yeah. Wait, that was one of our questions was, because you guys in the last Q and I at least talked about looking into other drivers, we decided to do that, and then found that they didn't really have that much of an impact. So I guess the question is, in our presentation, should we flag this as sort of like a we tested it, there was no outcome. Or do you think we should look into other data sources, potentially, like other consumer drivers? Yeah, to see if there's maybe something that we missed.
+
+Unknown Speaker  
+Well, first of all, great job. It's a lot of work.
+
+Unknown Speaker  
+I'd like to see more detail on what your satellite model looks like.
+
+Unknown Speaker  
+What macro variables were the most significant by how much? Why does that make
+
+Unknown Speaker  
+logical sense, unemployment is a big driver. Tell me why? Yeah. Why is that driving consumer loan portfolio? Are you also, I would like to know if you're forecasting specifically the
+
+Unknown Speaker  
+portfolio size or the change in the portfolio size. We're doing change because we did like we changed. We transformed, like a lot of our percentage variables into growth variables using log transformations, just so that they would be Yeah, because otherwise it would just be like, yeah, exponentially
+
+Unknown Speaker  
+growing
+
+Unknown Speaker  
+when you do the final projection under
+
+Unknown Speaker  
+the scenario. So you'll be sure that the variable you use can be mapping, you know, to that scenario.
+
+Unknown Speaker  
+Collaboration, if you want to try to become more variables that have some role in your forecast, yeah, but ultimately, you need to just map these variables to the eight GMs, yeah, yeah, yeah. That makes that makes complete sense. I think you had a question related to that as well, right? Like, kind of
+
+Unknown Speaker  
+in accordance with that, when we looked at the consumer model, like most of the macro variables we use didn't have any
+
+Unknown Speaker  
+significant impact on it, we were wondering if we could kind of tinker with the dependent variable, so as opposed to using consumer loans as like this aggregate consumer loans just balances, if we could kind of split it into maybe, like student auto credit cards,
+
+Unknown Speaker  
+that, if They, if like, separating them would maybe make them more sensitive to the macro variables. I
+
+Unknown Speaker  
+actually don't have a lot of expertise in statistics.
+
+Unknown Speaker  
+I just, I'm not sure that two seconds. It's an
+
+Unknown Speaker  
+interesting question. I think it gives you a lot of insight. Maybe
+
+Unknown Speaker  
+they affect some types
+
+Unknown Speaker  
+of loans, but when you put them all together, some of them may be more cyclical than others, right?
+
+Unknown Speaker  
+Lot of insight to be
+
+Unknown Speaker  
+gained.
+
+Unknown Speaker  
+Definitely, there's more segmentations you can
+
+Unknown Speaker  
+do. Yeah, so I look
+
+Unknown Speaker  
+for mortgage.
+
+Unknown Speaker  
+You segment
+
+Unknown Speaker  
+different loans from
+
+Unknown Speaker  
+different regions based on that, the whole model system consists of sub
+
+Unknown Speaker  
+models. Is that something you guys want to
+
+Unknown Speaker  
+try
+
+Unknown Speaker  
+so sub models, like having multiple models,
+
+Unknown Speaker  
+I think that our approach right now is actually so the satellite models are very good at forecasting and the VAR models are very good at the causality part of it. So we were thinking of doing sort of a double approach, where we were using the satellite models to sort of accurately forecast where these outcomes are going to be, but then we're using the VAR model, which still has a high performance, but it's way better at explaining why things happen and explaining which variables are the most important. So I think that's sort of our approach for using both models, because I think there's still a lot to be gained from both the satellite model and the VAR model. It's just that the VAR has more causality and is probably less good at the forecasting part, and the satellite model is very good at the forecasting part, but then doesn't do up the causality part.
+
+Unknown Speaker  
+If that makes sense,
+
+Unknown Speaker  
+that's at least our thought process right now. But I think that the more we explore these models and other models, we can definitely that can change, yeah,
+
+Unknown Speaker  
+on the right, right track. So because I think, well, trying to do some stress testing right, they are really they are the right or wrong answers, because they all have a technical model so
+
+Unknown Speaker  
+similar sounds like the right approaches, you know, the industry standards, or stress history.
+
+Unknown Speaker  
+Okay, great. But then, even for like, the consumer loans, instead of saying like splitting it and having like, multiple models, if we measure something else, like credit quality, like that, the Fred has data
+
+Unknown Speaker  
+as a consumer driver, yeah, no,
+
+Unknown Speaker  
+no as delinquency rates or like net charge
+
+Unknown Speaker  
+instead.
+
+Unknown Speaker  
+Yeah, that's fair game. I
+
+Unknown Speaker  
+think a lot of the presentation that you guys did today maybe just because the security was on the performance of the model, yeah, yeah. I'd like to see more details on
+
+Unknown Speaker  
+our results, yeah. And why the drivers that were the drivers? Yeah, yeah. Why that makes sense, and why a specific model framework like satellite model, is telling you that these drivers are significant. 100%
+
+Unknown Speaker  
+you said that you use, for example, a dummy variable for covid. I like to see more explanation on how that impacted your modeling.
+
+Unknown Speaker  
+I also think that the data piece where you're evaluating what data is available to use the frequency of data you said you tried interpolation. That stuff is really, really important
+
+Unknown Speaker  
+comparing the multiple scenarios or different models available from NGFS. I think there's a lot of value taking from doing that analysis and showing it before you start getting to the nitty gritty model performance.
+
+Unknown Speaker  
+Into that, I think maybe I need to get a refund from my grad school.
+
+Unknown Speaker  
+I don't remember any of the tests like that you guys used for comparing the model results. So from let's say you take me as a non technical
+
+Unknown Speaker  
+person? Yeah, I wouldn't
+
+Unknown Speaker  
+understand the logic behind them, right? So if you could show me some of the visualizations, yeah, yeah. I think part of the reason why it's so technical is because these are the slides we submitted to Dr pesavento to update her on what we've done so far, but yeah, 100% I mean, that's definitely
+
+Unknown Speaker  
+yeah.
+
+Unknown Speaker  
+These are, like, we have 50 minutes, and I need to say everything we did. But I also think that we've, like, not held ourselves back, but we just wanted to get confirmation that we were on the right track before doing like, a ton of work, and then hearing that actually this is not the right approach, because we didn't want to go, like, head first into satellite models that we found, like, from reading papers and whatever, only to find like, we come and show you guys, and you're like, this is actually not what we do anymore, and we actually don't have, you know, we don't like this.
+
+Unknown Speaker  
+Us at all, because then, you know, we have gone all in on something that was just a totally different direction. But I think this is really helpful.
+
+Unknown Speaker  
+Yeah, that makes sense. The way banks forecast these things test these things varies.
+
+Unknown Speaker  
+Oftentimes, it's
+
+Unknown Speaker  
+pretty simplified framework. A lot of what they do is linear regression, budget regression.
+
+Unknown Speaker  
+But sometimes what they try to do, not saying this direction should go and is they break up the problem into more digestible pieces, or, I guess, sub models we were talking about, where you can forecast a loss given a default of a loan, or you can forecast likelihood of a transition from a good loan to a bad loan.
+
+Unknown Speaker  
+And then models are better at better performing at these smaller questions, and that's what I'm saying you guys should do. But
+
+Unknown Speaker  
+if you guys do use a combination of satellite models and var models.
+
+Unknown Speaker  
+Try to explain why, yeah, I think you started going down that direction. But,
+
+Unknown Speaker  
+yeah, try to try to see if you can, yeah, I guess that's also like, kind of, I mean, there's like, that trade off. You don't know how, like, general we want it to be, or, like, how granular we want to Yeah, I think,
+
+Unknown Speaker  
+I think the time constraint for the final presentation is worrying us a little bit, because there's so much we could go into, and so much detail we could go into.
+
+Unknown Speaker  
+How long is our final presentation supposed to be? Was it? Did you guys decide on a time? Because I recall 15 minutes, but I could also just be making that up.
+
+Unknown Speaker  
+Oh,
+
+Unknown Speaker  
+yeah, that's better, because I think part of the issue was that I was afraid that we would have to skip over a lot of stuff just so that we could fit into the time. But 30 minutes is very doable. Yeah, we do want to see the details. Yeah.
+
+Unknown Speaker  
+That makes that makes clear to explain, like, all the little tests we have, yeah, yeah, for the presentation. I mean, obviously in our write up, we'll definitely include, like, the process of how we got to our final model. But when we present, would you rather us just focus on our final model, like the process of how it works and then our findings? Or do you want us to talk about, like, the entire timeline? Like, this is where we started, and this is what led us to the final model.
+
+Unknown Speaker  
+Okay, okay, definitely start with the story.
+
+Unknown Speaker  
+You mentioned fan charts, right? I would start with a nice visual story. You've tried forecasting consumer or CNI loans, this is what they look like in the future, and you have a certain degree of confidence in that because and then you can start talking about the drivers or the modeling decisions. That makes sense.
+
+Unknown Speaker  
+I would do that.
+
+Unknown Speaker  
+Seems like visualizations are, like, very important for you guys. Yeah, it's from it's like, what I'm hearing is what I'm hearing.
+
+Unknown Speaker  
+It's just so much easier
+
+Unknown Speaker  
+to pay attention. Yeah, you go back to maybe the previous
+
+Unknown Speaker  
+this one, yeah, you have your drivers here. You
+
+Unknown Speaker  
+say they're
+
+Unknown Speaker  
+significant, and you know it's nice that I can read your bullet points. But if you know I was an executive, I probably would want to see how significant? Yeah, why these? Maybe
+
+Unknown Speaker  
+not so much text make it, yeah,
+
+Unknown Speaker  
+got it. That makes sense.
+
+Unknown Speaker  
+And maybe like three to four numbers.
+
+Unknown Speaker  
+I think it should just be a graph, no sentences, no numbers, and then we just speak it. Yeah,
+
+Unknown Speaker  
+I'm trying to think, I think we'll definitely look into other models too before finalizing our satellite model. But I think we might prioritize, maybe, okay, like the satellite model we're thinking, we're
+
+Unknown Speaker  
+thinking
+
+Unknown Speaker  
+in the right way, or,
+
+Unknown Speaker  
+like, heading in the right direction, kind of, anyway, we didn't, either, we didn't either, until we searched it up. Are pretty simple. Like, they're not, they're, they're more simple than a bar, yeah. Like, they're, they're less complicated than I thought they would be, because they're very similar to a linear regression model in the sense that you're inputting things and looking for an output. So it's just something that we had never heard of before, but I think it's, I think it's more common than than you might think, yeah, yeah. That's.
+
+Unknown Speaker  
+So we realized at least what we were looking for. So yeah,
+
+Unknown Speaker  
+is our model
+
+Unknown Speaker  
+features us.
+
+Unknown Speaker  
+Yeah, it's just a AR model with extra variables. Yeah,
+
+Unknown Speaker  
+when you started, you said that if you have an autoregressive model that, using a lag performs really well, it's not worth investing in other models. I think that's kind of contrary to
+
+Unknown Speaker  
+the exercise, right? We want to understand why changes happen. If you know yesterday's stock price, you know, it
+
+Unknown Speaker  
+doesn't give you much strategic insights or understanding.
+
+Unknown Speaker  
+So if you can't leverage the explainability of our Yeah, so the robustness of salary models, yeah,
+
+Unknown Speaker  
+yeah, I think that's definitely the direction. But yeah, that's kind of what we're planning. Because our annual var was the one that we were like, Yeah, our quarterly var actually performed pretty well. So yeah, does the data have multiple models? Like the NGFS gives multiple models, yeah, they use, they use three. Well, they use three different models for all of the scenarios, yeah? So like the numerical paths are actually different depending on the model that they use, but they all go in the same direction, all between one to 3% uh huh. So they don't they differ like, a like, obviously, like, a significant amount, but not enough that, like, one's going down and the other is going up, you know, so. But it is something to to know, I guess that depending on the model that you use, you're going to get different results. I think what we wanted to do was use all three different model paths as inputs to see, like, where it would get us just generally, like, we're kind of already expecting the direction of our results to be the same, just because our inputs would be going in the same direction. But it would be kind of nice, like, especially if we have the time like in our presentation to discuss, like, what we find from it, because I know that we're going to do it anyways, just to see, like, what we get, because doesn't hurt. But if we do have the time in our presentation, that's definitely something that we want to be able to share. If it's, you know, even interesting at all, if our app would come out and they're like, basically the same thing, then obviously it's not worth I think one thing that I just remembered thinking was that baseline results, we're finding that the outcomes have different effects on consumer versus CNI loans. So what's good for consumer is bad for CNI? So strategic insights are actually difficult to give because it depends on what you want to prioritize. Like if you care more about consumer loans, then we would give you a certain set of recommendations, and if you care more about CNI loans, then we'd give you another set of recommendations. But they actually are mutually exclusive, like they don't they go, they go, if you look at other variables,
+
+Unknown Speaker  
+yeah,
+
+Unknown Speaker  
+you also need to decide whether that's because of your model or because of in every model, yeah, and it's also it says that in the paper as Yeah.
+
+Unknown Speaker  
+I think it's just like, Well, I mean, even during like covid, they were talking about how covid impacted Tni loans versus consumer loans. It's just the way that businesses spend and the way that individuals spend are completely different. So yeah, I'd actually, I would actually be curious to hear your feedback on how we present that difference and what you care more about. Slash, if there is something you care more about, I
+
+Unknown Speaker  
+but
+
+Unknown Speaker  
+I guess just just just present, okay, like, it makes sense. It makes sense that this
+
+Unknown Speaker  
+feature can act differently in terms of CNN, yeah, as
+
+Unknown Speaker  
+long as there's a project kind Yeah,
+
+Unknown Speaker  
+so, yeah. I mean, if you, if you're
+
+Unknown Speaker  
+thinking of the US economy, which one matters more and why? Or if you're looking at all banks in the US, which they care more about,
+
+Unknown Speaker  
+if you have something that you think is takes priority, just
+
+Unknown Speaker  
+the already just I also
+
+Unknown Speaker  
+asked
+
+Unknown Speaker  
+the other group is that, whether you think you're capturing more transitioning physical risk, how's that
+
+Unknown Speaker  
+balance with your approach the we definitely take that into consideration in the decomposition of these different things, especially because all of the papers we read talk so much about the decomposition of transition versus physical risk. But then at the end of the day, it really like all comes down to what.
+
+Unknown Speaker  
+Whether or not. I think the outcome that we're hearing so far is that
+
+Unknown Speaker  
+you have to prioritize whether or not you want to
+
+Unknown Speaker  
+get the impact of like the long term effects of climate change or the short term effects of transitioning, and then what that effect is on consumer versus CNI loans. And so far, what we're seeing is that transitioning sooner rather than later is the better outcome because it leads to less damages in the long ones also is just like, one is like, really short term, I guess. I mean in the greater scheme of things, and the other is like, the end of the world, you know, so it's like, feel like it's kind of, you can't really compare,
+
+Unknown Speaker  
+versus, like, the physical race. Like, when we look at the scenarios, you see, like, oh, like,
+
+Unknown Speaker  
+what is a hot house? World is like, very, like, zero transition risk, but extremely severe physical, physical risk. And it's because, like, you know, the atmospheric temperature is, like, three degrees Celsius hotter than, you know, and so it's, it's kind of interesting to think about, because obviously, from intuitive sense, like, at least for me, I'm like, well, it makes sense. Like, even, even if the transition risks are high, it's like, the cost to be, you know, paid. Or, like, you know, it's so much bigger if we don't act now. But also, it's interesting that my my intuition might be a little bit different than kind of what the numerical outputs are for our models, in terms of, like, what the costs and benefits are for banks to either, you know, yeah, transition now or transition later. But again, it all depends on what you prioritize. Like, if you're looking at CNI loans, I think the priority is transition later. If you're looking at consumer loans, the priority is transition now. So that's it's really interesting, how like, depending on the perspective that you are looking at this from the strategy, is going to be very different. Yeah. Yeah.
+
+Unknown Speaker  
+Think it's fair to say that
+
+Unknown Speaker  
+probably
+
+Unknown Speaker  
+focusing,
+
+Unknown Speaker  
+I think he's
+
+Unknown Speaker  
+asking that's on you guys. Models,
+
+Unknown Speaker  
+process and everything, yeah,
+
+Unknown Speaker  
+for better
+
+Unknown Speaker  
+use of the time, probably
+
+Unknown Speaker  
+focus. On one first, way more in
+
+Unknown Speaker  
+depth. We could do both. If you guys want us to like, we could like, make a case whatever you guys want.
+
+Unknown Speaker  
+Okay, think too much, much,
+
+Unknown Speaker  
+okay, yeah,
+
+Unknown Speaker  
+okay, it's not required. I think it's not required in the beginning,
+
+Unknown Speaker  
+okay,
+
+Unknown Speaker  
+yeah.
+
+Unknown Speaker  
+I think what we could maybe do is like a case for, like, provide the reasons for, justify, justifying why we selected one or the other. Yeah, perhaps, if we're thinking about like a story, maybe we just see, like this, the actual objective size of these portfolios, and see, I mean, I would obviously assume that CNI loans would be larger, just subjectively, but
+
+Unknown Speaker  
+we can do that. I mean, that would obviously make our lives easier, but also it wouldn't be that much harder for us to do both. So because, like, change your mind, it's no pressure. We'll do the second
+
+Unknown Speaker  
+one. Yeah,
+
+Unknown Speaker  
+prioritize trying other model frameworks if you have Okay, yeah, and see if
+
+Unknown Speaker  
+they give you different insights for one particular time series. Yeah, do that when you still have time and you're just enjoying it. All right. Great.
+
+Unknown Speaker  
+That makes sense. Okay, we have
+
+Unknown Speaker  
+another two day before. I think that's
+
+Unknown Speaker  
+okay. Is that like late March,
+
+Unknown Speaker  
+April, April 12?
+
+Unknown Speaker  
+Yeah, I think it might just be that's when it's due. I
+
+Unknown Speaker  
+up.
+
+Unknown Speaker  
+Great,
+
+Unknown Speaker  
+yeah, she just, she just makes us submit like updates, which is obviously really great for us, because it helps.
+
+Unknown Speaker  
+This to stay on track. But because we had it, she was like, you might as well share where you guys are at. But I feel like also the next Q and A would be easier to just do, like a pure Q and A as opposed to like, this is what we have like, is it right? And so,
+
+Unknown Speaker  
+yeah, I think expect
+
+Unknown Speaker  
+take,
+
+Unknown Speaker  
+yeah, yeah. The slides, the slides that we submitted, were quite literally, like, word vomit, of like, what we've done to Dr face evento. And then when we heard that, the other team was like, oh yeah. Like, we're gonna present our slides. And then she was like, Oh, do you want to put your slides on where we're like, oh yeah. We're preparing to do like. We're like, we have slides that we can show,
+
+Unknown Speaker  
+yeah, like, we're gonna throw it up there so that we can like, kind of refer to it, as opposed to like, present it. But,
+
+Unknown Speaker  
+well, you know, yes,
+
+Unknown Speaker  
+thank you. Thank you guys. But April
+
+Unknown Speaker  
+9 is the final
+
+Unknown Speaker  
+I think, I think that's when it's due, because you guys just said April 12.
+
+Unknown Speaker  
+Well, nine and 12 are pretty negligible. So
+
+Unknown Speaker  
+answer,
+
+Unknown Speaker  
+are you all parked in Fishburne? You have to
+
+Unknown Speaker  
+pay for parking. Yeah, yeah, unfortunately,
+
+Unknown Speaker  
+every day, wait, no, we have, we have, like, there's A, there's a, like, a free lot, I guess you
+
+Unknown Speaker  
+Yeah,
+
+Unknown Speaker  
+hi,
+
+Unknown Speaker  
+I don't know how to stop my recording. You.
+

@@ -1,0 +1,351 @@
+Speaker 1  
+Stationary. Remember them said that to do anything that we've done about constructing and finding the best ARMA model, you need the data to be stationary. So if you have deterministic trend and seasonality, first you have to DD trend and fix the clock. You have to detrain the data and decentralize the data, and then you do there. So now we're going to talk about at least some case of non stationarity. We're not going to cover all of them. So what, what could it be? Non stationary? One is when you have the permestrant and it will update you on what we talked about the project. Okay, nothing important. We know that if I have a break, that's a no stationary data. If you have a barrier that change over time is also breaking the stationarity rule. But actually one of the most common reason in macro data to be is non stationary, is the presence of what is called a stochastic trend. Now, there is stochastic trend in a very broad view and a broad definition, but what most of the time people think about it when they say stochastic trend is a model that has a uni route, which is also called around the walk, okay? And it's important, because if you have what's called uni route, or if you did that is on the walk, then the world theory that we just saw, and those all every armament, do not apply, and also the same family with the area it does not apply.
+
+Unknown Speaker  
+Have you heard the word around the walk? Yeah. Coefficient is bigger. You can't
+
+Speaker 1  
+predict too much into the future, reliability of the results will go down correct. So there are many things in those statement sets is now it will talk about the coefficient bigger than one is actually equal to one, but that's fair, but when you said it right, you probably have heard the word around the walking Wall Street. There's a famous book about it, or random walk is often used in finance. Why? Because the random walk is what we think most a lot of finance data are in the sense that you're right. That is not predictable. A Random Walk is not predictable. And now we're going to see why. Now, if you know the data is stationary, you could transform the data and make a stationary right in some cases. For example, if you have a trend, defend it. If you know the path there is a break, include the dummy break, the variable for the break. But when we talk about stochastic trend. It gets a little bit more difficult, because it's not obvious to detect when you have a stochastic trend or when you have a unit root, and it's very difficult to differentiate it between a stationary model or a trend stationary, which we're going to call it from now, and the UNI route always call a uni route, but we're gonna see now. Why?
+
+Speaker 1  
+Okay, so this is just again, so this is with the trend. So let's think about what are the implication of a stochastic trend? First, let's look at the definition. What is a uni root? Oh, actually, what is a random walk? Which is a model with a U random walk is exactly this is Y t equal to Y t minus one plus epsilon, damn it. I forgot my markers again. See how much I would write. We have to do. We have to do everything without writing.
+
+Unknown Speaker  
+What in what does it look like?
+
+Speaker 1  
+This is exactly an autoregressive model of more than one when that coefficient is equal to one, right? Because then auto regress over a one is Y t equal to rho, Y t minus one plus a y noise. So that's why it's also called a unit root, because it's a it's an auto regressive, natural regressive, with the root that is equal to one. So it would be like AR one, yes, is in a particular case. Or remember that when we talked about AR one, if you look at your notes, I think I draw or P, we had this. Then we derive the dynamic multiplier, we look at the actual correlation functions. And then we have some some assumption of this, this row, and one of those was that it had to be less than one. So that infinite sum that we had there had to converge, if you look back to your notes. So now we're saying, what happened when that row is equal to one? This was stricter, less than one, and now we're saying what's happened when is equal to one? This is called a unit root model, or a model with a unit root or a random one.
+
+Speaker 1  
+There's nothing else that air one is equal to one. Remember that we said that this had to be satisfied for the auto regress, where one to be stationary, otherwise the variance will explode. Effect will never disappear, stick around forever, and we're going to see again what happens around the one with drift is the same thing, but has a constant. So this is no constant. This is a constant.
+
+Speaker 1  
+Those are just definitions. Now, when I have a random walk, or on the walk with drift,
+
+Unknown Speaker  
+what happened? What is delta YT?
+
+Speaker 1  
+Is yt minus yt minus one, which is epsilon t? So if I take the first difference all around the block, I get a y noise, or in particular, I get something that is stationary, because we know that a white noise is stationary. If this was around the walk with riff, the difference would be c plus epsilon t. So the first distance we use something that is a function epsilon, t, and this will be stationary.
+
+Speaker 1  
+This is what we say. This is another thing. We say that a variable yt is integrated over the D, and we say I parameters D, if the number this difference is stationary. So in this case, we say that yt
+
+Unknown Speaker  
+is integrated over the one.
+
+Unknown Speaker  
+So A Random Walk is a random walk,
+
+Unknown Speaker  
+a stochastic trend, a
+
+Speaker 1  
+unit, root, integral, order, one. You can think that in broad sense, they all mean the same thing.
+
+Speaker 1  
+Now as a side note, remember that in Python, when you do the ARIMA command, you have to say you have three choices here. So if you felt like 200, was air, progress, water, two, if you have 002, was a moving average, order two, if you had 202, was Arma, two, two. Now this in the middle here is D. Was the same D that I have there. It says that if I have one, it says I have a model that is negative order one, and I want to do another two, two on the first difference. So here we'll tell you how many times you want the difference if you use this Python command, but we'll talk more about it. Or you can do it by step, take the first difference and then tell it to do Arima, two, zero, but we'll talk more in a second. So this is how they look. This is around the walk. I know I generated this way, and this is around the walk with drift.
+
+Unknown Speaker  
+What can you tell me about this data?
+
+Unknown Speaker  
+They look like something you already seen,
+
+Speaker 1  
+if I had, if you knew nothing about on the walk, what would you tell me?
+
+Speaker 2  
+It looks very different, random walk with drift, like on the left hand side, it looks like a jet. Well, other than the beginning few observations, it's a general downward trend. And then to see that random walk with drift. It's like going upwards,
+
+Speaker 1  
+and the fact that goes up or down. It doesn't matter, just because I choose. But I think the more important thing is finally said nothing to you before today. What you want to say about this data? I would have said that you see a trend. And what you would say, yes, you see a trend that is maybe quadratic, if I had so in this you say, do you see a trend? Well, maybe, maybe not, right, but I only saw this part, maybe here now, but what I see is long being swing. So, yeah, this is a persistent process, but it could be something. So the key is that my thing that I wanted to tell you is that the first part that I have generated this as a random walk, when I have 300 observations, it's going to be really hard for you to detect the naked eye, whether this is a deterministic plant or a stochastic plant, and that's the difficulty of this problem. We're going to see next, what are the implications of having a stochastic trend, and you will see that the implication are quite important. Yet you won't be able to see it with the naked eye. You're going to have to be testing and with the good, good statistical test. In fact, this, this problem was discovered in the late 80s, early 90s, so not a long time ago, and there was so many papers created to what is the best test? How can we make sure that we are able to detect if macro data having the root or not because it's very is a very, very important question.
+
+Unknown Speaker  
+So for a random walk,
+
+Speaker 1  
+if you substitute backwards, you can write it like this, as an infinite sum of the epsilon. For a random walk, it has mean zero. Now, if you do exactly what we did, or even go back to the air one case that we did and see what happens when I have rho is equal to one, you will see that the value is equal to t, where I am T times sigma squared, little t. So divided, today is going to be different than divided. Tomorrow is going to be different than divided next week. And this tells you like divided changes over time.
+
+Unknown Speaker  
+So here is now stationary,
+
+Unknown Speaker  
+and what happens as t gets very, very large.
+
+Speaker 1  
+The virus gets very, very large. So the virus can potentially, eventually, if I think about, oh, GDP is a unit root, and I wait to say, and I want to try to predict what GDP is going to be in 20 years, you can see that the virus so big that I would not be able to say where it goes. The covariances look like this. And again, remember what is one assumption? So it means that the covariance is a function of time, not just of the different this is the covariance over the K, not just of the difference of the side of the of the K, the lag of the covariance, but also some D. Remember that one of the assumptions of stationarity was the covariance should not depend on T only on K. So here's another reason why it's not stationary and the autocorrelation, which is the auto covariance, divided by the variance between two variables as T, is t gets large, converges to one, which is saying that if I try to predict in the future where yt is going to be, my best guess is where it is today, because everything else is noise. And that's that's why we say it on the walk in Wall Street. Now, if you want to think that the thing, the image that people use all the time for around the walk is imagine you have a drunk person walking down the street, okay? And the person stumble around, you cannot ever guess which it doesn't work in a Russian and doesn't walk in a Russian way. You can predict where it go, and then occasion it hit a curb right, and then it's going to go this side for a very long time, until it hits the pebbles, and then it goes this way, and then this way. But you cannot predict where it's going. So if you have this imaginary idea of like you can, you can imagine that eventually. So if you have, if this random drunk person is here and you have to guess which way is going, you're you have no guess. You have no way of guessing which way. So you may as well say that your best prediction is going to be where he is right now. You B. Now, if you have a random walk with drifts, everything is at the word the same, except that now the mean is, in a sense, a linear trend, and that's why it goes up like this. So before the mean. So if you look here, the mean of this random walk is going to be a constant while the mean of this is going to be looking similar to a deterministic term.
+
+Unknown Speaker  
+They're both clearly not nuclear stationary.
+
+Speaker 1  
+Now let's consider another text. Suppose that I have a deterministic trend, and I'm trying to do a forecast. So this is where I am today, and I want to see what is the forecast of time, t plus S. Well, that is the trend is deterministic, so I'm going to be c plus this is t becomes, t plus s. This become, this become remembering. You have to go back to your forecast, right? This is epsilon t plus S, which I don't know how to forecast. So zero t plus s minus one, which I don't have a forecast. There's also zero. The only one that I have option to know what to be is epsilon t epsilon t minus one. Remember this from the forecast lecture? No, you should have already so the forecast is this. We in the previous lecture, had this. Now that is, well, the deterministic trend. We also have this part of the trend. What happened at f becomes large, this, this all become zero, and you're left with this. And so S becomes large, this converges to something that looks like this. And when S becomes large is infinite, so but in a sense, if you have a three minutes to trend, what in your best guess, or where it's going to be is where this trend, the straight trend, is going to be in 50 years. That's the best guess. You remove all the all the certainty around the trend, you project the trend. If this is 10, you take where you are now you are 10, you make it increase at the same rate, and that's where you are. What happened when you have stochastic trend, then you have that the first difference is equal to this the forecast. So the first difference is going to be equal to this, but now this is the first difference. So when I do, when I go from the first difference to the level, I end up with YT plus s by c times S, which is the difference of the step in which you forecast.
+
+Unknown Speaker  
+This is not that difficult if you sit down in your sunlight.
+
+Unknown Speaker  
+So what happens? S becomes infinite.
+
+Speaker 1  
+Well, this stays and become larger, larger, and they have this. So actually here, you could predict exactly where you were here, your forecast is going to change depending on where you are today when you create the forecast. So forecast done in February
+
+Unknown Speaker  
+2026 for 2027
+
+Speaker 1  
+is going to be different than a forecast that I created last month for 2027 because where I start matter. You guys are with me. This is just a quantum math to give you some ideas, which is with the deterministic trend I can forecast with another terministic with a stochastic trend where my forecast and this is true no matter where I start, except that this is going to affect where I start, but this is going to strictly depend on the actual value GDP when I start My forecast, or whatever variable you think it is. So for the deterministic trend, the forecast converges to linear function on the forecastle horizon, regardless of the value of yours today. While for the stochastic trend is also linear functional forecast, or rhizome, but the intercept changes to the starting point.
+
+Unknown Speaker  
+So your best forecast is today,
+
+Unknown Speaker  
+not to that, but today.
+
+Unknown Speaker  
+And these are two very different implications for how you should forecast.
+
+Speaker 3  
+Can you go back? I'm sorry here, I'm having trouble understanding the difference.
+
+Unknown Speaker  
+So suppose that I want to forecast
+
+Unknown Speaker  
+GDP or any variable
+
+Speaker 4  
+I have 100 observations. The first one is just
+
+Speaker 1  
+as a deterministic trend. What is my best forecast? Well, little t is equal to 100 suppose I want to forecast 10 months ahead.
+
+Unknown Speaker  
+What is your best forecast? S
+
+Unknown Speaker  
+is equal to 10 is
+
+Speaker 1  
+going to be the mean of your data, plus this the slope of the trend, plus 110 if I'm here, if I start here, forecast, the step ahead is going to be numbers. It doesn't matter. So this is going to be your number. This is going to be your number that I cannot desire, estimated from your data. And then you plug in this, what is going to be one more step ahead, 111
+
+Unknown Speaker  
+you're just going to say, you're going to take
+
+Speaker 1  
+the trend, and you want to project the trend forward. Why did I do my forecast starting here, starting here? It doesn't matter. It's always going to say that I'm going to be here. Okay, sure you are very aware that there's going to be some random variation, or Random Strength, some cycles, but if I look very far into the future, so that the cycle don't matter, your arm is going to end up
+
+Unknown Speaker  
+here. Now what this is say,
+
+Speaker 1  
+if this is a deterministic trend, stochastic trend instead,
+
+Speaker 1  
+it's gonna look a little different, because what that is gonna say is,
+
+Unknown Speaker  
+this Is my vital
+
+Speaker 1  
+and I'm here, let's now say, okay, my forecast is going to be what I'm going to project it. This
+
+Speaker 1  
+is going to be still C, the slope is C, but I'm going to start here. So what does it mean that if I wait a little longer, maybe the data goes down, and now I forecast again,
+
+Unknown Speaker  
+I'm still going to say C but now I end up here.
+
+Speaker 1  
+So in one case, no matter where I start, I'm going to end up in the same place. In the second case, the starting point matters, and every time you have data, you may change your forecast any more
+
+Speaker 3  
+sense understood so is there intrinsically like one that is better or worse for forecasting?
+
+Speaker 1  
+No, that's a good question. None of this. Obviously, this is easier. This is telling you that YT itself is much harder to forecast. But it doesn't mean that it's better. It tells you that you could forecast very well the first difference of YT, and that's why we're going to talk about it. So it just tells you that, in this case, you could forecast yt, in this case, you can forecast difference of it. And so you would need to know which one of the two you want to do. There's no one that is better, but there is one that there is no one that is better, but there are two different implication of two different models. And therefore we should know which model is. Hopefully, we should try to guess our best which model is behind our data. And other things here just saying that the mean square error in one case is finite. The other one is it can be infinite, like having to invariance. Another important thing is the dynamic multipliers. If you have a dynamic forecast, the dynamic multiplier corresponds to these coefficients, and we know that this coefficient will go smaller and smaller and smaller. This is all to say what we already seen that say you have an AR one, then we said last time that if I have a shock today, and the coefficient on the other one is less than one, the shock eventually will disappear. If I wait long enough, when the rho is equal to one, any shock today will never disappear. That's the whole idea. If rho is equal to one, the shock will stay, have a permanent effect. So again, these are very two different implications. Suppose I'm a policymaker, and I want to surprise the economy by doing a policy shock. I need to know if the effect that I'm going to have on the economy is going to be permanent or temporary.
+
+Unknown Speaker  
+And even if it's temporary, how quickly it disappear?
+
+Speaker 2  
+So when you say the effect is permanent, does it just mean like to some degree, or is it like constantly at that same magnitude, if
+
+Speaker 1  
+it always equal to exactly one is olive Okay, yeah.
+
+Speaker 1  
+So then what could we do? Remember behind all this is I told you stochastic trend is no stationary. But until today, I told you, you better be sure that you didn't stationary before you do anything. So what can we do? Can we transport the data to make it stationary? Well, if what we've done so far, we said, Okay, if it's very stationary, I'm going to include the trend in my model, which is basically say, I'm going to include the trend and I'm going to consider the model as detrended and stationary. If I do it with drift, then what I need to do is like, I need to do something different. Simply, the trend in the data is not enough. The stochastic trend is not a permissive trend. What I need to do in that case is take the first difference. Only taking the first difference, I'm going to go back to stationarity. So if I have a deterministic trend, I can I can detract. If I have a stochastic trend, I could take the difference. You tell me, Well, can we just take the difference of everything? Well, the problem is, if I take the difference of a trend stationary data, then I end up with something that is not good either. So the truth is that you need to make sure whether the data has is stationary, sorry, whether your data is deterministic trend or stochastic trend, whether it's autoregressive without even because what you need to do to the data to make a stationary is very different, and there is not a solution that works from both situations. Make sense? Sure? Aidan, yeah, so at the root of all this is I need to be sure whether my data has limited and that's why you're going to see a lot of people think about it do, what does your data have a unit? So the problem is, there is not a single solution to transform the data to be stationary, and we do really care a lot about this. Why? Because we see that we have so that we have different implication on the effect of shocks, on the forecasting ability that we may have on how the bias can be infinite or not. So we have to know what the data is, what kind of data we have. So in the 80s, Nelson and Coada argue that many data were unit and and they started saying, we need to definitive. Then they started saying, okay, okay, hold on, a lot, let's do testing. Let's test them. We realized that some a lot of the tests were really not performing well, and we were ending concluding that a lot of data were UNIDROIT when they were not pretty limited then, in the 90s, seems a long time ago, but I was in grad school then, this is what my dissertation was, and that there were much better unit root testing. And so we realized that a lot of the micro data probably do not have immunity testing. They don't have a unit they don't have a unit root. What is true is most micro data is probably not exactly UNIDROIT, but still very persistent. I would say that is pretty much the consensus at the moment. Yes. Does that
+
+Speaker 4  
+mean? Yes, 0.85
+
+Speaker 1  
+Yes, very good, exactly. You will see that a lot of data are around 0.9 0.95 what does it mean in practice, like that? The shop will have an effect that is last for a long time, but eventually dies up by in a long time. So we have to be good that things move very slowly, and that, in practice, when you go and test for your root, you have to really think about it, because all this discussion is discussion for when you have an infinite like a very large sample, it's more sample is point nine, really different than one. When I only have 20 years of observation, sure, we can say that the fact is going to disappear in 30 years. But if I have only 20 years of past information, and I'm trying to forecast in two years, what is the best stochastic process that approximate that? And maybe it is a unit. So it's very nuanced argument.
+
+Speaker 3  
+So this is, this is probably a dumb question, but I just want to confirm my understanding. So a unit root is when rho, or autocorrelation function, is equal to one, right. And because, when we have a random walk, the our best forecast is just where we are today. Then, because rho is equal to one, our forecast would also just be equal to one times what our today's value is. So does that mean that, in actuality, like in real data, finding data that is like truly a random walk or has like a exact unit route is not very common, because, just like, intuitively, I feel like having data that has like 100%
+
+Unknown Speaker  
+autocorrelation is kind of
+
+Speaker 1  
+no but remember, even when you say that on the best forecast of tomorrow's today, What you truly saying is not that okay? I know. I understand that if I want to forecast what GDP is tomorrow is going to be what is today. You understand that there's a difference there, right? But, and GDP is not a good example, because he has a trend. So let's think about exchange rates like nominal exchange rate is one of the things we probably think is a unit root. So if you say, I want to forecast the nominal exchange rate next month, obviously, if you say that the exchange rate with Europe is 0.94 right now, you don't, you know, say, Oh, I'm going to forecast 0.94 and then next month, come in 0.93 you say, Oh, see, it's not a uni route, because remember, uni route is, where is today, plus something, but something that is completely random that you cannot forecast. Okay, so, yeah, you're saying there's gonna be obviously, I'm not gonna be precise, but the extra piece that I'm gonna be missing is something that is so random that I have no chances of forecast.
+
+Unknown Speaker  
+So that
+
+Speaker 3  
+plus random thing that we can't forecast is the SC, is the epsilon t? Okay, I see why.
+
+Speaker 1  
+Because what the water around the walk, what the unit would say is that yt is equal to yt minus one plus epsilon t. So it says that tomorrow is equal to today plus I see this, and this is not forecasting, yeah. And then if I go, What is to two steps ahead? Well, it's going to be a step ahead plus epsilon t plus two, but the two, the One Step Ahead we already said, is YT plus epsilon t plus one, but epsilon t plus two. And this is for a regular random walk, right? And so these are not forecastable. And so you're here. That's why you keep ending up here. I see now, if I had a constant, it would be the same. I would end up with c plus c.
+
+Unknown Speaker  
+Okay, that makes a lot of sense.
+
+Speaker 1  
+So you just say that and see, imagine this, right? What is this saying? Okay, if I have one step ahead, I have what I am today, plus this little thing that I know is a white noise, so it's going to be around zero, hopefully completely random, depending on the variance. What are the chances that this is going to become small or negative or positive? Whatever they are? I don't know. I cannot forecast now two step ahead. What happens I am today, and now, what am I missing? I'm missing this, plus this. So you can imagine that if I had very little chance. So if this could be because small, but it was one. Now, all of a sudden, I have two things that I cannot forecast, and they're going to add up, okay? And then if I go three step ahead, I'm going to have three and so my forecast in the future, the best I can do is still Whitey, and yet, the part that I'm going to be missing is going to be bigger and bigger and bigger, okay, that in that sense in which we say that we cannot forecast, and the further you go into the future, the more wrong you may be, or you're more the virus, or your forecast error is going to be bigger and bigger and bigger. A question first,
+
+Speaker 3  
+yeah, I was going to say, in practice, how do you recognize, especially in the short term, whether something is you a trend
+
+Speaker 1  
+or a unit root, no, I was gonna say, or just like a product of white noise, that's, which is, you said, How do I know where there is a trend or a stochastic trend? In a sense, we'll test it, and hopefully and somebody have done good testing, and you're gonna have to do a test knowing that now test is under percent correct,
+
+Unknown Speaker  
+we're gonna go next in the unit root function with the pacf kind of
+
+Speaker 1  
+just look like in the if this is a unit Root, the pacf is going to be, if exactly you do, the ACF is going to be 111111, yes. So that would the
+
+Speaker 4  
+pacf then just drop down after the first one, yes, go
+
+Speaker 1  
+down so, and that's what I'm going to do testing. So let's look at how can we test this is the Air One. This is our benchmark case. Now let's take the first difference. So I take yt minus yt minus one, implies rho. Yt minus one minus yt minus one, that can write as this delta. Y, d is the alpha. The alpha is rho minus one.
+
+Unknown Speaker  
+Okay, we need to write on the border. You can use two guys.
+
+Speaker 1  
+So then it's even here, right? So whether so this is now, this is a regression that I could do, and my hypothesis will be, if rho is equal to one, then this is a unit root. If rho is less than one, then it's not. You see what we're going to say. In case alpha is equal zero is a unit root. If alpha is less than zero is not. So one option that people realize is, OK, I can just do this by OLS. Take the different in GDP or different exchange rate, regressing on the lag exchange rate, and do a regular t test or significance, easy, right? Seems very easy. And that's where Nelson and plaster did and they did this. And I say, Okay, I'm going to do this, I'm going to do a T test, and I'm going to look at the regular critical value, and they end up saying that everything was a unit root. The problem is that later on, somebody figured out that, unfortunately, is more complicated than that. This is called the Mickey Phillip test. So if you do the Python you will call Dickey filler, or augmented Dickey filler, DF or ADF test. It is indeed a t test, so you will do it the same way. So you simply do this regression and look at the value that it comes in the output, the t value, the problem with the test value, the problem is that people came back later on and says, Okay, under the null, which is the case in which this data is hazardous, is tricky, because things behave very differently than normal. And in fact, this test here does not have the usual distribution as a distribution that is much more shifted to the left. It's called the Dickey pillar distribution. Is not a normal distribution, even when in large sample is something different. But luckily, you have a bunch of smart people that have done it for you and and realize that when the data has UNIDROIT, the normal is not a good approximation. Why you need to go to something much more complicated. If you are a big finance person, this is you go into the real, more continuous processing and Brownian motions, which you've done for finance. You may not so you still use the t statistic. But the only thing is you have to look at different critical points.
+
+Unknown Speaker  
+So do not use the table for the normal. We'll
+
+Speaker 1  
+give you an example in a second, also, because things are so different. If I did, if this was a situation where things were all stationary in a standard normal, it wouldn't matter what other variable I would have in my regressions, and the T will still be normally distributed, and I will look at the, you know, in a regression, no matter what you are in, you still look at the same critical value when you have a unit root. The test is called non pivotal, and it means that whether you have a constant or a trend in the regressions matter, and the critical value they have to look at when you have this is different than the critical value out of this. So now you have to have a set of critical value, one for when you have no constant. One you have the constant, and one you have the trend. And you have to make that decision ahead of time, ahead
+
+Unknown Speaker  
+of time. So what do you
+
+Speaker 1  
+do here? Somebody has a critical value for you. Python will probably speak the critical value. So theta, so R anybody? The critical value look like this. You can see they're bigger than minus two. And you can see why. When I you, when if I, if I had a test that was like minus 2.2 Nelson, Nelson and fraud will say, Oh,
+
+Unknown Speaker  
+okay, so there is more shifted to the left.
+
+Speaker 1  
+So you and is only one side test, not two side test. So you're probably going to get a negative value. And you have to think that these are the for the non non interceptor, only think about minus 2.8 and for the trend, minus 3.4 if it's less than that, you reject. If it's not less than that, you do not object.
+
+Unknown Speaker  
+And here you are three things you have
+
+Speaker 1  
+to remember. Let me say, let me go, let me go. And then I give you the step by step. In practice, what to do. Also, in most cases, models are a little bit more complicated than this. Is not as simple as this. You have more dynamics. So you have what is called the aumento decay field test, which is you regress. This should be delta, YT. This is a big mistake. Please correct it. This should be delta.
+
+Unknown Speaker  
+You regret the difference on the lag level
+
+Speaker 1  
+plus lag on the first difference. This is what is called the augmented TKE, full of test. So you probably gonna have to do tell pythons that you want to do an a test. Tell it how many lags you want. And choosing the number of legs is not an easy task. Then you then you're going to do a T test on this, and as long as you make sure that you look at the correct critical value, you can decide.
+
+Unknown Speaker  
+So let's look at
+
+Speaker 1  
+there are two. This is three decision here. The most important one is you want the constant or constant entrant, okay,
+
+Unknown Speaker  
+and here you have to look at the data,
+
+Speaker 1  
+if you have intercept only, that means that the alternative is the y station around the constant. So for something that looks like this, where is no obvious trend, I would do constant only for something that looks like this, the way your eyes will tell you maybe it's a trend model. Then you do the include the trend in the American so look, are you there to decide which one
+
+Speaker 1  
+in so if something looks like it's stationary, may be stationary around the constant. You only use a constant if you says, Well, if it gives either a drift or has a deterministic trend, then you use the trend in the regression. So let's look at one example, inflation rate.
+
+Unknown Speaker  
+This is how inflation rate looks like,
+
+Speaker 1  
+and now we have to decide we're going to test whether inflation has been looked first thing would you include the trend or constant? Only now this is monthly data. How many legs? That's good questions. You can choose yourself. You have monthly, you can add 12. If you have quarterly and it's four. You can also have information criteria peak for you, most routine. Have the option to like information therapy. In this case, I'm going to choose a maximum of eight, and you're going to let AIC picks the number of legs. It turns out that it picks eight legs. And these are the value of my
+
+Unknown Speaker  
+statistics, minus 3.94
+
+Speaker 1  
+is the test value. Remember where the critical value were was minus two point this is, I'm going to look at the case intercept only. So 10% is minus 255 percent is minus point 281. Percent minus 3.3 so here what I get, and most, most packaging, in fact, give you the p value, which give you all the information you get, minus three point and four. So this is more negative than any of those critical values, which is also shown by the fact that you have a p value.
+
+Speaker 4  
+Okay, that is bigger than 1% or
+
+Unknown Speaker  
+less than one so what do I conclude,
+
+Speaker 1  
+technically, this is more negative than any of this, so at all level I will reject. So what does it mean? Rejecting? You have to think, remember the null in the root. Reject null universe. So I reject the null of a unit root, so the data does not have a unit root. Two.
+
+Unknown Speaker  
+And here is where it gets even more tricky than this.
+
+Unknown Speaker  
+I would say that a value of ion 3.94
+
+Unknown Speaker  
+with a critical value of ion 3.3
+
+Speaker 1  
+is actually very close. You reject, yes, but you barely reject. And in a situation like this, where it's so difficult to detect, you may want to think a little bit of what you think is happening, so you may add more data, take more data off, and the result change. You will see people argue forever about what is the unit and what is not? Remember the inflation is the difference in prices. So there is no doubt that price in itself has at least a unit. But we don't really care often at the level of prices, we care about inflation. Inflation is still very persistent. But here, here you'll see you can think about, what does it mean that, as you know, does it mean that inflation can go as big as possible? Do we really believe that inflation can be infinite? Probably not, because we believe that, you know, that we have, at least in some countries, we may have some control over inflation, so maybe saying that it's persistent but not a unit root is a good idea, but some other people will consider it has
+
+Speaker 3  
+but if it's not a unit root, exactly that means we're given infinite time it could go
+
+Speaker 1  
+now, if it's not A unit root, it means that eventually, you know that is not is not going to explode, that a shock will always disappear. Maybe take a very long time, but it will disappear, right? If you 0.99 or nine, five, the shock will eventually disappear. It may take many, many, many years. You
+
+Unknown Speaker  
+sometimes we use like breaks. So if we didn't have the
+
+Speaker 1  
+break, would that kind of show up as a unit? That's very, very okay. So this is a very good question, which is exactly correct. You pinpoint just years of research, which is, which is that, and people something that a lot of people forget, that if there is a break, obvious break, and you ignore it, and then you do a unity test, you may conclude that there is unity test when there's not just because the break makes things look like and so there are then people came up and they came up with a unit test that allows for the possibility of breaks. But another way you can do, yeah, that's that's a good question, or one thing you can do it is just include the breaks and then test is complicated,
+
+Speaker 1  
+so the bottom line is to detect a unit test is not easy,
+
+Unknown Speaker  
+but likely For you, there are packages done.
+
+Speaker 1  
+If so, please. So my idea is, first plot the y's look at them always. I think that's always a good in any case, that's always a good habit. Look at your data. Then if a trend look possible, you want to test it. Test put it in your loop and include the trend in there. If this doesn't see it uni route by a reason to believe that there may be uni route tested with just a constant use a package, I show you one test that actually many possible tests and all have different properties. If your packages gives you different tests. Look at all of them. If you if you test, fail to reject,
+
+Unknown Speaker  
+then your data has a unit.
+
+Speaker 1  
+If you reject, clearly with all your tests, then the data does not have unit. If you're somewhere in between, some tests reject, some tests not you do a test you barely reject, or you barely do not reject. Then I say, stop and spend some time thinking. Make a decision and go with it, but ready to justify your decision.
+
+Speaker 1  
+If you find in a loop, then the if you're very convinced that are in the loop, then the best cost, best course of action is work on forecasting and modeling the first difference, take the first difference, and then from then on, Twitter has your Bible.
+
+Speaker 4  
+You is general. This is not an easy questions.
+
+Speaker 1  
+Make a good case for what you want to do and move on. If in doubt, there is some research, including the paper that I included in the module that I may you may not have time to discuss my paper. There is some reason to believe nowadays that not doing the first inferencing may be better for some things we are not going to do a separate lecture to see why the test this is my graduate students. Lecture is the hardest, most technical class that I teach. We go into continuous time in one functional, functional center limit.
+
+Speaker 1  
+Okay, Jay, will give you an example and the problem set that I gave you for after spring break, guys, looks super long. Don't panic. It's just.
+

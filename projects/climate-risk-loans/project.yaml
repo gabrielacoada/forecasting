@@ -2,8 +2,8 @@ name: climate-risk-loans
 title: "Climate Risk Impact on Banking Loan Portfolios"
 status: active
 created: 2026-02-12
-updated: 2026-02-25
-last_checkpoint: 2026-02-25
+updated: 2026-03-03
+last_checkpoint: 2026-03-03
 description: >
   Research project exploring how NGFS climate scenarios affect commercial
   and consumer loan portfolios. Case study for Emory Forecasting course,
@@ -22,12 +22,13 @@ stats:
   questions_answered: 8
   questions_partial: 3
   questions_open: 0
-  sources: 14
+  sources: 15
   facts: 613
   fact_files: 14
-  analysis_runs: 4
-  reports: 2
+  analysis_runs: 5
+  reports: 3
   notebooks: 6
-  figures: 35
-  data_files: 12
-  docs: 4
+  figures: 43
+  tables: 4
+  data_files: 14
+  docs: 8
